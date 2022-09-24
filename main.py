@@ -8,11 +8,7 @@ from typing import Any, Optional
 import aiohttp
 import asyncpg
 import discord
-import dotenv
 from discord.ext import commands
-
-dotenv.load_dotenv()
-# -> not sure where I will place this yet
 
 
 class Sincroni(commands.Bot):
