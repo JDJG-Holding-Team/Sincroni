@@ -11,6 +11,13 @@ import discord
 from discord.ext import commands
 
 
+class CustomRecordClass(asyncpg.Record):
+    def __getattr__(self, name: str) -> Any:
+        if name in self.keys():
+            return self[name]
+        return super().__getattr__(name)
+
+
 class Sincroni(commands.Bot):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -18,8 +25,8 @@ class Sincroni(commands.Bot):
     async def setup_hook(self) -> None:
 
         self.session = aiohttp.ClientSession()
-        self.db = await asyncpg.create_pool(os.getenv("DB_key"))
-        # get permission to use Juuzoq's record class, I get how it works, I just don't have permission to use it.
+        self.db = await asyncpg.create_pool(os.getenv("DB_key"), record_class=CustomRecordClass)
+        # Credit and thanks to Juuzoq(Permission Gunatreed)
 
         for filename in os.listdir("./cogs"):
             if filename.endswith(".py"):
