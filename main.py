@@ -26,7 +26,7 @@ class Sincroni(commands.Bot):
 
         self.session = aiohttp.ClientSession()
         self.db = await asyncpg.create_pool(os.getenv("DB_key"), record_class=CustomRecordClass)
-        # Credit and thanks to Juuzoq(Permission Gunatreed)
+        # Credit and thanks to Juuzoq(Permission Granted) for the use of CustomRecordClass
 
         for filename in os.listdir("./cogs"):
             if filename.endswith(".py"):
