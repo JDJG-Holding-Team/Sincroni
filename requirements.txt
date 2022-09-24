@@ -1,4 +1,5 @@
+asyncpg
+better-profanity
 discord.py
 jishaku
-asyncpg
 python-dotenv
