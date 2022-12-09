@@ -1,16 +1,20 @@
 from __future__ import annotations
+
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, cast
 
 from asyncpg import Record, create_pool
 
 from utils.extra import ChatType
+
 from .models import GlobalChat
 
 if TYPE_CHECKING:
     from asyncpg import Connection
 
     from main import Sincroni
+
     from .types import GlobalChat as GlobalChatPayload
+
 
 class CustomRecordClass(Record):
     def __getattr__(self, name: str) -> Any:
@@ -19,10 +23,12 @@ class CustomRecordClass(Record):
         return super().__getattr__(name)
 
     def __dict__(self) -> dict[str, Any]:
-        return dict(self) 
+        return dict(self)
+
 
 class DatabaseConnection:
     connection: Connection
+
     def __init__(self, bot: Sincroni, dsn: str) -> None:
         self.bot: Sincroni = bot
         self.__dsn: str = dsn
@@ -71,5 +77,7 @@ class DatabaseConnection:
         await self.execute("DELETE FROM TABLE_NAME WHERE channel_id = $1", channel_id)
         return self._global_chats.pop(channel_id, None)
 
-    async def add_global_chat(self, server_id: int, channel_id: int, chat_type: ChatType, webhook_url: Optional[str] = None) -> GlobalChat:
+    async def add_global_chat(
+        self, server_id: int, channel_id: int, chat_type: ChatType, webhook_url: Optional[str] = None
+    ) -> GlobalChat:
         ...  # Insert into database

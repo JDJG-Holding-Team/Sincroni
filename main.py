@@ -1,21 +1,22 @@
 from __future__ import annotations
-from typing import Any, Optional
 
 import functools
 import os
 import sys
 import traceback
-
-from aiohttp import ClientSession
+from typing import Any, Optional
 
 import discord
+from aiohttp import ClientSession
 from discord.ext import commands
 
 from utils.database.connection import DatabaseConnection
 
+
 class Sincroni(commands.Bot):
     session: ClientSession
     db: DatabaseConnection
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.db = DatabaseConnection(self, os.getenv("DB_key"))  # type: ignore

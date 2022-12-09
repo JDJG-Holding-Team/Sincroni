@@ -1,7 +1,7 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING, Optional
 
 from functools import cached_property
+from typing import TYPE_CHECKING, Optional
 
 from aiohttp import ClientSession
 from discord import Webhook
@@ -9,8 +9,9 @@ from discord import Webhook
 from utils.extra import ChatType
 
 if TYPE_CHECKING:
-    from .types import GlobalChat as GlobalChatPayload, ChatType as ChatTypePayload
     from .connection import DatabaseConnection
+    from .types import ChatType as ChatTypePayload
+    from .types import GlobalChat as GlobalChatPayload
 
 
 class GlobalChat:
@@ -42,5 +43,5 @@ class GlobalChat:
 
         if not self._webhook:
             self._webhook = self.__try_from_url(self.webhook_url, self.connection.bot.session)
-        
+
         return self._webhook
