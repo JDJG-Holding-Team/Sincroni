@@ -1,7 +1,7 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, cast
 
-from asyncpg import Record, connect
+from asyncpg import Record, create_pool
 
 from utils.extra import ChatType
 from .models import GlobalChat
@@ -31,7 +31,7 @@ class DatabaseConnection:
         self._global_chats: Dict[int, GlobalChat]
 
     async def create_connection(self) -> None:
-        con = await connect(self.__dsn, record_class=CustomRecordClass)
+        con = await create_pool(self.__dsn, record_class=CustomRecordClass)
         self.connection = con
 
     async def close(self) -> None:
