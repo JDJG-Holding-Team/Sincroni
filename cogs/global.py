@@ -15,7 +15,7 @@ class Global(commands.Cog):
     async def _global(self, ctx):
         return
 
-    @_global.command(name="Link")
+    @_global.command(name="link")
     async def link(self, ctx):
         await ctx.send("Linking chat.")
 
