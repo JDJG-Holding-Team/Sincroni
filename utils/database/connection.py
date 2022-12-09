@@ -62,7 +62,7 @@ class DatabaseConnection:
 
     # Global Chat
     async def fetch_global_chats(self) -> List[GlobalChat]:
-        entries = await self.fetch("SELECT * FROM TABLE_NAME")
+        entries = await self.fetch("SELECT * FROM SICRONI_GLOBAL_CHAT")
 
         for row in entries:
             row = cast(GlobalChatPayload, dict(row))
@@ -74,7 +74,7 @@ class DatabaseConnection:
         return self._global_chats.get(channel_id)
 
     async def remove_global_chat(self, channel_id: int) -> Optional[GlobalChat]:
-        await self.execute("DELETE FROM TABLE_NAME WHERE channel_id = $1", channel_id)
+        await self.execute("DELETE FROM SICRONI_GLOBAL_CHAT WHERE channel_id = $1", channel_id)
         return self._global_chats.pop(channel_id, None)
 
     async def add_global_chat(
