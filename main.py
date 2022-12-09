@@ -1,33 +1,28 @@
 from __future__ import annotations
+from typing import Any, Optional
 
 import functools
 import os
 import sys
 import traceback
-from typing import Any, Optional
 
-import aiohttp
-import asyncpg
+from aiohttp import ClientSession
+
 import discord
 from discord.ext import commands
 
-
-class CustomRecordClass(asyncpg.Record):
-    def __getattr__(self, name: str) -> Any:
-        if name in self.keys():
-            return self[name]
-        return super().__getattr__(name)
-
+from utils.database.connection import DatabaseConnection
 
 class Sincroni(commands.Bot):
+    session: ClientSession
+    db: DatabaseConnection
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.db = DatabaseConnection(self, os.getenv("DB_key"))  # type: ignore
 
     async def setup_hook(self) -> None:
-
-        self.session = aiohttp.ClientSession()
-        self.db = await asyncpg.create_pool(os.getenv("DB_key"), record_class=CustomRecordClass)
-        # Credit and thanks to Juuzoq(Permission Granted) for the use of CustomRecordClass
+        await self.db.create_connection()
+        self.session = ClientSession()
 
         for filename in os.listdir("./cogs"):
             if filename.endswith(".py"):
