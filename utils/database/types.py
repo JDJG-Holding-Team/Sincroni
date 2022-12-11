@@ -2,7 +2,7 @@ from __future__ import annotations
 from typing import Literal, Optional, TypedDict
 
 
-ChatType = Literal[1, 2, 3]
+ChatType = Literal[0, 1, 2]
 
 class GlobalChat(TypedDict):
     server_id: int  # BIGINT, NOT NULL, UNIQUE, PRIMARY KEY

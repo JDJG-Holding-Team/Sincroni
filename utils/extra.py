@@ -2,6 +2,6 @@ import enum
 
 
 class ChatType(enum.IntEnum):
-    public = 1
-    developer = 2
-    private = 3
+    public = 0
+    developer = 1
+    private = 2
