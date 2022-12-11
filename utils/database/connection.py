@@ -105,6 +105,12 @@ class DatabaseConnection:
         self, server_id: int, channel_id: int, chat_type: ChatType = ChatType.public, webhook_url: Optional[str] = None
     ) -> GlobalChat:
         query = "INSERT INTO SICRONI_GLOBAL_CHAT (server_id, channel_id, chat_type, webhook_url) VALUES ($1, $2, $3, $4) RETURNING *"
-        res = await self.fetchrow(query, server_id, channel_id, chat_type.value, webhook_url,)
+        res = await self.fetchrow(
+            query,
+            server_id,
+            channel_id,
+            chat_type.value,
+            webhook_url,
+        )
         self._global_chats[channel_id] = GlobalChat(self, res)
         return self._global_chats[channel_id]
