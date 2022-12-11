@@ -9,7 +9,7 @@ from utils.extra import ChatType
 from .models import GlobalChat
 
 if TYPE_CHECKING:
-    from asyncpg import Connection
+    from asyncpg import Pool
 
     from main import Sincroni
 
@@ -27,7 +27,7 @@ class CustomRecordClass(Record):
 
 
 class DatabaseConnection:
-    connection: Connection
+    _pool: Pool
 
     def __init__(self, bot: Sincroni, dsn: str) -> None:
         self.bot: Sincroni = bot
@@ -37,38 +37,62 @@ class DatabaseConnection:
         self._global_chats: Dict[int, GlobalChat]
 
     async def create_connection(self) -> None:
-        con = await create_pool(self.__dsn, record_class=CustomRecordClass)
-        self.connection = con
+        self._pool = await create_pool(self.__dsn, record_class=CustomRecordClass)
 
     async def close(self) -> None:
-        if self.connection and not self.connection.is_closed():
-            await self.connection.close()
-        self.connection = None  # type: ignore
+        if self._pool:
+            await self._pool.close()
+        self._pool = None  # type: ignore
 
     async def fetch(self, query: str, *args: Any) -> list[CustomRecordClass]:
-        return await self.connection.fetch(query, *args)
+        con = await self._pool.acquire()
+        try:
+            return await con.fetch(query, *args)
+        finally:
+            await self._pool.release(con)
 
     async def fetchrow(self, query: str, *args: Any) -> Optional[CustomRecordClass]:
-        return await self.connection.fetchrow(query, *args)
+        con = await self._pool.acquire()
+        try:
+            return await con.fetchrow(query, *args)
+        finally:
+            await self._pool.release(con)
 
     async def fetchval(self, query: str, *args: Any) -> Any:
-        return await self.connection.fetchval(query, *args)
+        con = await self._pool.acquire()
+        try:
+            return await con.fetchval(query, *args)
+        finally:
+            await self._pool.release(con)
 
     async def execute(self, query: str, *args: Any) -> None:
-        await self.connection.execute(query, *args)
+        con = await self._pool.acquire()
+        try:
+            return await con.execute(query, *args)
+        finally:
+            await self._pool.release(con)
 
     async def executemany(self, query: str, *args: Any) -> None:
-        await self.connection.executemany(query, *args)
+        con = await self._pool.acquire()
+        try:
+            return await con.executemany(query, *args)
+        finally:
+            await self._pool.release(con)
 
     # Global Chat
+
+    @property
+    def global_chats(self) -> List[GlobalChat]:
+        return list(self._global_chats.values())
+
     async def fetch_global_chats(self) -> List[GlobalChat]:
         entries = await self.fetch("SELECT * FROM SICRONI_GLOBAL_CHAT")
 
+        row: GlobalChatPayload
         for row in entries:
-            row = cast(GlobalChatPayload, dict(row))
-            self._global_chats[row["channel_id"]] = GlobalChat(self, data=row)
+            self._global_chats[row["channel_id"]] = GlobalChat(self, row)
 
-        return list(self._global_chats.values())
+        return self.global_chats
 
     def get_global_chat(self, channel_id: int) -> Optional[GlobalChat]:
         return self._global_chats.get(channel_id)
@@ -80,4 +104,7 @@ class DatabaseConnection:
     async def add_global_chat(
         self, server_id: int, channel_id: int, chat_type: ChatType, webhook_url: Optional[str] = None
     ) -> GlobalChat:
-        ...  # Insert into database
+        query = "INSERT INTO SICRONI_GLOBAL_CHAT (server_id, channel_id, chat_type, webhook_url) VALUES ($1, $2, $3, $4) RETURNING *"
+        res = await self.fetchrow(query, server_id, channel_id, chat_type.value, webhook_url,)
+        self._global_chats[channel_id] = GlobalChat(self, res)
+        return self._global_chats[channel_id]

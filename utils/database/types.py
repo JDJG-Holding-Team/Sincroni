@@ -1,13 +1,11 @@
+from __future__ import annotations
 from typing import Literal, Optional, TypedDict
+
 
 ChatType = Literal[1, 2, 3]
 
-
-class _GlobalChatOptions(TypedDict):
-    webhook_url: Optional[str]
-
-
-class GlobalChat(_GlobalChatOptions):
-    server_id: int
-    channel_id: int
-    chat_type: ChatType
+class GlobalChat(TypedDict):
+    server_id: int  # BIGINT, NOT NULL, UNIQUE, PRIMARY KEY
+    channel_id: int  # BIGINT, NOT NULL, UNIQUE
+    webhook_url: Optional[str]  # TEXT, NULL
+    chat_type: ChatType  # SMALLINT, DEFAULT 0, NOT NULL
