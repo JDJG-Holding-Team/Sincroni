@@ -1,10 +1,10 @@
 from __future__ import annotations
+from typing import Any, Optional
 
 import functools
 import os
 import sys
 import traceback
-from typing import Any, Optional
 
 import discord
 from aiohttp import ClientSession
