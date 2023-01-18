@@ -1,6 +1,6 @@
 from __future__ import annotations
-from typing import Literal, Optional, TypedDict
 
+from typing import Literal, Optional, TypedDict
 
 ChatType = Literal[0, 1, 2]
 
