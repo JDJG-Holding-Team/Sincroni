@@ -10,8 +10,8 @@ import discord
 from aiohttp import ClientSession
 from discord.ext import commands
 
+from cogs import EXTENSIONS
 from utils.database.connection import DatabaseConnection
-
 
 class Sincroni(commands.Bot):
     session: ClientSession
@@ -25,12 +25,11 @@ class Sincroni(commands.Bot):
         await self.db.create_connection()
         self.session = ClientSession()
 
-        for filename in os.listdir("./cogs"):
-            if filename.endswith(".py"):
-                try:
-                    await self.load_extension(f"cogs.{filename[:-3]}")
-                except commands.errors.ExtensionError:
-                    traceback.print_exc()
+        for cog in EXTENSIONS:
+            try:
+                await self.load_extension(f"{cog}")
+            except commands.errors.ExtensionError:
+                traceback.print_exc()
 
     async def close(self) -> None:
         await self.session.close()
