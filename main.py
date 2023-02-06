@@ -4,7 +4,7 @@ import functools
 import os
 import sys
 import traceback
-from typing import Any, Optional
+from typing import Any, Optional, Union
 
 import discord
 from aiohttp import ClientSession
@@ -75,7 +75,9 @@ class Sincroni(commands.Bot):
         webhook_url = os.environ["SUPPORT_WEBHOOK"]
         return discord.Webhook.from_url(webhook_url, session=self.session)
 
-    async def try_channel(self, id: int, /) -> Optional[discord.TextChannel]:
+    async def try_channel(
+        self, id: int, /
+    ) -> Optional[Union[discord.abc.GuildChannel, discord.abc.PrivateChannel, discord.Thread]]:
         maybe_channel = self.get_channel(id)
 
         if maybe_channel:
