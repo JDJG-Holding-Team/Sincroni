@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import functools
+import logging
 import os
 import sys
 import traceback
@@ -101,4 +102,5 @@ async def on_ready():
     # will be changed later
 
 
+logging.basicConfig(level=logging.INFO)
 bot.run(os.environ["TOKEN"])
