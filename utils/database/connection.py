@@ -34,7 +34,7 @@ class DatabaseConnection:
         self.__dsn: str = dsn
 
         # channel_id: GlobalChat
-        self._global_chats: Dict[int, GlobalChat]
+        self._global_chats: Dict[int, GlobalChat] = {}
 
     async def create_connection(self) -> None:
         self._pool = await create_pool(self.__dsn, record_class=CustomRecordClass)
