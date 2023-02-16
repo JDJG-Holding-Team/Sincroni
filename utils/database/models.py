@@ -1,9 +1,10 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING, Optional, Union
 
-from discord import Guild, Webhook
+from discord import Guild, Thread, Webhook
+from discord.abc import GuildChannel, PrivateChannel
 
 from utils.extra import ChatType
 
@@ -50,3 +51,7 @@ class GlobalChat:
     @property
     def guild(self) -> Optional[Guild]:
         return self._connection.bot.get_guild(self.server_id)
+
+    @property
+    def channel(self) -> Optional[Union[GuildChannel, Thread, PrivateChannel]]:
+        return self._connection.bot.get_channel(self.channel_id)
