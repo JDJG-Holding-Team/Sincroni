@@ -3,7 +3,7 @@ from __future__ import annotations
 from functools import cached_property
 from typing import TYPE_CHECKING, Optional
 
-from discord import Webhook
+from discord import Guild, Webhook
 
 from utils.extra import ChatType
 
@@ -46,3 +46,7 @@ class GlobalChat:
             self._webhook = self.__try_from_url(self.webhook_url, self._connection.bot.session)
 
         return self._webhook
+
+    @property
+    def guild(self) -> Optional[Guild]:
+        return self._connection.bot.get_guild(self.server_id)
