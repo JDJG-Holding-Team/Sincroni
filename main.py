@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 import functools
 import logging
 import os
@@ -27,11 +28,8 @@ class Sincroni(commands.Bot):
         await self.db.create_connection()
         self.session = ClientSession()
 
-        for cog in EXTENSIONS:
-            try:
-                await self.load_extension(f"{cog}")
-            except commands.errors.ExtensionError:
-                traceback.print_exc()
+        cogs = await asyncio.gather(*[self.load_extension(f"{cog}") for cog in EXTENSIONS], return_exceptions=True)
+        [traceback.print_exception(c) for c in cogs if isinstance(c, commands.errors.ExtensionError)]
 
         await bot.db.fetch_global_chats()
 
