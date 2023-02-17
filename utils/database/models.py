@@ -53,5 +53,8 @@ class GlobalChat:
         return self._connection.bot.get_guild(self.server_id)
 
     @property
-    def channel(self) -> Optional[Union[GuildChannel, Thread, PrivateChannel]]:
+    def channel(self) -> Optional[GuildChannel | PrivateChannel | Thread]:
+        if self.guild:
+            return self.guild.get_channel(self.channel_id)
+
         return self._connection.bot.get_channel(self.channel_id)
