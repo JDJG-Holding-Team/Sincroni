@@ -90,7 +90,7 @@ class Sincroni(commands.Bot):
             return None
 
 
-bot = Sincroni(intents=discord.Intents.all(), command_prefix="s.")
+bot = Sincroni(intents=discord.Intents.all(), command_prefix=commands.when_mentioned_or("s."))
 # figure out a clean way to support prefixes
 
 
