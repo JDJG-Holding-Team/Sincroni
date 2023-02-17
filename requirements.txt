@@ -1,4 +1,4 @@
 asyncpg
 better-profanity
 discord.py
-jishaku
+jishaku @ git+https://github.com/Gorialis/jishaku
