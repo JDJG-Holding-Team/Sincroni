@@ -98,8 +98,9 @@ bot = Sincroni(intents=discord.Intents.all(), command_prefix="s.")
 async def on_ready():
     print("Bot is ready")
     print(bot.user)
+
+    assert bot.user
     print(bot.user.id)
-    # will be changed later
 
 
 logging.basicConfig(level=logging.INFO)
