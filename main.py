@@ -33,6 +33,8 @@ class Sincroni(commands.Bot):
             except commands.errors.ExtensionError:
                 traceback.print_exc()
 
+        await bot.db.fetch_global_chats()
+
     async def close(self) -> None:
         await self.session.close()
         await self.db.close()
