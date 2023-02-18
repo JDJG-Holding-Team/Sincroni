@@ -91,6 +91,8 @@ class Global(commands.Cog):
                     if ctx.channel and isinstance(ctx.channel, discord.Thread):
                         thread = ctx.channel
 
+                    print(thread)
+
                     if not thread:
                         await record.webhook.send(
                             username=f"{ctx.author}",
