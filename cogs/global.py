@@ -36,6 +36,10 @@ class Global(commands.Cog):
         if message.author.bot:
             return message
 
+        if message.type is discord.MessageType.pins_add:
+            print("Pinned message.")
+            return message
+
         channel = self.bot.db.get_global_chat(ctx.channel.id)
 
         if channel:
