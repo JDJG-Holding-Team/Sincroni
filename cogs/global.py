@@ -56,10 +56,10 @@ class Global(commands.Cog):
                 url=ctx.guild.icon.url if ctx.guild.icon else "https://i.imgur.com/3ZUrjUP.png",
             )
 
-            mod_embed.add_field(name="Guild ID", value=f"{ctx.guild.id}")
-            mod_embed.add_field(name="Channel ID", value=f"{ctx.channel.id}")
-            mod_embed.add_field(name="User ID", value=f"{ctx.author.id}")
-            mod_embed.add_field(name="Message ID", value=f"{ctx.message.id}")
+            mod_embed.add_field(name="Guild ID", value=f"{ctx.guild.id}", inline=False)
+            mod_embed.add_field(name="Channel ID", value=f"{ctx.channel.id}", inline=False)
+            mod_embed.add_field(name="User ID", value=f"{ctx.author.id}", inline=False)
+            mod_embed.add_field(name="Message ID", value=f"{ctx.message.id}", inline=False)
 
             args = profanity.censor(args, censor_char="#")
 
