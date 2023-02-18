@@ -41,6 +41,9 @@ class Global(commands.Cog):
 
             args = message.content
 
+            args = await commands.clean_content().convert(ctx, args)
+            args = profanity.censor(args, censor_char="#")
+
             embed = discord.Embed(description=f"{args}", color=0xEB6D15, timestamp=ctx.message.created_at)
             embed.set_author(name=f"{ctx.author}", icon_url=ctx.author.display_avatar.url)
             embed.set_footer(text=f"{ctx.guild}")
