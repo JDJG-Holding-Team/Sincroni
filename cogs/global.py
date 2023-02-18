@@ -23,7 +23,7 @@ class Global(commands.Cog):
     async def on_message(self, message):
         ctx = await self.bot.get_context(message)
 
-        if ctx.prefix or ctx.command:
+        if ctx.prefix:
             return message
 
         if message.author.bot:
