@@ -51,12 +51,15 @@ class Global(commands.Cog):
             args = await commands.clean_content().convert(ctx, args)
 
             mod_embed = discord.Embed(description=f"{args}", color=0xEB6D15, timestamp=ctx.message.created_at)
-            mod_embed.set_footer(
-                text=f"{ctx.guild} \nGuild ID: {ctx.guild.id} \nChannel ID: {ctx.channel.id} \nUser ID: {ctx.author.id}"
-            )
+            mod_embed.set_footer(text=f"{ctx.guild}")
             mod_embed.set_thumbnail(
                 url=ctx.guild.icon.url if ctx.guild.icon else "https://i.imgur.com/3ZUrjUP.png",
             )
+
+            mod_embed.add_field(name="Guild ID", value=f"{ctx.guild.id}")
+            mod_embed.add_field(name="Channel ID", value=f"{ctx.channel.id}")
+            mod_embed.add_field(name="User ID", value=f"{ctx.author.id}")
+            mod_embed.add_field(name="Message ID", value=f"{ctx.message.id}")
 
             args = profanity.censor(args, censor_char="#")
 
