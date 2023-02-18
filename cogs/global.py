@@ -1,4 +1,6 @@
+import functools
 import re
+import os
 
 import discord
 from better_profanity import profanity
@@ -10,6 +12,11 @@ class Global(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
+
+    @functools.cached_property
+    def mod_webhook(self) -> discord.Webhook:
+        webhook_url = os.environ["MOD_WEBHOOK"]
+        return discord.Webhook.from_url(webhook_url, session=self.bot.session)
 
     @commands.hybrid_group(name="global", invoke_without_command=False)
     async def _global(self, ctx):
@@ -42,6 +49,13 @@ class Global(commands.Cog):
             args = message.content
 
             args = await commands.clean_content().convert(ctx, args)
+
+            mod_embed = discord.Embed(description=f"{args}", color=0xEB6D15, timestamp=ctx.message.created_at)
+            mod_embed.set_footer(
+                text=f"{ctx.guild}",
+                icon_url=ctx.guild.icon.url if ctx.guild.icon else "https://i.imgur.com/3ZUrjUP.png",
+            )
+
             args = profanity.censor(args, censor_char="#")
 
             embed = discord.Embed(description=f"{args}", color=0xEB6D15, timestamp=ctx.message.created_at)
@@ -53,6 +67,13 @@ class Global(commands.Cog):
             webhook_embed.set_footer(
                 text=f"{ctx.guild}",
                 icon_url=ctx.guild.icon.url if ctx.guild.icon else "https://i.imgur.com/3ZUrjUP.png",
+            )
+
+            await self.mod_webhook.send(
+                content="Moderator",
+                username=f"{ctx.author}",
+                embed=webhook_embed,
+                avatar_url=ctx.author.display_avatar.url,
             )
 
             for record in records:
