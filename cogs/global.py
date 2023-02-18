@@ -23,10 +23,14 @@ class Global(commands.Cog):
     async def on_message(self, message):
         ctx = await self.bot.get_context(message)
 
+        print("test")
+
         if ctx.prefix:
+            print(f"prefix found {message.content}")
             return message
 
         if message.author.bot:
+            print(f"bot message {message.content}")
             return message
 
         print(message.content)
