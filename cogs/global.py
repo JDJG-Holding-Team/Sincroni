@@ -46,8 +46,20 @@ class Global(commands.Cog):
             embed.set_footer(text=f"{ctx.guild}")
             embed.set_thumbnail(url=ctx.guild.icon.url if ctx.guild.icon else "https://i.imgur.com/3ZUrjUP.png")
 
+            webhook_embed = discord.Embed(description=f"{args}", color=0xEB6D15, timestamp=ctx.message.created_at)
+            webhook_embed.set_footer(
+                text=f"{ctx.guild}",
+                icon_url=ctx.guild.icon.url if ctx.guild.icon else "https://i.imgur.com/3ZUrjUP.png",
+            )
+
             for record in records:
-                if record.channel:
+
+                if record.webhook:
+                    await record.webhook.send(
+                        username=f"{ctx.author}", embed=embed, avatar_url=ctx.author.display_avatar.url
+                    )
+
+                if record.channel and not record.webhook:
                     await record.channel.send(embed=embed)
 
 
