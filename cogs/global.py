@@ -29,6 +29,9 @@ class Global(commands.Cog):
         if message.author.bot:
             return message
 
+        print(message)
+        # debug
+
 
 async def setup(bot):
     await bot.add_cog(Global(bot))
