@@ -72,7 +72,7 @@ class Global(commands.Cog):
             await self.mod_webhook.send(
                 content="Moderator",
                 username=f"{ctx.author}",
-                embed=webhook_embed,
+                embed=mod_embed,
                 avatar_url=ctx.author.display_avatar.url,
             )
 
