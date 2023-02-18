@@ -52,7 +52,7 @@ class Global(commands.Cog):
 
             mod_embed = discord.Embed(description=f"{args}", color=0xEB6D15, timestamp=ctx.message.created_at)
             mod_embed.set_footer(
-                text=f"{ctx.guild}",
+                text=f"{ctx.guild} \nGuild ID: {ctx.guild.id} \nChannel ID: {ctx.channel.id} \nUser ID: {ctx.author.id}",
                 icon_url=ctx.guild.icon.url if ctx.guild.icon else "https://i.imgur.com/3ZUrjUP.png",
             )
 
@@ -70,7 +70,6 @@ class Global(commands.Cog):
             )
 
             await self.mod_webhook.send(
-                content="Moderator",
                 username=f"{ctx.author}",
                 embed=mod_embed,
                 avatar_url=ctx.author.display_avatar.url,
