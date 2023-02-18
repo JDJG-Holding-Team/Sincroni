@@ -1,6 +1,6 @@
 import functools
-import re
 import os
+import re
 
 import discord
 from better_profanity import profanity
