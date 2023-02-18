@@ -1,22 +1,20 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, cast
+from typing import TYPE_CHECKING, Any, Dict, List, Optional
 
-from asyncpg import Record, create_pool
+import asyncpg
 
 from utils.extra import ChatType
 
 from .models import GlobalChat
 
 if TYPE_CHECKING:
-    from asyncpg import Pool
-
     from main import Sincroni
 
     from .types import GlobalChat as GlobalChatPayload
 
 
-class CustomRecordClass(Record):
+class CustomRecordClass(asyncpg.Record):
     def __getattr__(self, name: str) -> Any:
         if name in self.keys():
             return self[name]
@@ -27,7 +25,7 @@ class CustomRecordClass(Record):
 
 
 class DatabaseConnection:
-    _pool: Pool
+    _pool: asyncpg.Pool
 
     def __init__(self, bot: Sincroni, dsn: str) -> None:
         self.bot: Sincroni = bot
@@ -37,7 +35,7 @@ class DatabaseConnection:
         self._global_chats: Dict[int, GlobalChat] = {}
 
     async def create_connection(self) -> None:
-        self._pool = await create_pool(self.__dsn, record_class=CustomRecordClass)
+        self._pool = await asyncpg.create_pool(self.__dsn, record_class=CustomRecordClass)  # type: ignore
 
     async def close(self) -> None:
         if self._pool:
@@ -94,15 +92,31 @@ class DatabaseConnection:
 
         return self.global_chats
 
+    async def fetch_global_chat(self, channel_id: int) -> Optional[GlobalChat]:
+        res = await self.fetchrow(
+            "SELECT * FROM SICRONI_GLOBAL_CHAT WHERE channel_id = $1", channel_id
+        )
+        if res is None:
+            return None
+
+        self._global_chats[channel_id] = GlobalChat(self, res)
+        return self._global_chats[channel_id]
+
     def get_global_chat(self, channel_id: int) -> Optional[GlobalChat]:
         return self._global_chats.get(channel_id)
 
     async def remove_global_chat(self, channel_id: int) -> Optional[GlobalChat]:
-        await self.execute("DELETE FROM SICRONI_GLOBAL_CHAT WHERE channel_id = $1", channel_id)
+        await self.execute(
+            "DELETE FROM SICRONI_GLOBAL_CHAT WHERE channel_id = $1", channel_id
+        )
         return self._global_chats.pop(channel_id, None)
 
     async def add_global_chat(
-        self, server_id: int, channel_id: int, chat_type: ChatType = ChatType.public, webhook_url: Optional[str] = None
+        self,
+        server_id: int,
+        channel_id: int,
+        chat_type: ChatType = ChatType.public,
+        webhook_url: Optional[str] = None,
     ) -> GlobalChat:
         query = "INSERT INTO SICRONI_GLOBAL_CHAT (server_id, channel_id, chat_type, webhook_url) VALUES ($1, $2, $3, $4) RETURNING *"
         res = await self.fetchrow(
