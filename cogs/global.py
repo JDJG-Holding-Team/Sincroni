@@ -91,12 +91,20 @@ class Global(commands.Cog):
                     if ctx.channel and isinstance(ctx.channel, discord.Thread):
                         thread = ctx.channel
 
-                    await record.webhook.send(
-                        username=f"{ctx.author}",
-                        embed=webhook_embed,
-                        avatar_url=ctx.author.display_avatar.url,
-                        thread=thread,
-                    )
+                    if not thread:
+                        await record.webhook.send(
+                            username=f"{ctx.author}",
+                            embed=webhook_embed,
+                            avatar_url=ctx.author.display_avatar.url,
+                        )
+
+                    if thread:
+                        await record.webhook.send(
+                            username=f"{ctx.author}",
+                            embed=webhook_embed,
+                            avatar_url=ctx.author.display_avatar.url,
+                            thread=thread,
+                        )
 
                 if record.channel and not record.webhook:
                     await record.channel.send(embed=embed)
