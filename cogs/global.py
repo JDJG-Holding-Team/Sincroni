@@ -29,8 +29,26 @@ class Global(commands.Cog):
         if message.author.bot:
             return message
 
-        print(message.content)
-        # debug
+        channel = self.bot.db.get_global_chat(ctx.channel.id)
+
+        if channel:
+            records = list(
+                filter(
+                    lambda record: record.chat_type == channel.chat_type and record.channel_id != channel.channel.id,
+                    self.bot.db.global_chats,
+                )
+            )
+
+            args = message.content
+
+            embed = discord.Embed(description=f"{args}", color=0xEB6D15, timestamp=ctx.message.created_at)
+            embed.set_author(name=f"{ctx.author}", icon_url=ctx.author.display_avatar.url)
+            embed.set_footer(text=f"{ctx.guild}")
+            embed.set_thumbnail(url=ctx.guild.icon.url if ctx.guild.icon else "https://i.imgur.com/3ZUrjUP.png")
+
+            for record in records:
+                if record.channel:
+                    await record.channel.send(embed=embed)
 
 
 async def setup(bot):
