@@ -29,7 +29,7 @@ class Global(commands.Cog):
         if message.author.bot:
             return message
 
-        print(message)
+        print(message.content)
         # debug
 
 
