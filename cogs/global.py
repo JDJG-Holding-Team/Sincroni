@@ -88,10 +88,8 @@ class Global(commands.Cog):
                 if record.webhook:
 
                     thread = None
-                    if ctx.channel and isinstance(ctx.channel, discord.Thread):
-                        thread = ctx.channel
-
-                    print(thread)
+                    if record.channel and isinstance(record.channel, discord.Thread):
+                        thread = record.channel
 
                     if not thread:
                         await record.webhook.send(
