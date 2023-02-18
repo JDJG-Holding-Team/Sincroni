@@ -56,7 +56,7 @@ class Global(commands.Cog):
 
                 if record.webhook:
                     await record.webhook.send(
-                        username=f"{ctx.author}", embed=embed, avatar_url=ctx.author.display_avatar.url
+                        username=f"{ctx.author}", embed=webhook_embed, avatar_url=ctx.author.display_avatar.url
                     )
 
                 if record.channel and not record.webhook:
