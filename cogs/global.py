@@ -19,6 +19,16 @@ class Global(commands.Cog):
     async def link(self, ctx):
         await ctx.send("Linking chat.")
 
+    @commands.Cog.listener()
+    async def on_message(self, message):
+        ctx = await self.bot.get_context(message)
+
+        if ctx.valid == False and ctx.prefix != None and ctx.command is None:
+            return message
+
+        if message.author.bot:
+            return message
+
 
 async def setup(bot):
     await bot.add_cog(Global(bot))
