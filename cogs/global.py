@@ -7,6 +7,9 @@ from better_profanity import profanity
 from discord import app_commands
 from discord.ext import commands
 
+from utils import views
+from utils.views import Confirm
+
 from ..utils.extra import ChatType
 
 if TYPE_CHECKING:
@@ -123,6 +126,54 @@ class Global(commands.Cog):
         )
         emb.description = f"Success\n{linked.channel} is now linked as global chat."
         await ctx.send(embed=emb)
+
+    @_global.command(name="unlink")
+    @commands.guild_only()
+    @commands.has_permissions(manage_guilds=True)
+    async def unlink(
+        self,
+        ctx: commands.Context,
+        channel: Union[discord.TextChannel, discord.Thread] = commands.CurrentChannel,
+    ):
+        """Unlink a channel as global chat.
+
+        Parameters
+        ----------
+        channel : Union[discord.TextChannel, discord.Thread]
+            The channel to unlink. Defaults to the current channel.
+        """
+        # silent the type checker
+        if not ctx.guild:
+            return
+
+        emb = self.base_commands_embed.copy()
+        if self.bot.db.get_global_chat(channel.id):
+            emb.description = (
+                f"Error\n{channel.mention} is not linked as a global chat."
+            )
+            return await ctx.send(embed=emb)
+
+        view = await Confirm.prompt(
+            ctx,
+            user_id=ctx.author.id,
+            content=f"Are you sure you want to unlink {channel.mention} as global chat?",
+        )
+        if view.value is None:
+            await view.message.edit(
+                content=f"~~{view.message.content}~~ you didn't respond on time!... not doing anything."
+            )
+            return
+        elif view.value is False:
+            await view.message.edit(
+                content=f"~~{view.message.content}~~ okay, not unlinking {channel.mention} as global chat."
+            )
+            return
+        else:
+            await view.message.edit(
+                content=f"~~{view.message.content}~~ unlinking {channel.mention} as global chat."
+            )
+
+        await self.bot.db.remove_global_chat(channel.id)
 
     @commands.Cog.listener("on_message")
     async def global_chat_handler(self, message: discord.Message):
