@@ -7,14 +7,18 @@ import discord
 from discord import Guild, TextChannel, Thread, Webhook
 from discord.abc import GuildChannel, PrivateChannel
 
-from utils.extra import ChatType
+from utils.extra import ChatType, FilterType
 
 if TYPE_CHECKING:
     from aiohttp import ClientSession
 
     from .connection import DatabaseConnection
+    from .types import Blacklist as BlacklistPayload
     from .types import ChatType as ChatTypePayload
+    from .types import FilterType as FilterTypePayload
     from .types import GlobalChat as GlobalChatPayload
+    from .types import LinkedChannels as LinkedChannelsPayload
+    from .types import Whitelist as WhitelistPayload
 
 
 class GlobalChat:
@@ -86,3 +90,88 @@ class GlobalChat:
             return self.guild.get_channel_or_thread(self.channel_id)  # type: ignore
 
         return self._connection.bot.get_channel(self.channel_id)  # type: ignore
+
+
+class Blacklist:
+    def __init__(
+        self, connection: DatabaseConnection, data: BlacklistPayload, /
+    ) -> None:
+        self._connection: DatabaseConnection = connection
+
+        self.id: int = data["id"]
+        self.server_id: int = data["server_id"]
+        self.entity_id: int = data["entity_id"]
+        self.pub: bool = data["pub"]
+        self.dev: bool = data["dev"]
+        self.private: bool = data["private"]
+        self.raw_blacklist_type: FilterTypePayload = data["blacklist_type"]
+
+    def __repr__(self) -> str:
+        return f"<Blacklist id={self.id} server_id={self.server_id} entity_id={self.entity_id} blacklist_type={self.blacklist_type.name}>"
+
+    @property
+    def blacklist_type(self) -> FilterType:
+        return FilterType(self.raw_blacklist_type)
+
+    @property
+    def server(self) -> Optional[Guild]:
+        """The server that is blacklisted from discord.py cache."""
+        return self._connection.bot.get_guild(self.server_id)
+
+    @property
+    def entity(self) -> Optional[Union[Guild, discord.Member, discord.User]]:
+        """The entity that is blacklisted from discord.py cache."""
+        if self.blacklist_type is FilterType.user:
+            if self.server:
+                return self.server.get_member(self.entity_id)
+            return self._connection.bot.get_user(self.entity_id)
+        elif self.blacklist_type is FilterType.server:
+            return self._connection.bot.get_guild(self.entity_id)
+
+
+class Whitelist:
+    def __init__(
+        self, connection: DatabaseConnection, data: WhitelistPayload, /
+    ) -> None:
+        self._connection: DatabaseConnection = connection
+
+        self.id: int = data["id"]
+        self.entity_id: int = data["entity_id"]
+        self.raw_whitelist_type: FilterTypePayload = data["whitelist_type"]
+
+    def __repr__(self) -> str:
+        return f"<Whitelist id={self.id} entity_id={self.entity_id} whitelist_type={self.whitelist_type.name}>"
+
+    @property
+    def whitelist_type(self) -> FilterType:
+        return FilterType(self.raw_whitelist_type)
+
+    @property
+    def entity(self) -> Optional[Union[Guild, discord.User]]:
+        """The entity that is whitelisted from discord.py cache."""
+        if self.whitelist_type is FilterType.user:
+            return self._connection.bot.get_user(self.entity_id)
+        elif self.whitelist_type is FilterType.server:
+            return self._connection.bot.get_guild(self.entity_id)
+
+
+class LinkedChannel:
+    def __init__(
+        self, connection: DatabaseConnection, data: LinkedChannelsPayload, /
+    ) -> None:
+        self._connection: DatabaseConnection = connection
+
+        self.id: int = data["id"]
+        self.origin_channel_id: int = data["origin_channel_id"]
+        self.destination_channel_id: int = data["destination_channel_id"]
+
+    def __repr__(self) -> str:
+        return f"<LinkedChannel id={self.id} origin_channel_id={self.origin_channel_id} destination_channel_id={self.destination_channel_id}>"
+
+    @property
+    def origin_channel(self) -> Optional[TextChannel | discord.DMChannel | Thread]:
+        return self._connection.bot.get_channel(self.origin_channel_id)  # type: ignore
+
+    @property
+    def destination_channel(self) -> Optional[TextChannel | discord.DMChannel | Thread]:
+        return self._connection.bot.get_channel(self.destination_channel_id)  # type: ignore
