@@ -27,7 +27,7 @@ class Global(commands.Cog):
         channel: Union[discord.TextChannel, discord.Thread],
         member: discord.Member,
     ) -> bool:
-        TO_CHECK = ["send_messages", "read_messages", "manage_webhooks"]
+        TO_CHECK = ["send_messages", "read_messages"]
         perms = channel.permissions_for(member)
         return all(getattr(perms, attr) for attr in TO_CHECK)
 
@@ -72,7 +72,7 @@ class Global(commands.Cog):
             return
 
         emb = self.base_commands_embed.copy()
-        if model := self.bot.db.get_global_chat(channel.id):
+        if self.bot.db.get_global_chat(channel.id):
             emb.description = (
                 f"Error\n{channel.mention} is already linked as a global chat."
             )
@@ -101,7 +101,7 @@ class Global(commands.Cog):
             emb.description = "Error\nYou do not have the required permissions to link {channel.mention} as global chat."
             emb.add_field(
                 name="Required Permissions",
-                value="`Send Messages`, `Read Messages` and `Manage Webhooks`",
+                value="`Send Messages`, `Read Messages`",
             )
             return await ctx.send(embed=emb)
 
@@ -115,14 +115,17 @@ class Global(commands.Cog):
             emb.description = f"Error\nThis guild already has a global chat with the chosen type: `{_type}`. Please choose another type or unlink the existing one."
             return await ctx.send(embed=emb)
 
-        webhook_channel: discord.TextChannel = channel  # type: ignore # no, its not a thread
-        if isinstance(channel, discord.Thread):
-            webhook_channel = channel.parent  # type: ignore # no, its not a forum
+        webhook_url = None
+        if channel.permissions_for(ctx.guild.me).manage_webhooks and channel.permissions_for(ctx.author).manage_webhooks:  # type: ignore # no, ctx.author is not User
+            webhook_channel: discord.TextChannel = channel  # type: ignore # no, its not a thread
+            if isinstance(channel, discord.Thread):
+                webhook_channel = channel.parent  # type: ignore # no, its not a forum
 
-        webhook = await webhook_channel.create_webhook(name=f"{self.bot.user.name} GC")  # type: ignore # bot.user is not None
+                webhook = await webhook_channel.create_webhook(name=f"{self.bot.user.name} GC")  # type: ignore # bot.user is not None
+                webhook_url = webhook.url
 
         linked = await self.bot.db.add_global_chat(
-            ctx.guild.id, channel.id, enum_type, webhook.url
+            ctx.guild.id, channel.id, enum_type, webhook_url
         )
         emb.description = f"Success\n{linked.channel} is now linked as global chat."
         await ctx.send(embed=emb)
