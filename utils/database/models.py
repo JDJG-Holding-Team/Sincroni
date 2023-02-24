@@ -48,9 +48,7 @@ class GlobalChat:
         The representation of the global chat.
     """
 
-    def __init__(
-        self, connection: DatabaseConnection, data: GlobalChatPayload, /
-    ) -> None:
+    def __init__(self, connection: DatabaseConnection, data: GlobalChatPayload, /) -> None:
         self._connection: DatabaseConnection = connection
 
         self.server_id: int = data["server_id"]
@@ -93,9 +91,7 @@ class GlobalChat:
 
 
 class Blacklist:
-    def __init__(
-        self, connection: DatabaseConnection, data: BlacklistPayload, /
-    ) -> None:
+    def __init__(self, connection: DatabaseConnection, data: BlacklistPayload, /) -> None:
         self._connection: DatabaseConnection = connection
 
         self.id: int = data["id"]
@@ -130,9 +126,7 @@ class Blacklist:
 
 
 class Whitelist:
-    def __init__(
-        self, connection: DatabaseConnection, data: WhitelistPayload, /
-    ) -> None:
+    def __init__(self, connection: DatabaseConnection, data: WhitelistPayload, /) -> None:
         self._connection: DatabaseConnection = connection
 
         self.id: int = data["id"]
@@ -156,9 +150,7 @@ class Whitelist:
 
 
 class LinkedChannel:
-    def __init__(
-        self, connection: DatabaseConnection, data: LinkedChannelsPayload, /
-    ) -> None:
+    def __init__(self, connection: DatabaseConnection, data: LinkedChannelsPayload, /) -> None:
         self._connection: DatabaseConnection = connection
 
         self.id: int = data["id"]

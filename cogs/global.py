@@ -73,9 +73,7 @@ class Global(commands.Cog):
 
         emb = self.base_commands_embed.copy()
         if self.bot.db.get_global_chat(channel.id):
-            emb.description = (
-                f"Error\n{channel.mention} is already linked as a global chat."
-            )
+            emb.description = f"Error\n{channel.mention} is already linked as a global chat."
             return await ctx.send(embed=emb)
 
         bot_has_permissions = self._check_channel_permissions(channel, ctx.guild.me)
@@ -89,7 +87,9 @@ class Global(commands.Cog):
             else:
                 who = "You"
 
-            emb.description = f"Error\n{who} don't have the required permissions to link {channel.mention} as global chat."
+            emb.description = (
+                f"Error\n{who} don't have the required permissions to link {channel.mention} as global chat."
+            )
             emb.add_field(
                 name="Required Permissions",
                 value="`Send Messages`, `Read Messages` and `Manage Webhooks`",
@@ -98,7 +98,9 @@ class Global(commands.Cog):
 
         # user perms
         if not self._check_channel_permissions(channel, ctx.author):  # type: ignore # no, ctx.author is not User
-            emb.description = "Error\nYou do not have the required permissions to link {channel.mention} as global chat."
+            emb.description = (
+                "Error\nYou do not have the required permissions to link {channel.mention} as global chat."
+            )
             emb.add_field(
                 name="Required Permissions",
                 value="`Send Messages`, `Read Messages`",
@@ -124,9 +126,7 @@ class Global(commands.Cog):
                 webhook = await webhook_channel.create_webhook(name=f"{self.bot.user.name} GC")  # type: ignore # bot.user is not None
                 webhook_url = webhook.url
 
-        linked = await self.bot.db.add_global_chat(
-            ctx.guild.id, channel.id, enum_type, webhook_url
-        )
+        linked = await self.bot.db.add_global_chat(ctx.guild.id, channel.id, enum_type, webhook_url)
         emb.description = f"Success\n{linked.channel} is now linked as global chat."
         await ctx.send(embed=emb)
 
@@ -151,9 +151,7 @@ class Global(commands.Cog):
 
         emb = self.base_commands_embed.copy()
         if self.bot.db.get_global_chat(channel.id):
-            emb.description = (
-                f"Error\n{channel.mention} is not linked as a global chat."
-            )
+            emb.description = f"Error\n{channel.mention} is not linked as a global chat."
             return await ctx.send(embed=emb)
 
         view = await Confirm.prompt(
@@ -172,9 +170,7 @@ class Global(commands.Cog):
             )
             return
         else:
-            await view.message.edit(
-                content=f"~~{view.message.content}~~ unlinking {channel.mention} as global chat."
-            )
+            await view.message.edit(content=f"~~{view.message.content}~~ unlinking {channel.mention} as global chat.")
 
         await self.bot.db.remove_global_chat(channel.id)
 
@@ -203,18 +199,13 @@ class Global(commands.Cog):
         records = list(
             filter(
                 lambda record: (
-                    record.chat_type is global_chat.chat_type
-                    and record.channel_id != global_chat.channel_id
+                    record.chat_type is global_chat.chat_type and record.channel_id != global_chat.channel_id
                 ),
                 self.bot.db.global_chats,
             )
         )
 
-        guild_icon = (
-            message.guild.icon.url
-            if message.guild.icon
-            else "https://i.imgur.com/3ZUrjUP.png"
-        )
+        guild_icon = message.guild.icon.url if message.guild.icon else "https://i.imgur.com/3ZUrjUP.png"
         message_content = await commands.clean_content().convert(ctx, message.content)
 
         mod_embed = discord.Embed(
@@ -226,9 +217,7 @@ class Global(commands.Cog):
         mod_embed.set_thumbnail(url=guild_icon)
 
         mod_embed.add_field(name="Guild ID", value=str(message.guild.id), inline=False)
-        mod_embed.add_field(
-            name="Channel ID", value=str(message.channel.id), inline=False
-        )
+        mod_embed.add_field(name="Channel ID", value=str(message.channel.id), inline=False)
         mod_embed.add_field(name="User ID", value=str(message.author.id), inline=False)
         mod_embed.add_field(name="Message ID", value=str(message.id), inline=False)
 

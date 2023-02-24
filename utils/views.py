@@ -25,9 +25,7 @@ class Confirm(ui.View):
 
     async def interaction_check(self, interaction: discord.Interaction, /) -> bool:
         if interaction.user.id != self.user_id:
-            await interaction.response.send_message(
-                "This is not for you!", ephemeral=True
-            )
+            await interaction.response.send_message("This is not for you!", ephemeral=True)
             return False
 
         return True

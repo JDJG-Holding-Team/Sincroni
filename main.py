@@ -32,11 +32,7 @@ class Sincroni(commands.Bot):
             *[self.load_extension(f"{cog}") for cog in EXTENSIONS],
             return_exceptions=True,
         )
-        [
-            traceback.print_exception(c)
-            for c in cogs
-            if isinstance(c, commands.errors.ExtensionError)
-        ]
+        [traceback.print_exception(c) for c in cogs if isinstance(c, commands.errors.ExtensionError)]
 
         await bot.db.fetch_global_chats()
 
@@ -67,9 +63,7 @@ class Sincroni(commands.Bot):
         except discord.errors.NotFound:
             return None
 
-    async def try_member(
-        self, guild: discord.Guild, member_id: int, /
-    ) -> Optional[discord.Member]:
+    async def try_member(self, guild: discord.Guild, member_id: int, /) -> Optional[discord.Member]:
         member = guild.get_member(member_id)
 
         if member:
@@ -80,9 +74,7 @@ class Sincroni(commands.Bot):
             except discord.errors.NotFound:
                 return None
 
-    def get_webhook_from_url(
-        self, url: str, session: Optional[ClientSession] = None
-    ) -> Optional[discord.Webhook]:
+    def get_webhook_from_url(self, url: str, session: Optional[ClientSession] = None) -> Optional[discord.Webhook]:
         """Get a webhook from a URL.
 
         Parameters
@@ -109,9 +101,7 @@ class Sincroni(commands.Bot):
 
     async def try_channel(
         self, _id: int, /
-    ) -> Optional[
-        Union[discord.abc.GuildChannel, discord.abc.PrivateChannel, discord.Thread]
-    ]:
+    ) -> Optional[Union[discord.abc.GuildChannel, discord.abc.PrivateChannel, discord.Thread]]:
         """Try to get a channel from the cache or fetch it.
 
         Parameters
@@ -130,9 +120,7 @@ class Sincroni(commands.Bot):
             return None
 
 
-bot = Sincroni(
-    intents=discord.Intents.all(), command_prefix=commands.when_mentioned_or("s.")
-)
+bot = Sincroni(intents=discord.Intents.all(), command_prefix=commands.when_mentioned_or("s."))
 # figure out a clean way to support prefixes
 
 
