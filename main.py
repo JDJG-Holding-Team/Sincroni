@@ -26,6 +26,7 @@ class Sincroni(commands.Bot):
 
     async def setup_hook(self) -> None:
         await self.db.create_connection()
+        self.pool = self.db._pool
         self.session = ClientSession()
 
         cogs = await asyncio.gather(
