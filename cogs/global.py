@@ -10,7 +10,7 @@ from discord.ext import commands
 from utils import views
 from utils.views import Confirm
 
-from ..utils.extra import ChatType
+from utils.extra import ChatType
 
 if TYPE_CHECKING:
     from main import Sincroni
