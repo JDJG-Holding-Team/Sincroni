@@ -46,7 +46,7 @@ class Global(commands.Cog):
 
     @commands.hybrid_group(name="global")
     @commands.guild_only()
-    @commands.has_permissions(mmanage_guild=True)
+    @commands.has_permissions(manage_guild=True)
     async def _global(self, ctx: commands.Context):
         if not ctx.invoked_subcommand:
             await ctx.send_help(ctx.command)
