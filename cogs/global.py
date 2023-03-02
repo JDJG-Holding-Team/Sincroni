@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import functools
 import os
 from typing import TYPE_CHECKING, Literal, Optional, Union
@@ -8,9 +10,8 @@ from discord import app_commands
 from discord.ext import commands
 
 from utils import views
-from utils.views import Confirm
-
 from utils.extra import ChatType
+from utils.views import Confirm
 
 if TYPE_CHECKING:
     from main import Sincroni
