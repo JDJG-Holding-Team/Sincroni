@@ -254,6 +254,9 @@ class Global(commands.Cog):
         for record in records:
             # TODO: handle not found global chat channel
             if not record.channel:
+
+                print(record.channel_id)
+
                 return
 
             if not record.webhook:
