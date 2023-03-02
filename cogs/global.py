@@ -152,7 +152,7 @@ class Global(commands.Cog):
             return
 
         emb = self.base_commands_embed.copy()
-        if self.bot.db.get_global_chat(channel.id):
+        if not self.bot.db.get_global_chat(channel.id):
             emb.description = f"Error\n{channel.mention} is not linked as a global chat."
             return await ctx.send(embed=emb)
 
