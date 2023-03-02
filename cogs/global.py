@@ -125,8 +125,8 @@ class Global(commands.Cog):
             if isinstance(channel, discord.Thread):
                 webhook_channel = channel.parent  # type: ignore # no, its not a forum
 
-                webhook = await webhook_channel.create_webhook(name=f"{self.bot.user.name} GC")  # type: ignore # bot.user is not None
-                webhook_url = webhook.url
+            webhook = await webhook_channel.create_webhook(name=f"{self.bot.user.name} GC")  # type: ignore # bot.user is not None
+            webhook_url = webhook.url
 
         linked = await self.bot.db.add_global_chat(ctx.guild.id, channel.id, enum_type, webhook_url)
         emb.description = f"Success\n{linked.channel} is now linked as global chat."
