@@ -260,7 +260,9 @@ class Global(commands.Cog):
                 try:
                     await record.channel.send(embed=embed)
                 except (discord.HTTPException, discord.Forbidden):
-                    # TODO: handle invalid global chat channel
+
+                    print(record.channel_id)
+
                     pass
                 return
 
