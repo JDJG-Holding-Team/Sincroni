@@ -46,14 +46,14 @@ class Global(commands.Cog):
 
     @commands.hybrid_group(name="global")
     @commands.guild_only()
-    @commands.has_permissions(manage_guilds=True)
+    @commands.has_permissions(mmanage_guild=True)
     async def _global(self, ctx: commands.Context):
         if not ctx.invoked_subcommand:
             await ctx.send_help(ctx.command)
 
     @_global.command(name="link")
     @commands.guild_only()
-    @commands.has_permissions(manage_guilds=True)
+    @commands.has_permissions(manage_guild=True)
     @app_commands.rename(_type="type")
     async def link(
         self,
@@ -133,7 +133,7 @@ class Global(commands.Cog):
 
     @_global.command(name="unlink")
     @commands.guild_only()
-    @commands.has_permissions(manage_guilds=True)
+    @commands.has_permissions(manage_guild=True)
     async def unlink(
         self,
         ctx: commands.Context,
