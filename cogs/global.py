@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import functools
 import os
+import traceback
 from typing import TYPE_CHECKING, Literal, Optional, Union
 
 import discord
@@ -262,9 +263,11 @@ class Global(commands.Cog):
             if not record.webhook:
                 try:
                     await record.channel.send(embed=embed)
-                except (discord.HTTPException, discord.Forbidden):
+                except (discord.HTTPException, discord.Forbidden) as Exception:
 
                     print(record.channel_id)
+
+                    traceback.print_exception(Exception)
 
                     pass
                 return
