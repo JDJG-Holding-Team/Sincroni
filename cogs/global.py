@@ -281,6 +281,10 @@ class Global(commands.Cog):
                 await record.webhook.send(**kwargs)
             except (discord.HTTPException, discord.Forbidden):
                 # TODO: handle invalid global chat webhook
+
+                print(record.channel_id)
+                print(record.webhook_url)
+
                 pass
 
 
