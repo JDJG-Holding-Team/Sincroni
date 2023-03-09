@@ -241,8 +241,16 @@ class Global(commands.Cog):
                     if ref_message.content:
                         ref_content: str = await commands.clean_content().convert(ctx, ref_message.content)
                         ref_content: str = profanity.censor(ref_content, censor_char="#")
+                    elif ref_message.embeds and ref_message.attachments:
+                        ref_content = "\u2022*has embed and attachment*"
+                    elif ref_message.embeds:
+                        ref_content = "\u2022*has embed*"
+                    elif ref_message.attachments:
+                        ref_content = "\u2022*has attachment*"
+                    elif ref_message.stickers:
+                        ref_content = "\u2022*has sticker*"
                     else:
-                        ref_content = "*no content*"
+                        ref_content = "\u2022*empty message*"
                     jump_url: str = f"[Jump to message]({ref_message.jump_url})"
                     embed.add_field(
                         name=f"Reply to {ref_message.author}",
