@@ -255,22 +255,19 @@ class Global(commands.Cog):
         for record in records:
             # TODO: handle not found global chat channel
             if not record.channel:
-
                 print(record.channel_id)
-
-                return
+                continue
 
             if not record.webhook:
                 try:
                     await record.channel.send(embed=embed)
-                except (discord.HTTPException, discord.Forbidden) as Exception:
-
+                except (discord.HTTPException, discord.Forbidden) as err:
                     print(record.channel_id)
-
-                    traceback.print_exception(Exception)
-
+                    traceback.print_exception(err)
                     pass
-                return
+                 
+                continue
+
 
             kwargs = {
                 "username": str(ctx.author),
@@ -282,14 +279,13 @@ class Global(commands.Cog):
 
             try:
                 await record.webhook.send(**kwargs)
-            except (discord.HTTPException, discord.Forbidden) as Exception:
+            except (discord.HTTPException, discord.Forbidden) as err:
                 # TODO: handle invalid global chat webhook
 
                 print(record.channel_id)
                 print(record.webhook_url)
 
-                traceback.print_exception(Exception)
-
+                traceback.print_exception(err)
                 pass
 
 
