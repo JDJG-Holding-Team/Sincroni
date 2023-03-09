@@ -234,6 +234,24 @@ class Global(commands.Cog):
         embed.set_footer(text=ctx.guild)
         embed.set_thumbnail(url=guild_icon)
 
+        if message.type is discord.MessageType.reply and message.reference:
+            try:
+                ref_message: discord.Message | discord.DeletedReferencedMessage | None = message.reference.resolved
+                if isinstance(ref_message, discord.Message):
+                    if ref_message.content:
+                        ref_content: str = await commands.clean_content().convert(ctx, ref_message.content)
+                        ref_content: str = profanity.censor(ref_content, censor_char="#")
+                    else:
+                        ref_content = "*no content*"
+                    jump_url: str = f"[Jump to message]({ref_message.jump_url})"
+                    embed.add_field(
+                        name=f"Reply to {ref_message.author}",
+                        value=f"{ref_content[:500]}{f'...' if len(ref_content) > 500 else ''}\n{jump_url}",
+                        inline=False,
+                    )
+            except (discord.HTTPException, discord.Forbidden):
+                pass
+
         webhook_embed = discord.Embed(
             description=str(message_content),
             color=0xEB6D15,
