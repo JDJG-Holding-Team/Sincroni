@@ -235,30 +235,28 @@ class Global(commands.Cog):
         embed.set_thumbnail(url=guild_icon)
 
         if message.type is discord.MessageType.reply and message.reference:
-            try:
-                ref_message: discord.Message | discord.DeletedReferencedMessage | None = message.reference.resolved
-                if isinstance(ref_message, discord.Message):
-                    if ref_message.content:
-                        ref_content: str = await commands.clean_content().convert(ctx, ref_message.content)
-                        ref_content: str = profanity.censor(ref_content, censor_char="#")
-                    elif ref_message.embeds and ref_message.attachments:
-                        ref_content = "\u2022*has embed and attachment*"
-                    elif ref_message.embeds:
-                        ref_content = "\u2022*has embed*"
-                    elif ref_message.attachments:
-                        ref_content = "\u2022*has attachment*"
-                    elif ref_message.stickers:
-                        ref_content = "\u2022*has sticker*"
-                    else:
-                        ref_content = "\u2022*empty message*"
-                    jump_url: str = f"[Jump to message]({ref_message.jump_url})"
-                    embed.add_field(
-                        name=f"Reply to {ref_message.author}",
-                        value=f"{ref_content[:500]}{f'...' if len(ref_content) > 500 else ''}\n{jump_url}",
-                        inline=False,
-                    )
-            except (discord.HTTPException, discord.Forbidden):
-                pass
+            ref_message: discord.Message | discord.DeletedReferencedMessage | None = message.reference.resolved
+            if isinstance(ref_message, discord.Message):
+                if ref_message.content:
+                    ref_content: str = await commands.clean_content().convert(ctx, ref_message.content)
+                    ref_content: str = profanity.censor(ref_content, censor_char="#")
+                elif ref_message.embeds and ref_message.attachments:
+                    ref_content = "\u2022*has embed and attachment*"
+                elif ref_message.embeds:
+                    ref_content = "\u2022*has embed*"
+                elif ref_message.attachments:
+                    ref_content = "\u2022*has attachment*"
+                elif ref_message.stickers:
+                    ref_content = "\u2022*has sticker*"
+                else:
+                    ref_content = "\u2022*empty message*"
+                jump_url: str = f"[Jump to message]({ref_message.jump_url})"
+                embed.add_field(
+                    name=f"Reply to {ref_message.author}",
+                    value=f"{ref_content[:500]}{f'...' if len(ref_content) > 500 else ''}\n{jump_url}",
+                    inline=False,
+                )
+
 
         webhook_embed = discord.Embed(
             description=str(message_content),
