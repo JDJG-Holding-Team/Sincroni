@@ -275,7 +275,7 @@ class DatabaseConnection:
 
         row: LinkedChannel
         for row in entries:
-            self._linked_channels[row["entity_id"]] = LinkedChannel(self, row)
+            self._linked_channels[row["origin_channel_id"]] = LinkedChannel(self, row)
 
         return self.linked_channels
 
