@@ -148,14 +148,25 @@ class DatabaseConnection:
 
     async def fetch_blacklist(self, _id: int, /) -> Optional[Blacklist]:
         query = "SELECT * FROM SICRONI_BLACKLIST WHERE id = $1"
-        ...
+        
+
+        res = await self.fetchrow(query, _id)
+        if res is None:
+            return None
+        
+        self._blacklists[_id] = Blacklist(self, res)
+        return self._blacklists[_id]
+
 
     def get_blacklist(self, _id: int) -> Optional[Blacklist]:
-        ...
+        return self._blacklists.get(_id)
 
     async def remove_blacklist(self, _id: int, /) -> Optional[Blacklist]:
         query = "DELETE FROM SICRONI_BLACKLIST WHERE id = $1"
-        ...
+        
+
+        await self.execute(query, _id)
+        return self._blacklists.pop(_id, None)
 
     async def add_blacklist(
         self,
@@ -178,7 +189,19 @@ class DatabaseConnection:
             VALUES ($1, $2, $3, $4, $5, $6) 
             RETURNING *
             """
-        ...
+        
+        res = await self.fetchrow(
+            query,
+            server_id,
+            entity_id,
+            pub,
+            dev,
+            private,
+            blacklist_type,
+        )
+
+        self._blacklists[entity_id] = Blacklist(self, res)
+        return self._blacklists[entity_id]
 
     # Whitelist
 
@@ -197,14 +220,25 @@ class DatabaseConnection:
 
     async def fetch_whitelist(self, _id: int, /) -> Optional[Whitelist]:
         query = "SELECT * FROM SICRONI_WHITELIST WHERE id = $1"
-        ...
+        
+        res = await self.fetchrow(query, _id)
+        if res is None:
+            return None
+        
+        self._whitelists[_id] = Whitelist(self, res)
+        return self._whitelists[_id]
+
 
     def get_whitelist(self, _id: int, /) -> Optional[Whitelist]:
-        ...
+        
+        return self._whitelists.get(_id)
 
     async def remove_whitelist(self, _id: int, /) -> Optional[Whitelist]:
         query = "DELETE FROM SICRONI_WHITELIST WHERE id = $1"
-        ...
+
+        await self.execute(query, _id)
+        return self._whitelists.pop(_id, None)
+
 
     async def add_whitelist(
         self,
@@ -219,7 +253,16 @@ class DatabaseConnection:
             VALUES ($1, $2) 
             RETURNING *
             """
-        ...
+        
+        res = await self.fetchrow(
+            query,
+            entity_id,
+            whitelist_type,
+        )
+
+        self._whitelists[entity_id] = Whitelist(self, res)
+        return self._whitelists[entity_id]
+
 
     # Linked Channels
 
@@ -238,14 +281,23 @@ class DatabaseConnection:
 
     async def fetch_linked_channel(self, _id: int, /) -> Optional[LinkedChannel]:
         query = "SELECT * FROM SICRONI_LINKED_CHANNELS WHERE id = $1"
-        ...
+        
+        res = await self.fetchrow(query, _id)
+        if res is None:
+            return None
+        
+        self._linked_channels[_id] = LinkedChannel(self, res)
+        return self._linked_channels[_id]
 
     def get_linked_channel(self, _id: int) -> Optional[LinkedChannel]:
-        ...
+        
+        return self._linked_channels.get(_id)
 
     async def remove_linked_channel(self, _id: int, /) -> Optional[LinkedChannel]:
         query = "DELETE FROM SICRONI_LINKED_CHANNELS WHERE id = $1"
-        ...
+        
+        await self.execute(query, _id)
+        return self._linked_channels.pop(_id, None)
 
     async def add_linked_channel(
         self,
@@ -260,4 +312,12 @@ class DatabaseConnection:
             VALUES ($1, $2) 
             RETURNING *
             """
-        ...
+        
+        res = await self.fetchrow(
+            query,
+            origin_channel_id,
+            destination_channel_id,
+        )
+
+        self._linked_channels[origin_channel_id] = LinkedChannel(self, res)
+        return self._linked_channels[origin_channel_id]
