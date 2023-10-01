@@ -44,6 +44,21 @@ class Global(commands.Cog):
     def mod_webhook(self) -> Optional[discord.Webhook]:
         webhook_url = os.environ["MOD_WEBHOOK"]
         return self.bot.get_webhook_from_url(webhook_url)
+    
+    @commands.hybrid_command(name="source")
+    async def source(self, ctx: commands.Context):
+
+        github_url = "https://github.com/JDJG-Holding-Team/Sincroni"
+
+        embed = discord.Embed(
+            title="Github link", description=f"{github_url}", color=15428885, timestamp=ctx.message.created_at
+        )
+
+        embed.set_footer(
+            text="This Bot's License is MIT, you must credit if you use my code, but please just make your own, if you don't know something works ask me, or try to learn how mine works."
+        )
+
+        await ctx.send(embed=embed)
 
     @commands.hybrid_group(name="global")
     @commands.guild_only()
