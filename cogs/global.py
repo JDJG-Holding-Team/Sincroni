@@ -44,7 +44,7 @@ class Global(commands.Cog):
     def mod_webhook(self) -> Optional[discord.Webhook]:
         webhook_url = os.environ["MOD_WEBHOOK"]
         return self.bot.get_webhook_from_url(webhook_url)
-    
+
     @commands.hybrid_command(name="source")
     async def source(self, ctx: commands.Context):
 
@@ -280,9 +280,8 @@ class Global(commands.Cog):
                     print(record.channel_id)
                     traceback.print_exception(err)
                     pass
-                 
-                continue
 
+                continue
 
             kwargs = {
                 "username": str(ctx.author),
