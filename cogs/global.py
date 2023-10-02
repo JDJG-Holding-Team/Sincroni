@@ -267,6 +267,10 @@ class Global(commands.Cog):
                 # TODO: handle invalid mod webhook
                 pass
 
+        # if user is blacklisted send them to a new blacklisted webhook, this is way we see what they send.
+        # this may not be needed though
+        # also blacklisting would return around here, I would think
+
         for record in records:
             # TODO: handle not found global chat channel
             if not record.channel:
