@@ -6,7 +6,7 @@ if TYPE_CHECKING:
     from main import Sincroni
 
 from discord.ext import commands
-
+import discord
 
 class Listener(commands.Cog):
     "Listener Cog for events"
