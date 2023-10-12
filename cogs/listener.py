@@ -7,6 +7,7 @@ if TYPE_CHECKING:
 
 from discord.ext import commands
 import discord
+import random
 
 class Listener(commands.Cog):
     "Listener Cog for events"
