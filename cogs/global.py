@@ -240,6 +240,8 @@ class Global(commands.Cog):
 
         message_content = profanity.censor(message_content, censor_char="#")
 
+        # censor links
+
         embed = discord.Embed(
             description=str(message_content),
             color=0xEB6D15,
