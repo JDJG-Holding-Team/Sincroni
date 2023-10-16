@@ -196,7 +196,7 @@ class Global(commands.Cog):
         await self.bot.db.remove_global_chat(channel.id)
 
 
-    def replace_string(match):
+    def replace_string(self, match):
         if match.group(0):
             return " :lock: [link redacted] :lock: "
 
