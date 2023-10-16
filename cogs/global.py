@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import functools
 import os
+import re
 import traceback
 from typing import TYPE_CHECKING, Literal, Optional, Union
 
@@ -23,6 +24,9 @@ class Global(commands.Cog):
 
     def __init__(self, bot: Sincroni):
         self.bot: Sincroni = bot
+
+        self.link_regex = re.compile(r"http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*(),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+")
+        self.discord_regex = re.compile(r"(?:https?://)?discord(?:.gg|(?:app)?.com/invite)/[^/]+")
 
     @staticmethod
     def _check_channel_permissions(
@@ -191,6 +195,21 @@ class Global(commands.Cog):
 
         await self.bot.db.remove_global_chat(channel.id)
 
+
+    def replace_string(match):
+        if match.group(0):
+            return " :lock: [link redacted] :lock: "
+
+        else:
+            return match.string
+
+    def censor_links(self, string):
+
+        changed_string = re.sub(self.discord_regex, self.replace_string, string)
+        new_string = re.sub(self.link_regex, changed_string, "https://google.com")
+
+        return new_string
+
     @commands.Cog.listener("on_message")
     async def global_chat_handler(self, message: discord.Message):
         supported_message_types = (
@@ -240,7 +259,7 @@ class Global(commands.Cog):
 
         message_content = profanity.censor(message_content, censor_char="#")
 
-        # censor links
+        message_content = self.censor_links(message_content)
 
         embed = discord.Embed(
             description=str(message_content),
