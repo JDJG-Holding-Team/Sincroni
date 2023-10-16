@@ -206,7 +206,7 @@ class Global(commands.Cog):
     def censor_links(self, string):
 
         changed_string = re.sub(self.discord_regex, self.replace_string, string)
-        new_string = re.sub(self.link_regex, changed_string, "https://google.com")
+        new_string = re.sub(self.link_regex, self.replace_string, string)
 
         return new_string
 
