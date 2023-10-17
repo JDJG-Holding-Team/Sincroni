@@ -197,8 +197,8 @@ class Global(commands.Cog):
 
     def censor_links(self, string):
 
-        changed_string = self.discord_regex.sub(":lock: [link redacted] :lock: ", string)
-        new_string = self.link_regex.sub(":lock: [discord invite redacted] :lock: ", changed_string)
+        changed_string = self.discord_regex.sub(":lock: [discord invite redacted] :lock: ", string)
+        new_string = self.link_regex.sub(":lock: [link redacted] :lock: ", changed_string)
 
         return new_string
 
