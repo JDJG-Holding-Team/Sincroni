@@ -5,9 +5,11 @@ from typing import TYPE_CHECKING, Literal, Optional, Union
 if TYPE_CHECKING:
     from main import Sincroni
 
-from discord.ext import commands
-import discord
 import random
+
+import discord
+from discord.ext import commands
+
 
 class Listener(commands.Cog):
     "Listener Cog for events"
