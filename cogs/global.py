@@ -26,7 +26,7 @@ class Global(commands.Cog):
         self.bot: Sincroni = bot
 
         self.link_regex = re.compile(r"http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*(),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+")
-        self.discord_regex = re.compile(r"(?:https?://)?discord(?:.gg|(?:app)?.com/invite)/[^/]+")
+        self.discord_regex = re.compile(r"(?:https?://)?discord(?:.gg|(?:app)?.com/invite)/[^/\s]+")
 
     @staticmethod
     def _check_channel_permissions(
