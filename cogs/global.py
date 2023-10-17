@@ -195,18 +195,10 @@ class Global(commands.Cog):
 
         await self.bot.db.remove_global_chat(channel.id)
 
-
-    def replace_string(self, match):
-        if match.group(0):
-            return " :lock: [link redacted] :lock: "
-
-        else:
-            return match.string
-
     def censor_links(self, string):
 
-        changed_string = re.sub(self.discord_regex, self.replace_string, string)
-        new_string = re.sub(self.link_regex, self.replace_string, changed_string)
+        changed_string = self.discord_regex.sub(:lock: [link redacted] :lock: " string)
+        new_string = self.link_regex.sub(":lock: [discord invite redacted] :lock: ", changed_string)
 
         return new_string
 
