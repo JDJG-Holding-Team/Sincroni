@@ -14,13 +14,15 @@ CREATE TABLE IF NOT EXISTS SINCRONI_BLACKLIST(
    pub BOOLEAN DEFAULT FALSE,
    dev BOOLEAN DEFAULT FALSE,
    private BOOLEAN DEFAULT FALSE,
-   blacklist_type SMALLINT DEFAULT 0 
+   blacklist_type SMALLINT DEFAULT 0,
+   reason TEXT DEFAULT "No reason provided"
 )
 
 CREATE TABLE IF NOT EXISTS SINCRONI_WHITELIST(
   id SERIAL NOT NULL,
   entity_id BIGINT NOT NULL,
-  whitelist_type smallint DEFAULT 0
+  whitelist_type smallint DEFAULT 0,
+  reason TEXT DEFAULT "No reason provided"
 )
 
 
