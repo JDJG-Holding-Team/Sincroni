@@ -201,7 +201,7 @@ class Global(commands.Cog):
         ctx: Commands.Context
     ):
         
-        embed = discord.Embed(title="Rules", description=""" 
+        embed = discord.Embed(title="Rules", description="""
         1. No advertising is allowed in the global chat. 
         2. Please refrain from sharing NSFW content in the global chat.
         3. Do not share malicious links in the global chat.
