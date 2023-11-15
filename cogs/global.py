@@ -195,7 +195,7 @@ class Global(commands.Cog):
 
         await self.bot.db.remove_global_chat(channel.id)
 
-    @_global.command(name="rules")
+    @commands.hybrid_group(name="rules")
     async def rules(
         self, 
         ctx: Commands.Context
