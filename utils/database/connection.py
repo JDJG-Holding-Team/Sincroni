@@ -138,7 +138,7 @@ class DatabaseConnection:
         return list(self._blacklists.values())
 
     async def fetch_blacklists(self) -> List[Blacklist]:
-        entries = await self.fetch("SELECT * FROM SICRONI_BLACKLIST")
+        entries = await self.fetch("SELECT * FROM SINCRONI_BLACKLIST")
 
         row: Blacklist
         for row in entries:
@@ -147,7 +147,7 @@ class DatabaseConnection:
         return self.blacklists
 
     async def fetch_blacklist(self, entity_id: int, /) -> Optional[Blacklist]:
-        query = "SELECT * FROM SICRONI_BLACKLIST WHERE entity_id = $1"
+        query = "SELECT * FROM SINCRONI_BLACKLIST WHERE entity_id = $1"
 
         res = await self.fetchrow(query, entity_id)
         if res is None:
@@ -160,7 +160,7 @@ class DatabaseConnection:
         return self._blacklists.get(entity_id)
 
     async def remove_blacklist(self, entity_id: int, /) -> Optional[Blacklist]:
-        query = "DELETE FROM SICRONI_BLACKLIST WHERE entity_id = $1"
+        query = "DELETE FROM SINCRONI_BLACKLIST WHERE entity_id = $1"
 
         await self.execute(query, entity_id)
         return self._blacklists.pop(entity_id, None)
@@ -176,7 +176,7 @@ class DatabaseConnection:
         reason : Optional[str] = None,
     ) -> Blacklist:
         query = """
-            INSERT INTO SICRONI_BLACKLIST (
+            INSERT INTO SINCRONI_BLACKLIST (
                 server_id,
                 entity_id,
                 pub,
