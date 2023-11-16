@@ -126,6 +126,12 @@ class Blacklist:
             return self._connection.bot.get_guild(self.entity_id)
 
 
+    @property
+    def _global (self) -> bool:
+        """Whether or not the blacklist is enforced at a server or blacklist level."""
+        return bool(self.server_id)
+
+
 class Whitelist:
     def __init__(self, connection: DatabaseConnection, data: WhitelistPayload, /) -> None:
         self._connection: DatabaseConnection = connection
