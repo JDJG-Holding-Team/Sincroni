@@ -34,7 +34,7 @@ class DatabaseConnection:
         # channel_id: GlobalChat
         self._global_chats: Dict[int, GlobalChat] = {}
         # entity_id: Blacklist
-        self._blacklists: Dict[int, Blacklist] = {}
+        self._blacklists: Dict[tuple, Blacklist] = {}
         # entity_id: Whitelist
         self._whitelists: Dict[int, Whitelist] = {}
         # origin_channel_id: LinkedChannels
@@ -142,28 +142,28 @@ class DatabaseConnection:
 
         row: Blacklist
         for row in entries:
-            self._blacklists[row["entity_id"]] = Blacklist(self, row)
+            self._blacklists[(row["server_id"], row["entity_id"], row["pub"], row["dev"], row["private"])] = Blacklist(self, row)
 
         return self.blacklists
 
-    async def fetch_blacklist(self, entity_id: int, /) -> Optional[Blacklist]:
-        query = "SELECT * FROM SINCRONI_BLACKLIST WHERE entity_id = $1"
+    async def fetch_blacklist(self, server_id : int, entity_id: int, pub : bool = False, dev : bool = False, private : bool = False, /) -> Optional[Blacklist]:
+        query = "SELECT * FROM SINCRONI_BLACKLIST WHERE entity_id = $1 AND server_id = $2 AND pub = $3 AND dev = $4 AND private = $5"
 
-        res = await self.fetchrow(query, entity_id)
+        res = await self.fetchrow(query, entity_id, server_id, pub, dev, private)
         if res is None:
             return None
 
-        self._blacklists[entity_id] = Blacklist(self, res)
-        return self._blacklists[entity_id]
+        self._blacklists[(server_id, entity_id, pub, dev, private)] = Blacklist(self, res)
+        return self._blacklists[(server_id, entity_id, pub, dev, private)]
 
-    def get_blacklist(self, entity_id: int) -> Optional[Blacklist]:
-        return self._blacklists.get(entity_id)
+    def get_blacklist(self, server_id : int, entity_id: int, pub : bool = False, dev : bool = False, private : bool = False) -> Optional[Blacklist]:
+        return self._blacklists.get((server_id, entity_id, pub, dev, private))
 
-    async def remove_blacklist(self, entity_id: int, /) -> Optional[Blacklist]:
-        query = "DELETE FROM SINCRONI_BLACKLIST WHERE entity_id = $1"
+    async def remove_blacklist(self, server_id, entity_id: int, pub : bool = False, dev : bool = False, private : bool= False, /) -> Optional[Blacklist]:
+        query = "DELETE FROM SINCRONI_BLACKLIST WHERE entity_id = $1 AND server_id = $2 and pub = $3 and dev = $4 and private = $5"
 
-        await self.execute(query, entity_id)
-        return self._blacklists.pop(entity_id, None)
+        await self.execute(query, entity_id, server_id, pub, dev, private)
+        return self._blacklists.pop((server_id, entity_id, pub, dev, private)), None)
 
     async def add_blacklist(
         self,
@@ -200,8 +200,8 @@ class DatabaseConnection:
             reason
         )
 
-        self._blacklists[entity_id] = Blacklist(self, res)
-        return self._blacklists[entity_id]
+        self._blacklists[(server_id, entity_id, pub, dev, private)] = Blacklist(self, res)
+        return self._blacklists[(server_id, entity_id, pub, dev, private)]
 
     # Whitelist
 
