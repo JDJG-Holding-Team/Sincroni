@@ -21,12 +21,14 @@ class Blacklist(TypedDict):
     dev: bool  # BOOLEAN, DEFAULT FALSE
     private: bool  # BOOLEAN, DEFAULT FALSE
     blacklist_type: FilterType  # SMALLINT, DEFAULT 0
+    reason : str  # TEXT DEFAULT "No reason provided"
 
 
 class Whitelist(TypedDict):
     id: int  # serial, NOT NULL
     entity_id: int  # BIGINT, NOT NULL
     whitelist_type: FilterType  # SMALLINT, DEFAULT 0
+    reason: str # TEXT DEFAULT "No reason provided"
 
 
 class LinkedChannels(TypedDict):

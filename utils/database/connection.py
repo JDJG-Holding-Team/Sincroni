@@ -173,6 +173,7 @@ class DatabaseConnection:
         dev: bool = False,
         private: bool = False,
         blacklist_type: FilterType = FilterType.user,
+        reason : Optional[str] = None,
     ) -> Blacklist:
         query = """
             INSERT INTO SICRONI_BLACKLIST (
@@ -182,8 +183,9 @@ class DatabaseConnection:
                 dev,
                 private,
                 blacklist_type
+                reason
             ) 
-            VALUES ($1, $2, $3, $4, $5, $6) 
+            VALUES ($1, $2, $3, $4, $5, $6, $7) 
             RETURNING *
             """
 
@@ -195,6 +197,7 @@ class DatabaseConnection:
             dev,
             private,
             blacklist_type,
+            reason
         )
 
         self._blacklists[entity_id] = Blacklist(self, res)
@@ -239,13 +242,15 @@ class DatabaseConnection:
         self,
         entity_id: int,
         whitelist_type: FilterType = FilterType.user,
+        reason : Optional[str] = None,
     ) -> Whitelist:
         query = """
             INSERT INTO SICRONI_WHITELIST (
                 entity_id,
                 whitelist_type
+                reason
             ) 
-            VALUES ($1, $2) 
+            VALUES ($1, $2, $3) 
             RETURNING *
             """
 
@@ -253,6 +258,7 @@ class DatabaseConnection:
             query,
             entity_id,
             whitelist_type,
+            reason,
         )
 
         self._whitelists[entity_id] = Whitelist(self, res)

@@ -101,6 +101,7 @@ class Blacklist:
         self.dev: bool = data["dev"]
         self.private: bool = data["private"]
         self.raw_blacklist_type: FilterTypePayload = data["blacklist_type"]
+        self.reason : str = data["reason"]
 
     def __repr__(self) -> str:
         return f"<Blacklist id={self.id} server_id={self.server_id} entity_id={self.entity_id} blacklist_type={self.blacklist_type.name}>"
@@ -132,6 +133,7 @@ class Whitelist:
         self.id: int = data["id"]
         self.entity_id: int = data["entity_id"]
         self.raw_whitelist_type: FilterTypePayload = data["whitelist_type"]
+        self.reason : str = data["reason"]
 
     def __repr__(self) -> str:
         return f"<Whitelist id={self.id} entity_id={self.entity_id} whitelist_type={self.whitelist_type.name}>"
