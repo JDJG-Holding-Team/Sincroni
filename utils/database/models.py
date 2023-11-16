@@ -112,7 +112,7 @@ class Blacklist:
 
     @property
     def server(self) -> Optional[Guild]:
-        """The server that is blacklisted from discord.py cache."""
+        """The server that is blacklisting the entity from discord.py cache."""
         return self._connection.bot.get_guild(self.server_id)
 
     @property
