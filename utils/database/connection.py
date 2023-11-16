@@ -182,7 +182,7 @@ class DatabaseConnection:
                 pub,
                 dev,
                 private,
-                blacklist_type
+                blacklist_type,
                 reason
             ) 
             VALUES ($1, $2, $3, $4, $5, $6, $7) 
@@ -247,7 +247,7 @@ class DatabaseConnection:
         query = """
             INSERT INTO SICRONI_WHITELIST (
                 entity_id,
-                whitelist_type
+                whitelist_type,
                 reason
             ) 
             VALUES ($1, $2, $3) 
