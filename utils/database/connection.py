@@ -90,7 +90,7 @@ class DatabaseConnection:
         return list(self._global_chats.values())
 
     async def fetch_global_chats(self) -> List[GlobalChat]:
-        entries = await self.fetch("SELECT * FROM SICRONI_GLOBAL_CHAT")
+        entries = await self.fetch("SELECT * FROM SINCRONI_GLOBAL_CHAT")
 
         row: GlobalChatPayload
         for row in entries:
@@ -99,7 +99,7 @@ class DatabaseConnection:
         return self.global_chats
 
     async def fetch_global_chat(self, channel_id: int) -> Optional[GlobalChat]:
-        res = await self.fetchrow("SELECT * FROM SICRONI_GLOBAL_CHAT WHERE channel_id = $1", channel_id)
+        res = await self.fetchrow("SELECT * FROM SINCRONI_GLOBAL_CHAT WHERE channel_id = $1", channel_id)
         if res is None:
             return None
 
@@ -110,7 +110,7 @@ class DatabaseConnection:
         return self._global_chats.get(channel_id)
 
     async def remove_global_chat(self, channel_id: int) -> Optional[GlobalChat]:
-        await self.execute("DELETE FROM SICRONI_GLOBAL_CHAT WHERE channel_id = $1", channel_id)
+        await self.execute("DELETE FROM SINCRONI_GLOBAL_CHAT WHERE channel_id = $1", channel_id)
         return self._global_chats.pop(channel_id, None)
 
     async def add_global_chat(
@@ -120,7 +120,7 @@ class DatabaseConnection:
         chat_type: ChatType = ChatType.public,
         webhook_url: Optional[str] = None,
     ) -> GlobalChat:
-        query = "INSERT INTO SICRONI_GLOBAL_CHAT (server_id, channel_id, chat_type, webhook_url) VALUES ($1, $2, $3, $4) RETURNING *"
+        query = "INSERT INTO SINCRONI_GLOBAL_CHAT (server_id, channel_id, chat_type, webhook_url) VALUES ($1, $2, $3, $4) RETURNING *"
         res = await self.fetchrow(
             query,
             server_id,
@@ -210,7 +210,7 @@ class DatabaseConnection:
         return list(self._whitelists.values())
 
     async def fetch_whitelists(self) -> List[Whitelist]:
-        entries = await self.fetch("SELECT * FROM SICRONI_WHITELIST")
+        entries = await self.fetch("SELECT * FROM SINCRONI_WHITELIST")
 
         row: Whitelist
         for row in entries:
@@ -219,7 +219,7 @@ class DatabaseConnection:
         return self.whitelists
 
     async def fetch_whitelist(self, entity_id: int, /) -> Optional[Whitelist]:
-        query = "SELECT * FROM SICRONI_WHITELIST WHERE entity_id = $1"
+        query = "SELECT * FROM SINCRONI_WHITELIST WHERE entity_id = $1"
 
         res = await self.fetchrow(query, entity_id)
         if res is None:
@@ -233,7 +233,7 @@ class DatabaseConnection:
         return self._whitelists.get(entity_id)
 
     async def remove_whitelist(self, entity_id: int, /) -> Optional[Whitelist]:
-        query = "DELETE FROM SICRONI_WHITELIST WHERE entity_id = $1"
+        query = "DELETE FROM SINCRONI_WHITELIST WHERE entity_id = $1"
 
         await self.execute(query, entity_id)
         return self._whitelists.pop(entity_id, None)
@@ -245,7 +245,7 @@ class DatabaseConnection:
         reason : Optional[str] = None,
     ) -> Whitelist:
         query = """
-            INSERT INTO SICRONI_WHITELIST (
+            INSERT INTO SINCRONI_WHITELIST (
                 entity_id,
                 whitelist_type,
                 reason
@@ -271,7 +271,7 @@ class DatabaseConnection:
         return list(self._linked_channels.values())
 
     async def fetch_linked_channels(self) -> List[LinkedChannel]:
-        entries = await self.fetch("SELECT * FROM SICRONI_LINKED_CHANNELS")
+        entries = await self.fetch("SELECT * FROM SINCRONI_LINKED_CHANNELS")
 
         row: LinkedChannel
         for row in entries:
@@ -280,7 +280,7 @@ class DatabaseConnection:
         return self.linked_channels
 
     async def fetch_linked_channel(self, origin_channel_id, /) -> Optional[LinkedChannel]:
-        query = "SELECT * FROM SICRONI_LINKED_CHANNELS WHERE origin_channel_id = $1"
+        query = "SELECT * FROM SINCRONI_LINKED_CHANNELS WHERE origin_channel_id = $1"
 
         res = await self.fetchrow(query, origin_channel_id)
         if res is None:
@@ -294,7 +294,7 @@ class DatabaseConnection:
         return self._linked_channels.get(origin_channel_id)
 
     async def remove_linked_channel(self, origin_channel_id: int, /) -> Optional[LinkedChannel]:
-        query = "DELETE FROM SICRONI_LINKED_CHANNELS WHERE origin_channel_id = $1"
+        query = "DELETE FROM SINCRONI_LINKED_CHANNELS WHERE origin_channel_id = $1"
 
         await self.execute(query, origin_channel_id)
         return self._linked_channels.pop(origin_channel_id, None)
@@ -305,7 +305,7 @@ class DatabaseConnection:
         destination_channel_id: int,
     ) -> LinkedChannel:
         query = """
-            INSERT INTO SICRONI_LINKED_CHANNELS (
+            INSERT INTO SINCRONI_LINKED_CHANNELS (
                 origin_channel_id,
                 destination_channel_id
             ) 

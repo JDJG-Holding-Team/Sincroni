@@ -28,18 +28,6 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
--- Name: sicroni_global_chat; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.sicroni_global_chat (
-    server_id bigint NOT NULL,
-    channel_id bigint NOT NULL,
-    webhook_url text,
-    chat_type smallint DEFAULT 0 NOT NULL
-);
-
-
---
 -- Name: sincroni_blacklist; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -73,6 +61,18 @@ CREATE SEQUENCE public.sincroni_blacklist_id_seq
 --
 
 ALTER SEQUENCE public.sincroni_blacklist_id_seq OWNED BY public.sincroni_blacklist.id;
+
+
+--
+-- Name: sincroni_global_chat; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.sincroni_global_chat (
+    server_id bigint NOT NULL,
+    channel_id bigint NOT NULL,
+    webhook_url text,
+    chat_type smallint DEFAULT 0 NOT NULL
+);
 
 
 --
@@ -160,18 +160,18 @@ ALTER TABLE ONLY public.sincroni_whitelist ALTER COLUMN id SET DEFAULT nextval('
 
 
 --
--- Name: sicroni_global_chat sicroni_global_chat_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: sincroni_global_chat sicroni_global_chat_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.sicroni_global_chat
+ALTER TABLE ONLY public.sincroni_global_chat
     ADD CONSTRAINT sicroni_global_chat_pkey PRIMARY KEY (server_id, chat_type);
 
 
 --
--- Name: sicroni_global_chat sicroni_global_chat_server_id_channel_id_key; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: sincroni_global_chat sicroni_global_chat_server_id_channel_id_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.sicroni_global_chat
+ALTER TABLE ONLY public.sincroni_global_chat
     ADD CONSTRAINT sicroni_global_chat_server_id_channel_id_key UNIQUE (server_id, channel_id);
 
 
