@@ -307,6 +307,8 @@ class Global(commands.Cog):
         # this may not be needed though
         # also blacklisting would return around here, I would think
 
+        # get ready to test the data now, I have ported over the old blacklisted users.
+
         for record in records:
             # TODO: handle not found global chat channel
             if not record.channel:
