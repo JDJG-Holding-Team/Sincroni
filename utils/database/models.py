@@ -125,6 +125,16 @@ class Blacklist:
         elif self.blacklist_type is FilterType.server:
             return self._connection.bot.get_guild(self.entity_id)
 
+    
+    def public_check(self, chat_type : ChatType) -> bool:
+        return raw_chat_type == 0 and self.pub
+
+    def developer_check(self, chat_type: ChatType) -> bool:
+        return int(chat_type) == 1 and self.dev
+    
+    def private_check(self, chat_type : ChatType) -> bool:
+        return int(chat_type) == 2 and self.private
+
 
     @property
     def _global(self) -> bool:
