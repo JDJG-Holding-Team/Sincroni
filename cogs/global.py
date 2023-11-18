@@ -259,6 +259,7 @@ class Global(commands.Cog):
         )
 
         # this new filter seems to work fine.
+        # maybe make this records filter into something that can handle pub, developer, private types ie detect the chat_type and only grab blacklist stuff from that sort of thing.
 
         guild_icon = message.guild.icon.url if message.guild.icon else "https://i.imgur.com/3ZUrjUP.png"
         message_content = await commands.clean_content().convert(ctx, message.content)
