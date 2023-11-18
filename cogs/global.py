@@ -324,6 +324,20 @@ class Global(commands.Cog):
                 # TODO: handle invalid mod webhook
                 pass
 
+        blacklisted_guilds = list(
+            filter(
+                lambda record: (
+                    record.server_id == message.guild.id
+                ),
+                self.bot.db.blacklists,
+            )
+        )
+
+
+        bad_records = [record for record in records if record.server_id in blacklisted_guilds]
+
+        print(bad_records)
+
         for record in records:
             # TODO: handle not found global chat channel
             if not record.channel:
