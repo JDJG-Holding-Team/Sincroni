@@ -162,7 +162,7 @@ class DatabaseConnection:
     async def remove_blacklist(self, server_id, entity_id: int, /) -> Optional[Blacklist]:
         query = "DELETE FROM SINCRONI_BLACKLIST WHERE entity_id = $1 AND server_id = $2"
 
-        await self.execute(query, entity_id, server_id, pub, dev, private)
+        await self.execute(query, entity_id, server_id)
 
         return self._blacklists.pop((server_id, entity_id), None)
 
