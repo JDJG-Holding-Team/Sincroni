@@ -292,9 +292,13 @@ class Global(commands.Cog):
         )
         webhook_embed.set_footer(text=str(ctx.guild), icon_url=guild_icon)
 
-        blacklisted_user = self.bot.db.get_blacklist(0, message.author.id)
+        global_blacklisted_user = self.bot.db.get_blacklist(0, message.author.id)
         blacklisted_guild = self.bot.db.get_blacklist(0, ctx.guild.id)
-        if blacklisted_user or blacklisted_guild:
+        blacklisted_user = self.bot.db.get_blacklist(ctx.guild.id, message.author.id)
+
+        # you would not check if the current guild is blacklisted as that is the origin.
+
+        if global_blacklisted_user or blacklisted_guild or blacklisted_user:
             
             if self.mod_webhook:
                 try:
