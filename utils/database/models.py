@@ -129,7 +129,7 @@ class Blacklist:
     @property
     def _global(self) -> bool:
         """Whether or not the blacklist is enforced at a server or blacklist level."""
-        return bool(self.server_id)
+        return not bool(self.server_id)
 
 
 class Whitelist:
