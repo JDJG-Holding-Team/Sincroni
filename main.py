@@ -36,6 +36,7 @@ class Sincroni(commands.Bot):
         [traceback.print_exception(c) for c in cogs if isinstance(c, commands.errors.ExtensionError)]
 
         await bot.db.fetch_global_chats()
+        await bot.db.fetch_blacklists()
 
     async def close(self) -> None:
         await self.session.close()
