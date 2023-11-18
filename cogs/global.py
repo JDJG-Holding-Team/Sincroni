@@ -292,6 +292,18 @@ class Global(commands.Cog):
         )
         webhook_embed.set_footer(text=str(ctx.guild), icon_url=guild_icon)
 
+        if bot.db.get_blacklist(message.author.id, 0):
+            if self.mod_webhook:
+                try:
+                    await self.mod_webhook.send(
+                        username=str(ctx.author),
+                        embed=mod_embed,
+                        avatar_url="https://i.imgur.com/qyk9vQq.png",
+                    )
+                except (discord.HTTPException, discord.Forbidden):
+                    # TODO: handle invalid mod webhook
+                    pass
+
         if self.mod_webhook:
             try:
                 await self.mod_webhook.send(
@@ -302,12 +314,6 @@ class Global(commands.Cog):
             except (discord.HTTPException, discord.Forbidden):
                 # TODO: handle invalid mod webhook
                 pass
-
-        # if user is blacklisted send them to a new blacklisted webhook, this is way we see what they send.
-        # this may not be needed though
-        # also blacklisting would return around here, I would think
-
-        # get ready to test the data now, I have ported over the old blacklisted users.
 
         for record in records:
             # TODO: handle not found global chat channel
