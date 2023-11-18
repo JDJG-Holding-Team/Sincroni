@@ -332,8 +332,9 @@ class Global(commands.Cog):
 
             blacklisted_user = self.bot.db.get_blacklist(record.server_id, message.author.id)
             blacklisted_guild = self.bot.db.get_blacklist(record.server_id, message.guild.id)
-            target_blacklisted_guild = self.bot.db.get_blacklist(message.guild.id, record.server_id)
-            target_blacklisted_guild
+
+            # unsure how to hide messages sent from the guild that is blacklisting another one.
+
             if blacklisted_user or blacklisted_guild:
                 continue
 
