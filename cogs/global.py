@@ -299,7 +299,7 @@ class Global(commands.Cog):
             if self.mod_webhook:
                 try:
                     await self.mod_webhook.send(
-                        username=str(ctx.author),
+                        username=f"Blacklisted: {ctx.author}",
                         embed=mod_embed,
                         avatar_url="https://i.imgur.com/qyk9vQq.png",
                     )
