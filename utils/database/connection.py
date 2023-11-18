@@ -146,10 +146,10 @@ class DatabaseConnection:
 
         return self.blacklists
 
-    async def fetch_blacklist(self, entity_id: int, server_id : int, /) -> Optional[Blacklist]:
-        query = "SELECT * FROM SINCRONI_BLACKLIST WHERE entity_id = $1 AND server_id = $2"
+    async def fetch_blacklist(self, server_id : int, entity_id: int, /) -> Optional[Blacklist]:
+        query = "SELECT * FROM SINCRONI_BLACKLIST WHERE server_id = $1 AND entity_id = $2"
 
-        res = await self.fetchrow(query, entity_id, server_id)
+        res = await self.fetchrow(query, server_id, entity_id)
         if res is None:
             return None
 
@@ -160,9 +160,9 @@ class DatabaseConnection:
         return self._blacklists.get((server_id, entity_id))
 
     async def remove_blacklist(self, server_id, entity_id: int, /) -> Optional[Blacklist]:
-        query = "DELETE FROM SINCRONI_BLACKLIST WHERE entity_id = $1 AND server_id = $2"
+        query = "DELETE FROM SINCRONI_BLACKLIST WHERE server_id = $1 AND entity_id = $2"
 
-        await self.execute(query, entity_id, server_id)
+        await self.execute(query, server_id, entity_id)
 
         return self._blacklists.pop((server_id, entity_id), None)
 
