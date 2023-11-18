@@ -293,7 +293,8 @@ class Global(commands.Cog):
         webhook_embed.set_footer(text=str(ctx.guild), icon_url=guild_icon)
 
         blacklisted_user = self.bot.db.get_blacklist(0, message.author.id)
-        if blacklisted_user:
+        blacklisted_guild = self.bot.db.get_blacklist(0, ctx.guild.id)
+        if blacklisted_user or blacklisted_guild:
             
             if self.mod_webhook:
                 try:
@@ -305,6 +306,10 @@ class Global(commands.Cog):
                 except (discord.HTTPException, discord.Forbidden):
                     # TODO: handle invalid mod webhook
                     pass
+
+            return
+    
+
 
         if self.mod_webhook:
             try:
