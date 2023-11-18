@@ -308,8 +308,6 @@ class Global(commands.Cog):
                     pass
 
             return
-    
-
 
         if self.mod_webhook:
             try:
