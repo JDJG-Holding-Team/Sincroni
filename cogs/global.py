@@ -292,7 +292,7 @@ class Global(commands.Cog):
         )
         webhook_embed.set_footer(text=str(ctx.guild), icon_url=guild_icon)
 
-        blacklisted_user = bot.db.get_blacklist(message.author.id, 0)
+        blacklisted_user = self.bot.db.get_blacklist(message.author.id, 0)
         if blacklisted_user:
             
             if self.mod_webhook:
