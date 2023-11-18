@@ -258,17 +258,7 @@ class Global(commands.Cog):
             )
         )
 
-        opposite_records = list(
-            filter(
-                lambda record: (
-                    record.chat_type is global_chat.chat_type and record.channel_id != global_chat.channel_id and record.server_id in blacklisted_servers
-                ),
-                self.bot.db.global_chats,
-            )
-        )
-
-        for record in opposite_records:
-            print(record)
+        # this new filter seems to work fine.
 
         guild_icon = message.guild.icon.url if message.guild.icon else "https://i.imgur.com/3ZUrjUP.png"
         message_content = await commands.clean_content().convert(ctx, message.content)
