@@ -330,7 +330,10 @@ class Global(commands.Cog):
                 print(record.channel_id)
                 continue
 
-            # handle specific people being blacklisted or a server from a guild
+            blacklisted_user = self.bot.db.get_blacklist(record.server_id, message.author.id)
+            blacklisted_guild = self.bot.db.get_blacklist(record.server_id, message.guild.id)
+            if blacklisted_user or blacklisted_guild:
+                continue
 
             if not record.webhook:
                 try:
