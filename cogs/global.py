@@ -247,14 +247,28 @@ class Global(commands.Cog):
         if not global_chat:
             return
 
+        blacklisted_servers = [record.entity_id for record in self.bot.db.blacklists if not record._global and record.blacklist_type.server and record.server_id == message.guild.id]
+
         records = list(
             filter(
                 lambda record: (
-                    record.chat_type is global_chat.chat_type and record.channel_id != global_chat.channel_id
+                    record.chat_type is global_chat.chat_type and record.channel_id != global_chat.channel_id and not record.server_id in blacklisted_servers
                 ),
                 self.bot.db.global_chats,
             )
         )
+
+        opposite_records = list(
+            filter(
+                lambda record: (
+                    record.chat_type is global_chat.chat_type and record.channel_id != global_chat.channel_id and record.server_id in blacklisted_servers
+                ),
+                self.bot.db.global_chats,
+            )
+        )
+
+        for record in opposite_records:
+            print(record)
 
         guild_icon = message.guild.icon.url if message.guild.icon else "https://i.imgur.com/3ZUrjUP.png"
         message_content = await commands.clean_content().convert(ctx, message.content)
@@ -323,20 +337,6 @@ class Global(commands.Cog):
             except (discord.HTTPException, discord.Forbidden):
                 # TODO: handle invalid mod webhook
                 pass
-
-        blacklisted_guilds = list(
-            filter(
-                lambda record: (
-                    record.server_id == message.guild.id
-                ),
-                self.bot.db.blacklists,
-            )
-        )
-
-
-        bad_records = [record for record in records if record.server_id in blacklisted_guilds]
-
-        print(bad_records)
 
         for record in records:
             # TODO: handle not found global chat channel
