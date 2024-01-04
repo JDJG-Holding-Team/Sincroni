@@ -40,7 +40,7 @@ class DatabaseConnection:
         # origin_channel_id: LinkedChannels
         self._linked_channels: Dict[int, LinkedChannel] = {}
         # (server_id, chat_type) : EmbedColor
-        self._embed_colors: Dict[int, EmbedColor] = {}
+        self._embed_colors: Dict[tuple, EmbedColor] = {}
 
     async def create_connection(self) -> None:
         self._pool = await asyncpg.create_pool(self.__dsn, record_class=CustomRecordClass)  # type: ignore
