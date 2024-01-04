@@ -373,7 +373,7 @@ class Global(commands.Cog):
                 pass
 
     @commands.Cog.listener("on_message")
-    async def linked_chat_handler(self, message: discord.Message):
+    async def linked_channel_handler(self, message: discord.Message):
         supported_message_types = (
             discord.MessageType.default,
             discord.MessageType.reply,
@@ -414,11 +414,11 @@ class Global(commands.Cog):
         embed.set_thumbnail(url=guild_icon)
 
         try:
-            await linked_chat.destination_channel.send(embed=embed)
+            await linked_channel.destination_channel.send(embed=embed)
 
         except (discord.HTTPException, discord.Forbidden) as err:
             print("problematic linked chats:")
-            print(linked_chat.origin_channel_id)
+            print(linked_channel.origin_channel_id)
             print(linked.destination_channel_id)
             traceback.print_exception(err)
             pass
