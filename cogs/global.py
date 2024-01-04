@@ -291,8 +291,8 @@ class Global(commands.Cog):
         embed.set_footer(text=ctx.guild)
         embed.set_thumbnail(url=guild_icon)
 
-        custom_color = self.bot.db.get_embed_color(ctx.guild_id, record.chat_type)
-        
+        custom_color = self.bot.db.get_embed_color(ctx.guild.id, record.chat_type)
+
         if custom_color:
             embed.color = custom_color.custom_color
 
