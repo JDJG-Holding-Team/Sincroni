@@ -64,6 +64,17 @@ ALTER SEQUENCE public.sincroni_blacklist_id_seq OWNED BY public.sincroni_blackli
 
 
 --
+-- Name: sincroni_embed_color; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.sincroni_embed_color (
+    server_id bigint NOT NULL,
+    chat_type smallint DEFAULT 0 NOT NULL,
+    custom_color integer NOT NULL
+);
+
+
+--
 -- Name: sincroni_global_chat; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -173,6 +184,14 @@ ALTER TABLE ONLY public.sincroni_global_chat
 
 ALTER TABLE ONLY public.sincroni_global_chat
     ADD CONSTRAINT sicroni_global_chat_server_id_channel_id_key UNIQUE (server_id, channel_id);
+
+
+--
+-- Name: sincroni_embed_color sincroni_embed_color_server_id_chat_type_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.sincroni_embed_color
+    ADD CONSTRAINT sincroni_embed_color_server_id_chat_type_key UNIQUE (server_id, chat_type);
 
 
 --
