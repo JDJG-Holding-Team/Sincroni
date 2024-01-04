@@ -350,8 +350,6 @@ class Global(commands.Cog):
                 embed.color = color_change.custom_color
                 webhook_embed.color = color_change.custom_color
 
-                print("color changed")
-
             # changes color for specific guilds only.
 
             else:
