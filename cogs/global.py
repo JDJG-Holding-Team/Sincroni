@@ -298,14 +298,6 @@ class Global(commands.Cog):
         )
         webhook_embed.set_footer(text=str(ctx.guild), icon_url=guild_icon)
 
-        color_change = self.bot.db.get_embed_color(ctx.guild.id, global_chat.chat_type)
-
-        if color_change:
-            embed.color = color_change.custom_color
-            webhook_embed.color = color_change.custom_color
-
-            print("color changed")
-
         global_blacklisted_user = self.bot.db.get_blacklist(0, message.author.id)
         blacklisted_guild = self.bot.db.get_blacklist(0, ctx.guild.id)
         blacklisted_user = self.bot.db.get_blacklist(ctx.guild.id, message.author.id)
@@ -351,6 +343,18 @@ class Global(commands.Cog):
 
             if blacklisted_user or blacklisted_guild:
                 continue
+
+            color_change = self.bot.db.get_embed_color(record.server_id, record.chat_type)
+
+            if color_change:
+                embed.color = color_change.custom_color
+                webhook_embed.color = color_change.custom_color
+
+                print("color changed")
+
+            else:
+                embed.color = discord.Color(0xEB6D15)
+                webhook_embed.color = discord.Color(0xEB6D15)
 
             if not record.webhook:
                 try:
