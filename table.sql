@@ -36,5 +36,5 @@ CREATE TABLE SINCRONI_EMBED_COLOR(
 server_id BIGINT NOT NULL,
 chat_type SMALLINT DEFAULT 0 NOT NULL,
 custom_color INTEGER NOT NULL,
-UNIQUE (server_id, chat_type),
+UNIQUE (server_id, chat_type)
 )
