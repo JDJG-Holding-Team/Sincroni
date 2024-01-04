@@ -304,6 +304,8 @@ class Global(commands.Cog):
             embed.color = color_change.custom_color
             webhook_embed.color = color_change.custom_color
 
+            print("color changed")
+
         global_blacklisted_user = self.bot.db.get_blacklist(0, message.author.id)
         blacklisted_guild = self.bot.db.get_blacklist(0, ctx.guild.id)
         blacklisted_user = self.bot.db.get_blacklist(ctx.guild.id, message.author.id)
