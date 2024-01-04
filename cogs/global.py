@@ -419,7 +419,7 @@ class Global(commands.Cog):
         except (discord.HTTPException, discord.Forbidden) as err:
             print("problematic linked chats:")
             print(linked_channel.origin_channel_id)
-            print(linked.destination_channel_id)
+            print(linked_channel.destination_channel_id)
             traceback.print_exception(err)
             pass
 
