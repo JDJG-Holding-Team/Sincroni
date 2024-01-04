@@ -363,7 +363,7 @@ class DatabaseConnection:
     async def add_embed_color(
         self,
         server_id: int,
-        chat_type: ChatType = ChatType.public
+        chat_type: ChatType = ChatType.public,
         custom_color : int
     ) -> EmbedColor:
         query = """
