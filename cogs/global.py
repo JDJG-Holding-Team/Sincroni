@@ -414,12 +414,12 @@ class Global(commands.Cog):
         embed.set_thumbnail(url=guild_icon)
 
         try:
-            await record.destination_channel.send(embed=embed)
+            await linked_chat.destination_channel.send(embed=embed)
 
         except (discord.HTTPException, discord.Forbidden) as err:
             print("problematic linked chats:")
-            print(record.origin_channel_id)
-            print(record.destination_channel_id)
+            print(linked_chat.origin_channel_id)
+            print(linked.destination_channel_id)
             traceback.print_exception(err)
             pass
 
