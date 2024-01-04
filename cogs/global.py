@@ -397,12 +397,16 @@ class Global(commands.Cog):
         # I may need to make two versions when someone links it and then remove the copy.
         # i don't know yet.
 
+        message_content = await commands.clean_content().convert(ctx, message.content)
+        message_content = profanity.censor(message_content, censor_char="#")
+        message_content = self.censor_links(message_content)
+
         embed = discord.Embed(
             description=str(message_content),
             color=0xEB6D15,
             timestamp=message.created_at,
         )
-        
+
         embed.set_author(name=message.author, icon_url=ctx.author.display_avatar.url)
         embed.set_footer(text=ctx.guild)
         embed.set_thumbnail(url=guild_icon)
