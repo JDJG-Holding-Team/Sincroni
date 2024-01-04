@@ -400,7 +400,7 @@ class Global(commands.Cog):
         records = list(
             filter(
                 lambda record: (
-                    record.chat_type is linked_channel.chat_type and record.channel_id != linked_channels.channel_id and not record.server_id in blacklisted_servers
+                    record.channel_id != linked_channels.channel_id and not record.server_id in blacklisted_servers
                 ),
                 self.bot.db.linked_channels,
             )
