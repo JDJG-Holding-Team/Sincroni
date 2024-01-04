@@ -291,17 +291,18 @@ class Global(commands.Cog):
         embed.set_footer(text=ctx.guild)
         embed.set_thumbnail(url=guild_icon)
 
-        custom_color = self.bot.db.get_embed_color(ctx.guild.id, global_chat.chat_type)
-
-        if custom_color:
-            embed.color = custom_color.custom_color
-
         webhook_embed = discord.Embed(
             description=str(message_content),
             color=0xEB6D15,
             timestamp=ctx.message.created_at,
         )
         webhook_embed.set_footer(text=str(ctx.guild), icon_url=guild_icon)
+
+        color_change = self.bot.db.get_embed_color(ctx.guild.id, global_chat.chat_type)
+
+        if color_change:
+            embed.color = color_change.custom_color
+            webhook_embed.color = color_change.custom_color
 
         global_blacklisted_user = self.bot.db.get_blacklist(0, message.author.id)
         blacklisted_guild = self.bot.db.get_blacklist(0, ctx.guild.id)
