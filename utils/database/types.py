@@ -35,3 +35,8 @@ class LinkedChannels(TypedDict):
     id: int  # serial, NOT NULL
     origin_channel_id: int  # BIGINT, NOT NULL
     destination_channel_id: int  # BIGINT, NOT NULL
+
+class EmbedColors(TypedDict):
+    server_id : int # BIGINT, NOT NULL
+    chat_type: ChatType  # SMALLINT, DEFAULT 0, NOT NULL
+    custom_color : int # INTEGER, NOT NULL

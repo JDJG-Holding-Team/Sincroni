@@ -19,6 +19,7 @@ if TYPE_CHECKING:
     from .types import GlobalChat as GlobalChatPayload
     from .types import LinkedChannels as LinkedChannelsPayload
     from .types import Whitelist as WhitelistPayload
+    from .types import EmbedColors as EmbedColorsPayload
 
 
 class GlobalChat:
@@ -175,3 +176,28 @@ class LinkedChannel:
     @property
     def destination_channel(self) -> Optional[TextChannel | discord.DMChannel | Thread]:
         return self._connection.bot.get_channel(self.destination_channel_id)  # type: ignore
+
+
+class EmbedColor:
+    def __init__(self, connection: DatabaseConnection, data: EmbedColorsPayload, /) -> None:
+        self._connection: DatabaseConnection = connection
+
+        self.server_id : int = data["server_id"]
+        self.raw_chat_type: ChatTypePayload = data["chat_type"]
+        self.raw_custom_color : int = data["custom_color"]
+
+    def __repr__(self) -> str:
+        return f"<EmbedColor server_id={self.server_id} chat_type={self.raw_chat_type} custom_color={self.custom_color}>"
+
+    @property
+    def server(self) -> Optional[Guild]:
+        """The server that is blacklisting the entity from discord.py cache."""
+        return self._connection.bot.get_guild(self.server_id)
+
+    @property
+    def chat_type(self) -> ChatType:
+        return ChatType(self.raw_chat_type)
+
+    @property
+    def custom_color(self) -> discord.Color:
+        return discord.Color(self.raw_custom_color)

@@ -6,7 +6,7 @@ import asyncpg
 
 from utils.extra import ChatType, FilterType
 
-from .models import Blacklist, GlobalChat, LinkedChannel, Whitelist
+from .models import Blacklist, GlobalChat, LinkedChannel, Whitelist, EmbedColor
 
 if TYPE_CHECKING:
     from main import Sincroni
@@ -33,12 +33,14 @@ class DatabaseConnection:
 
         # channel_id: GlobalChat
         self._global_chats: Dict[int, GlobalChat] = {}
-        # entity_id: Blacklist
+        # (server_id, entity_id): Blacklist
         self._blacklists: Dict[tuple, Blacklist] = {}
         # entity_id: Whitelist
         self._whitelists: Dict[int, Whitelist] = {}
         # origin_channel_id: LinkedChannels
         self._linked_channels: Dict[int, LinkedChannel] = {}
+        # (server_id, chat_type) : EmbedColor
+        self._embed_colors: Dict[int, EmbedColor] = {}
 
     async def create_connection(self) -> None:
         self._pool = await asyncpg.create_pool(self.__dsn, record_class=CustomRecordClass)  # type: ignore
@@ -322,3 +324,66 @@ class DatabaseConnection:
 
         self._linked_channels[origin_channel_id] = LinkedChannel(self, res)
         return self._linked_channels[origin_channel_id]
+
+    # Embed Colors
+
+    @property
+    def embed_colors(self) -> List[EmbedColor]:
+        return list(self._embed_colors.values())
+
+    async def fetch_embed_colors(self) -> List[EmbedColor]:
+        entries = await self.fetch("SELECT * FROM SINCRONI_EMBED_COLOR")
+
+        row: EmbedColor
+        for row in entries:
+            self._embed_colors[(row["server_id"], row["chat_type"])] = EmbedColor(self, row)
+
+        return self.embed_colors
+
+    async def fetch_embed_color(self, server_id : int, chat_type: ChatType = ChatType.public, /) -> Optional[EmbedColor]:
+        query = "SELECT * FROM SINCRONI_EMBED_COLOR WHERE server_id = $1 AND chat_type = $2"
+
+        res = await self.fetchrow(query, server_id, chat_type)
+        if res is None:
+            return None
+
+        self._embed_colors[(server_id, chat_type)] = Embed_Color(self, res)
+        return self._embed_colors[(server_id, chat_type)]
+
+    def get_embed_color(self, server_id : int, chat_type: ChatType = ChatType.public) -> Optional[EmbedColor]:
+        return self._embed_colors.get((server_id, chat_type))
+
+    async def remove_embed_color(self, server_id, chat_type: ChatType = ChatType.public, /) -> Optional[Blacklist]:
+        query = "DELETE FROM SINCRONI_EMBED_COLOR WHERE server_id = $1 AND chat_type = $2"
+
+        await self.execute(query, server_id, chat_type)
+
+        return self._embed_colors.pop((server_id, chat_type), None)
+
+    async def add_embed_color(
+        self,
+        server_id: int,
+        chat_type: ChatType = ChatType.public
+        custom_color : int
+    ) -> EmbedColor:
+        query = """
+            INSERT INTO SINCRONI_EMBED_COLOR (
+                server_id,
+                chat_type,
+                custom_color
+            ) 
+            VALUES ($1, $2, $3) 
+            RETURNING *
+            """
+
+        res = await self.fetchrow(
+            query,
+            server_id,
+            chat_type,
+            custom_color
+        )
+
+        self._embed_colors[(server_id, chat_type)] = EmbedColor(self, res)
+        return self._embed_colors[(server_id, chat_type)]
+
+    
