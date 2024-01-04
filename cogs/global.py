@@ -394,18 +394,30 @@ class Global(commands.Cog):
         if not linked_channel:
             return
 
-        records = list(
-            filter(
-                lambda record: (
-                    record.origin_channel_id != linked_channel.origin_channel_id and not message.guild.id in blacklisted_servers
-                ),
-                self.bot.db.linked_channels,
-            )
-        ) 
+        # I may need to make two versions when someone links it and then remove the copy.
+        # i don't know yet.
 
-        print(records)
+        embed = discord.Embed(
+            description=str(message_content),
+            color=0xEB6D15,
+            timestamp=message.created_at,
+        )
+        
+        embed.set_author(name=message.author, icon_url=ctx.author.display_avatar.url)
+        embed.set_footer(text=ctx.guild)
+        embed.set_thumbnail(url=guild_icon)
 
-        # wip linked channels
+        try:
+            await record.destination_channel.send(embed=embed)
+
+        except (discord.HTTPException, discord.Forbidden) as err:
+            print("problematic linked chats:")
+            print(record.origin_channel_id)
+            print(record.destination_channel_id)
+            traceback.print_exception(err)
+            pass
+
+        
 
 async def setup(bot: Sincroni):
     await bot.add_cog(Global(bot))
