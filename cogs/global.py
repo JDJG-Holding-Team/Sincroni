@@ -372,6 +372,43 @@ class Global(commands.Cog):
                 traceback.print_exception(err)
                 pass
 
+    @commands.Cog.listener("on_message")
+    async def linked_chat_handler(self, message: discord.Message):
+        supported_message_types = (
+            discord.MessageType.default,
+            discord.MessageType.reply,
+        )
+        if (
+            not message.guild
+            or not message.content
+            or message.author.bot
+            or message.type not in supported_message_types
+        ):
+            return
+
+        ctx = await self.bot.get_context(message)
+        if ctx.valid:
+            return
+
+        linked_chat = self.bot.db.get_linked_channel(ctx.channel.id)
+        if not linked_chat:
+            return
+
+
+        blacklisted_servers = [record.entity_id for record in self.bot.db.blacklists if not record._global and record.blacklist_type.server and record.server_id == message.guild.id]
+
+        records = list(
+            filter(
+                lambda record: (
+                    record.chat_type is linked_channel.chat_type and record.channel_id != linked_channels.channel_id and not record.server_id in blacklisted_servers
+                ),
+                self.bot.db.linked_channels,
+            )
+        ) 
+
+        print(records)
+
+        # wip linked channels
 
 async def setup(bot: Sincroni):
     await bot.add_cog(Global(bot))
