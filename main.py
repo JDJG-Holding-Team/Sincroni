@@ -37,6 +37,11 @@ class Sincroni(commands.Bot):
 
         await bot.db.fetch_global_chats()
         await bot.db.fetch_blacklists()
+        await bot.db.fetch_linked_channels()
+        await bot.db.fetch_embed_colors()
+        await bot.db.fetch_whitelists()
+        
+        # loads the stored lists into cache.
 
     async def close(self) -> None:
         await self.session.close()
