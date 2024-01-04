@@ -352,9 +352,13 @@ class Global(commands.Cog):
 
                 print("color changed")
 
+            # changes color for specific guilds only.
+
             else:
                 embed.color = discord.Color(0xEB6D15)
                 webhook_embed.color = discord.Color(0xEB6D15)
+
+            # changes color back to default
 
             if not record.webhook:
                 try:
