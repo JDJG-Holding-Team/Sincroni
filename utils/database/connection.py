@@ -364,7 +364,7 @@ class DatabaseConnection:
         self,
         server_id: int,
         chat_type: ChatType = ChatType.public,
-        custom_color : int
+        custom_color : int = 2067276,
     ) -> EmbedColor:
         query = """
             INSERT INTO SINCRONI_EMBED_COLOR (
