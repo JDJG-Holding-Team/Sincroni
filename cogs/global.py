@@ -390,8 +390,8 @@ class Global(commands.Cog):
         if ctx.valid:
             return
 
-        linked_chat = self.bot.db.get_linked_channel(ctx.channel.id)
-        if not linked_chat:
+        linked_channel = self.bot.db.get_linked_channel(ctx.channel.id)
+        if not linked_channel:
             return
 
         records = list(
