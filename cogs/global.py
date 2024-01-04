@@ -417,7 +417,7 @@ class Global(commands.Cog):
             await linked_channel.destination_channel.send(embed=embed)
 
         except (discord.HTTPException, discord.Forbidden) as err:
-            print("problematic linked chats:")
+            print("problematic linked channels")
             print(linked_channel.origin_channel_id)
             print(linked_channel.destination_channel_id)
             traceback.print_exception(err)
