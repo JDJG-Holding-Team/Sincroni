@@ -394,13 +394,10 @@ class Global(commands.Cog):
         if not linked_chat:
             return
 
-
-        blacklisted_servers = [record.entity_id for record in self.bot.db.blacklists if not record._global and record.blacklist_type.server and record.server_id == message.guild.id]
-
         records = list(
             filter(
                 lambda record: (
-                    record.channel_id != linked_channels.channel_id and not record.server_id in blacklisted_servers
+                    record.origin_channel_id != linked_channel.origin_channel_id and not message.guild.id in blacklisted_servers
                 ),
                 self.bot.db.linked_channels,
             )
