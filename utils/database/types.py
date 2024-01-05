@@ -21,14 +21,14 @@ class Blacklist(TypedDict):
     dev: bool  # BOOLEAN, DEFAULT FALSE
     private: bool  # BOOLEAN, DEFAULT FALSE
     blacklist_type: FilterType  # SMALLINT, DEFAULT 0
-    reason : str  # TEXT DEFAULT "No reason provided"
+    reason: str  # TEXT DEFAULT "No reason provided"
 
 
 class Whitelist(TypedDict):
     id: int  # serial, NOT NULL
     entity_id: int  # BIGINT, NOT NULL
     whitelist_type: FilterType  # SMALLINT, DEFAULT 0
-    reason: str # TEXT DEFAULT "No reason provided"
+    reason: str  # TEXT DEFAULT "No reason provided"
 
 
 class LinkedChannels(TypedDict):
@@ -36,7 +36,8 @@ class LinkedChannels(TypedDict):
     origin_channel_id: int  # BIGINT, NOT NULL
     destination_channel_id: int  # BIGINT, NOT NULL
 
+
 class EmbedColors(TypedDict):
-    server_id : int # BIGINT, NOT NULL
+    server_id: int  # BIGINT, NOT NULL
     chat_type: ChatType  # SMALLINT, DEFAULT 0, NOT NULL
-    custom_color : int # INTEGER, NOT NULL
+    custom_color: int  # INTEGER, NOT NULL

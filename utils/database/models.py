@@ -15,11 +15,11 @@ if TYPE_CHECKING:
     from .connection import DatabaseConnection
     from .types import Blacklist as BlacklistPayload
     from .types import ChatType as ChatTypePayload
+    from .types import EmbedColors as EmbedColorsPayload
     from .types import FilterType as FilterTypePayload
     from .types import GlobalChat as GlobalChatPayload
     from .types import LinkedChannels as LinkedChannelsPayload
     from .types import Whitelist as WhitelistPayload
-    from .types import EmbedColors as EmbedColorsPayload
 
 
 class GlobalChat:
@@ -102,7 +102,7 @@ class Blacklist:
         self.dev: bool = data["dev"]
         self.private: bool = data["private"]
         self.raw_blacklist_type: FilterTypePayload = data["blacklist_type"]
-        self.reason : str = data["reason"]
+        self.reason: str = data["reason"]
 
     def __repr__(self) -> str:
         return f"<Blacklist id={self.id} server_id={self.server_id} entity_id={self.entity_id} blacklist_type={self.blacklist_type.name}>"
@@ -126,7 +126,6 @@ class Blacklist:
         elif self.blacklist_type is FilterType.server:
             return self._connection.bot.get_guild(self.entity_id)
 
-
     @property
     def _global(self) -> bool:
         """Whether or not the blacklist is enforced at a server or blacklist level."""
@@ -140,7 +139,7 @@ class Whitelist:
         self.id: int = data["id"]
         self.entity_id: int = data["entity_id"]
         self.raw_whitelist_type: FilterTypePayload = data["whitelist_type"]
-        self.reason : str = data["reason"]
+        self.reason: str = data["reason"]
 
     def __repr__(self) -> str:
         return f"<Whitelist id={self.id} entity_id={self.entity_id} whitelist_type={self.whitelist_type.name}>"
@@ -182,12 +181,14 @@ class EmbedColor:
     def __init__(self, connection: DatabaseConnection, data: EmbedColorsPayload, /) -> None:
         self._connection: DatabaseConnection = connection
 
-        self.server_id : int = data["server_id"]
+        self.server_id: int = data["server_id"]
         self.raw_chat_type: ChatTypePayload = data["chat_type"]
-        self.raw_custom_color : int = data["custom_color"]
+        self.raw_custom_color: int = data["custom_color"]
 
     def __repr__(self) -> str:
-        return f"<EmbedColor server_id={self.server_id} chat_type={self.raw_chat_type} custom_color={self.custom_color}>"
+        return (
+            f"<EmbedColor server_id={self.server_id} chat_type={self.raw_chat_type} custom_color={self.custom_color}>"
+        )
 
     @property
     def server(self) -> Optional[Guild]:

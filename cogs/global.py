@@ -196,12 +196,11 @@ class Global(commands.Cog):
         await self.bot.db.remove_global_chat(channel.id)
 
     @commands.hybrid_command(name="rules")
-    async def rules(
-        self, 
-        ctx: commands.Context
-    ):
-        
-        embed = discord.Embed(title="Rules", description="""
+    async def rules(self, ctx: commands.Context):
+
+        embed = discord.Embed(
+            title="Rules",
+            description="""
         1. No advertising is allowed in the global chat. 
         2. Please refrain from sharing NSFW content in the global chat.
         3. Do not share malicious links in the global chat.
@@ -212,11 +211,10 @@ class Global(commands.Cog):
         8. I have the authority to revoke access to the global chat for any reason, but this decision will always be discussed privately among the global chat moderators.
         9. Moderators have the authority to enforce message blacklisting within their guild based on their established rules and guidelines.
         For further questions, feel free to DM me at JDJG or join our Discord server at https://discord.gg/JdDxFpNk8J.
-        """)
+        """,
+        )
 
         await ctx.send(embed=embed)
-        
-        
 
     def censor_links(self, string):
 
@@ -247,12 +245,18 @@ class Global(commands.Cog):
         if not global_chat:
             return
 
-        blacklisted_servers = [record.entity_id for record in self.bot.db.blacklists if not record._global and record.blacklist_type.server and record.server_id == message.guild.id]
+        blacklisted_servers = [
+            record.entity_id
+            for record in self.bot.db.blacklists
+            if not record._global and record.blacklist_type.server and record.server_id == message.guild.id
+        ]
 
         records = list(
             filter(
                 lambda record: (
-                    record.chat_type is global_chat.chat_type and record.channel_id != global_chat.channel_id and not record.server_id in blacklisted_servers
+                    record.chat_type is global_chat.chat_type
+                    and record.channel_id != global_chat.channel_id
+                    and not record.server_id in blacklisted_servers
                 ),
                 self.bot.db.global_chats,
             )
@@ -305,7 +309,7 @@ class Global(commands.Cog):
         # you would not check if the current guild is blacklisted as that is the origin.
 
         if global_blacklisted_user or blacklisted_guild or blacklisted_user:
-            
+
             if self.mod_webhook:
                 try:
                     await self.mod_webhook.send(
@@ -417,7 +421,6 @@ class Global(commands.Cog):
         message_content = await commands.clean_content().convert(ctx, message.content)
         message_content = profanity.censor(message_content, censor_char="#")
         message_content = self.censor_links(message_content)
-        
 
         embed = discord.Embed(
             description=str(message_content),
@@ -442,7 +445,6 @@ class Global(commands.Cog):
             traceback.print_exception(err)
             pass
 
-        
 
 async def setup(bot: Sincroni):
     await bot.add_cog(Global(bot))

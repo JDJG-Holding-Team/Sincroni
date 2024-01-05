@@ -40,7 +40,7 @@ class Sincroni(commands.Bot):
         await bot.db.fetch_linked_channels()
         await bot.db.fetch_embed_colors()
         await bot.db.fetch_whitelists()
-        
+
         # loads the stored lists into cache.
 
     async def close(self) -> None:
