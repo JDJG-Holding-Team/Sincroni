@@ -265,6 +265,7 @@ class Global(commands.Cog):
         # have an anti spam check here.
         # this new filter seems to work fine.
         # maybe make this records filter into something that can handle pub, developer, private types ie detect the chat_type and only grab blacklist stuff from that sort of thing.
+        # custom function likely needed
 
         guild_icon = message.guild.icon.url if message.guild.icon else "https://i.imgur.com/3ZUrjUP.png"
         message_content = await commands.clean_content().convert(ctx, message.content)
@@ -361,7 +362,7 @@ class Global(commands.Cog):
                 embed.color = discord.Color(0xEB6D15)
                 webhook_embed.color = discord.Color(0xEB6D15)
 
-            # changes color back to default
+            # changes color back to default so color does not get stuck at the custom color.
 
             if not record.webhook:
                 try:
