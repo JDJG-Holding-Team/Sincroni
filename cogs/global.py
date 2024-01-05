@@ -307,7 +307,7 @@ class Global(commands.Cog):
         blacklisted_guild = self.bot.db.get_blacklist(0, message.guild.id)
         blacklisted_user = self.bot.db.get_blacklist(message.guild.id, message.author.id)
 
-        # you would not check if the current guild is blacklisted as that is the origin.
+        # you do not check if the current guild is blacklisted as that is the origin.
 
         if global_blacklisted_user or blacklisted_guild or blacklisted_user:
 
@@ -343,9 +343,6 @@ class Global(commands.Cog):
 
             blacklisted_user = self.bot.db.get_blacklist(record.server_id, message.author.id)
             blacklisted_guild = self.bot.db.get_blacklist(record.server_id, message.guild.id)
-
-            # unsure how to hide messages sent from the guild that is blacklisting another one.
-            # seems to be fine but I would need to have someone else help me test this.
 
             if blacklisted_user or blacklisted_guild:
                 continue
