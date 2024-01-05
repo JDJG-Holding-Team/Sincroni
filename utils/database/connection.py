@@ -338,13 +338,13 @@ class DatabaseConnection:
         if res is None:
             return None
 
-        self._embed_colors[(server_id, chat_type)] = Embed_Color(self, res)
+        self._embed_colors[(server_id, chat_type)] = EmbedColor(self, res)
         return self._embed_colors[(server_id, chat_type)]
 
     def get_embed_color(self, server_id: int, chat_type: ChatType = ChatType.public) -> Optional[EmbedColor]:
         return self._embed_colors.get((server_id, chat_type))
 
-    async def remove_embed_color(self, server_id, chat_type: ChatType = ChatType.public, /) -> Optional[Blacklist]:
+    async def remove_embed_color(self, server_id, chat_type: ChatType = ChatType.public, /) -> Optional[EmbedColor]:
         query = "DELETE FROM SINCRONI_EMBED_COLOR WHERE server_id = $1 AND chat_type = $2"
 
         await self.execute(query, server_id, chat_type)
