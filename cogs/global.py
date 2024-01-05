@@ -198,7 +198,7 @@ class Global(commands.Cog):
     @commands.hybrid_command(name="rules")
     async def rules(
         self, 
-        ctx: Commands.Context
+        ctx: commands.Context
     ):
         
         embed = discord.Embed(title="Rules", description="""
@@ -299,8 +299,8 @@ class Global(commands.Cog):
         webhook_embed.set_footer(text=str(ctx.guild), icon_url=guild_icon)
 
         global_blacklisted_user = self.bot.db.get_blacklist(0, message.author.id)
-        blacklisted_guild = self.bot.db.get_blacklist(0, ctx.guild.id)
-        blacklisted_user = self.bot.db.get_blacklist(ctx.guild.id, message.author.id)
+        blacklisted_guild = self.bot.db.get_blacklist(0, message.guild.id)
+        blacklisted_user = self.bot.db.get_blacklist(message.guild.id, message.author.id)
 
         # you would not check if the current guild is blacklisted as that is the origin.
 
@@ -428,6 +428,9 @@ class Global(commands.Cog):
         embed.set_author(name=message.author, icon_url=ctx.author.display_avatar.url)
         embed.set_footer(text=ctx.guild)
         embed.set_thumbnail(url=guild_icon)
+
+        if not linked_channel.destination_channel:
+            return print(f"missing destination channel : {linked_channel.destination_channel_id}")
 
         try:
             await linked_channel.destination_channel.send(embed=embed)
