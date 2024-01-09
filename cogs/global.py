@@ -366,7 +366,7 @@ class Global(commands.Cog):
                     await record.channel.send(embed=embed)
                 except (discord.HTTPException, discord.Forbidden) as err:
                     print(record.channel_id)
-                    traceback.print_exception(err)
+                    traceback.print_exception(type(err), err, err.__traceback__)
                     pass
 
                 continue
@@ -387,7 +387,7 @@ class Global(commands.Cog):
                 print(record.channel_id)
                 print(record.webhook_url)
 
-                traceback.print_exception(err)
+                traceback.print_exception(type(err), err, err.__traceback__)
                 pass
 
     @commands.Cog.listener("on_message")
@@ -440,7 +440,7 @@ class Global(commands.Cog):
             print("problematic linked channels")
             print(linked_channel.origin_channel_id)
             print(linked_channel.destination_channel_id)
-            traceback.print_exception(err)
+            traceback.print_exception(type(err), err, err.__traceback__)
             pass
 
 
