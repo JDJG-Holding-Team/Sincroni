@@ -29,7 +29,7 @@ class Global(commands.Cog):
         self.discord_regex = re.compile(r"(?:https?://)?(?:www\.)?discord(?:.gg|(?:app)?.com/invite)/[^/\s]+")
 
     async def cog_load(self):
-        profanity.load_censor_words(["balls", "ballss"])
+        profanity.add_custom_words(["balls", "ballss"])
 
         # load censor words
         # https://github.com/JDJG-Holding-Team/Sincroni/issues/16#issue-2069012832
