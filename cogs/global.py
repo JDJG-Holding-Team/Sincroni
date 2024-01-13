@@ -28,6 +28,17 @@ class Global(commands.Cog):
         self.link_regex = re.compile(r"http[s]?://(?:[a-zA-Z]|[0-9]|[$\-_@.&+]|[!*(),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+")
         self.discord_regex = re.compile(r"(?:https?://)?(?:www\.)?discord(?:.gg|(?:app)?.com/invite)/[^/\s]+")
 
+    async def cog_load(self):
+        profanity.load_censor_words(["balls", "ballss"])
+
+        # load censor words
+        # https://github.com/JDJG-Holding-Team/Sincroni/issues/16#issue-2069012832
+
+    async def cog_unload(self):
+        print("cog unloaded")
+
+        # a few extra stuff
+
     @staticmethod
     def _check_channel_permissions(
         channel: Union[discord.TextChannel, discord.Thread],
