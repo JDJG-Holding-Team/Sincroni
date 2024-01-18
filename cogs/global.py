@@ -298,13 +298,16 @@ class Global(commands.Cog):
 
         message_content = self.censor_links(message_content)
 
+        guild_name = self.censor_links(str(ctx.guild))
+        user_name = self.censor_links(str(message.author))
+
         embed = discord.Embed(
             description=str(message_content),
             color=0xEB6D15,
             timestamp=message.created_at,
         )
-        embed.set_author(name=message.author, icon_url=ctx.author.display_avatar.url)
-        embed.set_footer(text=ctx.guild)
+        embed.set_author(name=user_name, icon_url=ctx.author.display_avatar.url)
+        embed.set_footer(text=guild_name)
         embed.set_thumbnail(url=guild_icon)
 
         webhook_embed = discord.Embed(
@@ -312,7 +315,7 @@ class Global(commands.Cog):
             color=0xEB6D15,
             timestamp=ctx.message.created_at,
         )
-        webhook_embed.set_footer(text=str(ctx.guild), icon_url=guild_icon)
+        webhook_embed.set_footer(text=guild_name, icon_url=guild_icon)
 
         global_blacklisted_user = self.bot.db.get_blacklist(0, message.author.id)
         blacklisted_guild = self.bot.db.get_blacklist(0, message.guild.id)
@@ -383,7 +386,7 @@ class Global(commands.Cog):
                 continue
 
             kwargs = {
-                "username": str(ctx.author),
+                "username": user_name,
                 "embed": embed,
                 "avatar_url": ctx.author.display_avatar.url,
             }
