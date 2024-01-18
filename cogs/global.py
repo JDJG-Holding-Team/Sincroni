@@ -387,7 +387,7 @@ class Global(commands.Cog):
 
             kwargs = {
                 "username": user_name,
-                "embed": embed,
+                "embed": webhook_embed,
                 "avatar_url": ctx.author.display_avatar.url,
             }
             if isinstance(record.channel, discord.Thread):
