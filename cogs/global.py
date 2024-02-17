@@ -227,6 +227,26 @@ class Global(commands.Cog):
 
         await ctx.send(embed=embed)
 
+    @_global.command(name="blacklist")
+    @commands.guild_only()
+    @commands.has_permissions(manage_messages=True)
+    async def blacklist(self, ctx : commands.Context, user : Optional[discord.User], guild : Optional[str]):
+
+        return
+
+        await ctx.send("Test")
+
+    @blacklist.autocomplete("guild")
+    async def blacklist_guild_autocomplete(interaction : discord.interaction, current: str):
+        # ignore current guild in results
+
+        global_guilds = [record.guild for record in self.bot.db.global_chats if record.guild and not interaction.guild]
+
+        return [
+        app_commands.Choice(name='Option 1', value='Option 1')
+    ]
+
+
     def censor_links(self, string):
 
         changed_string = self.discord_regex.sub(":lock: [discord invite redacted] :lock: ", string)
