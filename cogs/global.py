@@ -225,10 +225,10 @@ class Global(commands.Cog):
         await ctx.send("Test")
 
     @blacklist.autocomplete("guild")
-    async def blacklist_guild_autocomplete(interaction : discord.interaction, current: str):
+    async def blacklist_guild_autocomplete(self, interaction : discord.interaction, current: str):
         # ignore current guild in results
 
-        global_guilds = [record.guild for record in self.bot.db.global_chats if record.guild and not interaction.guild]
+        global_guilds = [record for record in self.bot.db.global_chats if record.guild and not interaction.guild]
 
         return [
         app_commands.Choice(name='Option 1', value='Option 1')
