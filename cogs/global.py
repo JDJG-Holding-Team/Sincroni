@@ -221,7 +221,6 @@ class Global(commands.Cog):
         reason: Optional[str],
         public: bool = True,
         developer: bool = True,
-        repeat : bool = True
     ):
         # make it require manage_messages plus option of also manage_guild only per guild
         # should allow either or if possible.
@@ -243,12 +242,12 @@ class Global(commands.Cog):
 
         if user and not self.db.get_blacklist(ctx.guild.id, user.id):
             await self.db.add_blacklist(
-                ctx.guild.id, user.id, public, developer, repeat, False, utils.FilterType.user, reason
+                ctx.guild.id, user.id, public, developer, False, utils.FilterType.user, reason
             )
 
         if valid_guild and not self.db.get_blacklist(ctx.guild.id, guild_grab.id):
             await self.db.add_blacklist(
-                ctx.guild.id, valid_guild.id, public, developer, repeat, False, utils.FilterType.server, reason
+                ctx.guild.id, valid_guild.id, public, developer, False, utils.FilterType.server, reason
             )
 
     @blacklist.autocomplete("guild")
@@ -311,7 +310,7 @@ class Global(commands.Cog):
 
         # have an anti spam check here.
         # this new filter seems to work fine.
-        # maybe make this records filter into something that can handle pub, developer, repeat and private types ie detect the chat_type and only grab blacklist stuff from that sort of thing.
+        # maybe make this records filter into something that can handle pub, developer, private, and repeat types ie detect the chat_type and only grab blacklist stuff from that sort of thing.
         # custom function likely needed
 
         guild_icon = message.guild.icon.url if message.guild.icon else "https://i.imgur.com/3ZUrjUP.png"
