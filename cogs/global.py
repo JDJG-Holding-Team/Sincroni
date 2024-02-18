@@ -326,16 +326,18 @@ class Global(commands.Cog):
             )
 
             if view.value is None:
-                return await view.message.edit(
-                    content=f"~~{view.message.content}~~ you didn't respond on time!... not doing anything."
+                await view.message.edit(
+                     content=f"~~{view.message.content}~~ you didn't respond on time!... not doing anything."
                 )
+                return
 
             elif view.value is False:
-                return await view.message.edit(content=f"~~{view.message.content}~~ okay, not unblacklisting {user}.")
+                await view.message.edit(content=f"~~{view.message.content}~~ okay, not unblacklisting {user}.")
+                return
 
-            await self.bot.db.remove_blacklist(ctx.guild.id, user.id)
-
-            await ctx.send("Removed User from blacklist sucessfully")
+            else:
+                await view.message.edit(content="Removed User from blacklist sucessfully")
+                await self.bot.db.remove_blacklist(ctx.guild.id, user.id)
 
         if valid_guild and self.bot.db.get_blacklist(ctx.guild.id, valid_guild.id):
             view = await Confirm.prompt(
@@ -345,18 +347,20 @@ class Global(commands.Cog):
             )
 
             if view.value is None:
-                return await view.message.edit(
+                await view.message.edit(
                     content=f"~~{view.message.content}~~ you didn't respond on time!... not doing anything."
                 )
+                return
 
             elif view.value is False:
-                return await view.message.edit(
+                await view.message.edit(
                     content=f"~~{view.message.content}~~ okay, not unblacklisting {valid_guild}."
                 )
-
-            await self.bot.db.remove_blacklist(ctx.guild.id, valid_guild.id)
-
-            await ctx.send("Removed guild from blacklist sucessfully")
+                return
+            
+            else:
+                await view.message.edit(content="Removed guild from blacklist sucessfully")
+                await self.bot.db.remove_blacklist(ctx.guild.id, valid_guild.id)
 
         else:
             await ctx.send(
