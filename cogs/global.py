@@ -334,8 +334,8 @@ class Global(commands.Cog):
         else:
             await ctx.send("You must have already unblacklisted them or not added them to the blacklist", ephemeral=True)
 
-        @unblacklist.autocomplete("guild")
-        async def unblacklist_guild_autocomplete(self, interaction: discord.interaction, current: str) -> List[Choice]:
+    @unblacklist.autocomplete("guild")
+    async def unblacklist_guild_autocomplete(self, interaction: discord.interaction, current: str) -> List[Choice]:
         # ignore current guild in results
 
             records = [record for record in self.bot.db.blacklists if isinstance(record.entity, discord.Guild) and record.server_id == interaction.guild_id]
@@ -348,6 +348,10 @@ class Global(commands.Cog):
                 return guilds[0:25]
 
             return startswith[0:25]
+
+    @unblacklist.error
+    async def unblacklist_error(self, ctx : commands.Context, error):
+        await ctx.send(error)
 
 
     def censor_links(self, string):
