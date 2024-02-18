@@ -261,6 +261,10 @@ class Global(commands.Cog):
 
         guilds = [app_commands.Choice(name=f"{record.guild}", value=str(record.server_id)) for record in records]
         startswith: list[Choice] = [choices for choices in guilds if guilds.name.startswith(current)]
+
+        print(guilds[0:25])
+        print(startswith[0])
+
         if not (current and startswith):
             return guilds[0:25]
 
