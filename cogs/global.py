@@ -218,7 +218,7 @@ class Global(commands.Cog):
     @_global.command(name="blacklist")
     @commands.guild_only()
     @commands.has_permissions(manage_messages=True)
-    async def blacklist(self, ctx : commands.Context, user : Optional[discord.User], guild : Optional[int]):
+    async def blacklist(self, ctx : commands.Context, user : Optional[discord.User], guild : Optional[int], public : Optional[bool] = True, developer : Optional[bool] = True):
 
         # make it require manage_messages only per guild
 
@@ -234,12 +234,15 @@ class Global(commands.Cog):
 
         if user:
             check_valid_user = self.db.get_blacklist(interaction.guild_id, user.id)
+            if not check_valid_user:
+                await self.db.add_blacklist(interaction.guild_id, user.id, pub, dev, False, utils.FilterType.user, reason)
 
         if guild_grab:
             check_valid_guild = self.db.get_blacklist(interaction.guild_id, guild.id)
+            if not check_valid_guild:
+                await self.db.add_blacklist(interaction.guild_id, guild.id, pub, dev, False, utils.FilterType.server, reason)
 
-        # should I make an unblacklist command or manage blacklisting and unblackisting the same command?
-        
+        # check that they aren't valid blacklists ie not in them and then add the one that makes most sense.
 
     @blacklist.autocomplete("guild")
     async def blacklist_guild_autocomplete(self, interaction : discord.interaction, current: str):
