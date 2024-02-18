@@ -343,7 +343,7 @@ class Global(commands.Cog):
             if isinstance(record.entity, discord.Guild) and record.server_id == interaction.guild_id
         ]
 
-        guilds: list[Choice] = [Choice(name=f"{record.entity}", value=str(record.server_id)) for record in records]
+        guilds: list[Choice] = [Choice(name=f"{record.entity}", value=str(record.entity_id)) for record in records]
 
         startswith: list[Choice] = [choices for choices in guilds if choices.name.startswith(current)]
 
