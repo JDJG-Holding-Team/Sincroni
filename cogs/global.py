@@ -319,11 +319,45 @@ class Global(commands.Cog):
             return await ctx.send("Please pick at least one to unblacklist.", ephemeral=True)
 
         if user and self.bot.db.get_blacklist(ctx.guild.id, user.id):
+            
+            view = await Confirm.prompt(
+            ctx,
+            user_id=ctx.author.id,
+            content=f"Are you sure you want to unblacklist {user}?",
+            )
+
+            if view.value is None:
+                return await view.message.edit(
+                    content=f"~~{view.message.content}~~ you didn't respond on time!... not doing anything."
+                )
+
+            elif view.value is False:
+                return await view.message.edit(
+                    content=f"~~{view.message.content}~~ okay, not unblacklisting {user}."
+                )
+
             await self.bot.db.remove_blacklist(ctx.guild.id, user.id)
 
             await ctx.send("Removed User from blacklist sucessfully")
 
         if valid_guild and self.bot.db.get_blacklist(ctx.guild.id, valid_guild.id):
+            
+            view = await Confirm.prompt(
+            ctx,
+            user_id=ctx.author.id,
+            content=f"Are you sure you want to unblacklist {valid_guild}?",
+            )
+
+            if view.value is None:
+                return await view.message.edit(
+                    content=f"~~{view.message.content}~~ you didn't respond on time!... not doing anything."
+                )
+
+            elif view.value is False:
+                return await view.message.edit(
+                    content=f"~~{view.message.content}~~ okay, not unblacklisting {valid_guild}}."
+                )
+
             await self.bot.db.remove_blacklist(ctx.guild.id, valid_guild.id)
 
             await ctx.send("Removed guild from blacklist sucessfully")
