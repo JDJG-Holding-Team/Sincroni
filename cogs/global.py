@@ -237,7 +237,7 @@ class Global(commands.Cog):
             return await ctx.send("Sorry you must be owner to run this command for the time being.", ephemeral=True)
 
         if not guild.isdigit():
-            return await ctx.send("That's not a valid guild, please try again.")
+            return await ctx.send("That's not a valid guild, please try again.", ephemeral=True)
 
         valid_guild = bot.get_guild(int(guild))
 
@@ -245,7 +245,7 @@ class Global(commands.Cog):
             return await ctx.send("That guild does not exist sadly.", ephemeral=True)
 
         if not valid_guild and not user:
-            return await ctx.send("Please pick at least one to blacklist.")
+            return await ctx.send("Please pick at least one to blacklist.", ephemeral=True)
 
         if user and not self.db.get_blacklist(ctx.guild.id, user.id):
             await self.db.add_blacklist(
