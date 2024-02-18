@@ -12,7 +12,7 @@ from discord import app_commands
 from discord.ext import commands
 
 from utils import views
-from utils.extra import ChatType
+from utils.extra import ChatType, rules
 from utils.views import Confirm
 
 if TYPE_CHECKING:
@@ -206,9 +206,8 @@ class Global(commands.Cog):
         await self.bot.db.remove_global_chat(channel.id)
 
     @commands.hybrid_command(name="rules")
-    async def rules(self, ctx: commands.Context):
-        embed = discord.Embed(title="Rules", description=utils.rules)
-
+    async def _rules(self, ctx: commands.Context):
+        embed = discord.Embed(title="Rules", description=rules)
         await ctx.send(embed=embed)
 
     @_global.command(name="blacklist")
