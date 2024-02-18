@@ -19,6 +19,7 @@ class Blacklist(TypedDict):
     entity_id: int  # BIGINT, NOT NULL
     pub: bool  # BOOLEAN, DEFAULT FALSE
     dev: bool  # BOOLEAN, DEFAULT FALSE
+    repeat : bool # BOOLEAN, DEFAULT FALSE
     private: bool  # BOOLEAN, DEFAULT FALSE
     blacklist_type: FilterType  # SMALLINT, DEFAULT 0
     reason: str  # TEXT DEFAULT "No reason provided"

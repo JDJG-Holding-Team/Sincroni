@@ -100,6 +100,7 @@ class Blacklist:
         self.entity_id: int = data["entity_id"]
         self.pub: bool = data["pub"]
         self.dev: bool = data["dev"]
+        self.repeat = bool = data["repeat"]
         self.private: bool = data["private"]
         self.raw_blacklist_type: FilterTypePayload = data["blacklist_type"]
         self.reason: str = data["reason"]
