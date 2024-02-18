@@ -220,7 +220,7 @@ class Global(commands.Cog):
     @commands.has_permissions(manage_messages=True)
     async def blacklist(self, ctx : commands.Context, user : Optional[discord.User], guild : Optional[int]):
     
-        guild_grab = bot.get_guild(int(guild))
+        guild_grab = bot.get_guild(guild)
 
         if guild and not user and not guild_grab:
             return await ctx.send("That guild does not exist sadly.")
