@@ -287,6 +287,28 @@ class Global(commands.Cog):
     async def blacklist_error(self, ctx : commands.Context, error):
         await ctx.send(error)
 
+    @_global.command(name="unblacklist")
+    @commands.guild_only()
+    @commands.has_permissions(manage_messages=True)
+    async def unblacklist(
+        self,
+        ctx: commands.Context,
+        user: Optional[discord.User],
+        guild: Optional[str],
+    ):
+
+        if not ctx.interaction:
+            return await ctx.send("You must run this as a slash command.")
+
+        check_owner = await self.bot.is_owner(ctx.author)
+
+        if not check_owner:
+            return await ctx.send("Sorry you must be owner to run this command for the time being.", ephemeral=True)
+
+        # await self.bot.db.remove_blacklist(ctx.guild.id, user.id)
+        # await self.bot.db.remove_blacklist(ctx.guild.id, guild.id)
+
+
     def censor_links(self, string):
         changed_string = self.discord_regex.sub(":lock: [discord invite redacted] :lock: ", string)
         new_string = self.link_regex.sub(":lock: [link redacted] :lock: ", changed_string)
