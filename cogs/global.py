@@ -270,6 +270,10 @@ class Global(commands.Cog):
 
         return startswith[0:25]
 
+    @blacklist.error
+    async def blacklist_error(self, ctx : commands.Context, error):
+        await ctx.send(error)
+
     def censor_links(self, string):
         changed_string = self.discord_regex.sub(":lock: [discord invite redacted] :lock: ", string)
         new_string = self.link_regex.sub(":lock: [link redacted] :lock: ", changed_string)
