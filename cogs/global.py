@@ -222,7 +222,8 @@ class Global(commands.Cog):
         public: bool = True,
         developer: bool = True,
     ):
-        # make it require manage_messages only per guild
+        # make it require manage_messages plus option of also manage_guild only per guild
+        # should allow either or if possible.
 
         # add documenation to the command
 
