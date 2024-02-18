@@ -227,6 +227,9 @@ class Global(commands.Cog):
 
         # add documenation to the command
 
+        if not ctx.interaction:
+            return await ctx.send("you can't run this in text command mode.")
+
         check_owner = await self.bot.is_owner(ctx.author)
 
         if not check_owner:
