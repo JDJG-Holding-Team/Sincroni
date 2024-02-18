@@ -218,7 +218,7 @@ class Global(commands.Cog):
     @_global.command(name="blacklist")
     @commands.guild_only()
     @commands.has_permissions(manage_messages=True)
-    async def blacklist(self, ctx : commands.Context, user : Optional[discord.User], guild : Optional[int], public : Optional[bool] = True, developer : Optional[bool] = True):
+    async def blacklist(self, ctx : commands.Context, user : Optional[discord.User], guild : Optional[int], public : bool = True, developer : bool = True):
 
         # make it require manage_messages only per guild
 
@@ -241,8 +241,6 @@ class Global(commands.Cog):
             check_valid_guild = self.db.get_blacklist(interaction.guild_id, guild.id)
             if not check_valid_guild:
                 await self.db.add_blacklist(interaction.guild_id, guild.id, pub, dev, False, utils.FilterType.server, reason)
-
-        # check that they aren't valid blacklists ie not in them and then add the one that makes most sense.
 
     @blacklist.autocomplete("guild")
     async def blacklist_guild_autocomplete(self, interaction : discord.interaction, current: str):
