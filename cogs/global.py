@@ -236,10 +236,15 @@ class Global(commands.Cog):
         if not check_owner:
             return await ctx.send("Sorry you must be owner to run this command for the time being.", ephemeral=True)
 
-        if not guild.isdigit():
-            return await ctx.send("That's not a valid guild, please try again.", ephemeral=True)
+        if guild:
 
-        valid_guild = self.bot.get_guild(int(guild))
+            if not guild.isdigit():
+                return await ctx.send("That's not a valid guild, please try again.", ephemeral=True)
+
+            valid_guild = self.bot.get_guild(int(guild))
+
+        else:
+            valid_guild = None
 
         if guild and not user and not valid_guild:
             return await ctx.send("That guild does not exist sadly.", ephemeral=True)
