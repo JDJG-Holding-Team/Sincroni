@@ -247,15 +247,15 @@ class Global(commands.Cog):
         if not valid_guild and not user:
             return await ctx.send("Please pick at least one to blacklist.", ephemeral=True)
 
-        if user and not self.db.get_blacklist(ctx.guild.id, user.id):
-            await self.db.add_blacklist(
+        if user and not self.bot.db.get_blacklist(ctx.guild.id, user.id):
+            await self.bot.db.add_blacklist(
                 ctx.guild.id, user.id, public, developer, False, utils.FilterType.user, reason
             )
 
             await ctx.send("Added User to blacklist sucessfully")
 
-        if valid_guild and not self.db.get_blacklist(ctx.guild.id, guild_grab.id):
-            await self.db.add_blacklist(
+        if valid_guild and not self.bot.db.get_blacklist(ctx.guild.id, guild_grab.id):
+            await self.bot.db.add_blacklist(
                 ctx.guild.id, valid_guild.id, public, developer, False, utils.FilterType.server, reason
             )
 
@@ -269,11 +269,6 @@ class Global(commands.Cog):
 
         guilds: list[Choice] = [Choice(name=f"{record.guild}", value=str(record.server_id)) for record in records]
         startswith: list[Choice] = [choices for choices in guilds if choices.name.startswith(current)]
-
-        print(startswith)
-
-        print(guilds[0:25])
-        print(startswith[0])
 
         if not (current and startswith):
             return guilds[0:25]
