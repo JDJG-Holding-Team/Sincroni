@@ -217,7 +217,7 @@ class Global(commands.Cog):
         self,
         ctx: commands.Context,
         user: Optional[discord.User],
-        guild: Optional[str],
+        guild: Optional[int],
         reason: Optional[str],
         public: bool = True,
         developer: bool = True,
@@ -232,10 +232,7 @@ class Global(commands.Cog):
         if not check_owner:
             return await ctx.send("Sorry you must be owner to run this command for the time being.")
 
-        if not guild.isint():
-            return await ctx.send("That's not a valid guild, please try again.")
-
-        valid_guild = bot.get_guild(int(guild))
+        valid_guild = bot.get_guild(guild)
 
         if guild and not user and not valid_guild:
             return await ctx.send("That guild does not exist sadly.")
@@ -257,9 +254,9 @@ class Global(commands.Cog):
     async def blacklist_guild_autocomplete(self, interaction: discord.interaction, current: str):
         # ignore current guild in results
 
-        records = [record for record in self.bot.db.global_chats if record.guild and not interaction.guild]
+        records = [record for record in self.bot.db.global_chats if record.guild and record.server_id != interaction.guild_id]
 
-        guilds = [app_commands.Choice(name=f"{record.guild}", value=str(record.server_id)) for record in records]
+        guilds = [app_commands.Choice(name=f"{record.guild}", value=record.server_id) for record in records]
         startswith: list[Choice] = [choices for choices in guilds if guilds.name.startswith(current)]
         if not (current and startswith):
             return guilds[0:25]
