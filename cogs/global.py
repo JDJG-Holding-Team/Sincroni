@@ -13,7 +13,7 @@ from discord.app_commands import Choice
 from discord.ext import commands
 
 from utils import views
-from utils.extra import ChatType, rules, FilterType
+from utils.extra import ChatType, FilterType, rules
 from utils.views import Confirm
 
 if TYPE_CHECKING:
@@ -237,7 +237,6 @@ class Global(commands.Cog):
             return await ctx.send("Sorry you must be owner to run this command for the time being.", ephemeral=True)
 
         if guild:
-
             if not guild.isdigit():
                 return await ctx.send("That's not a valid guild, please try again.", ephemeral=True)
 
@@ -253,9 +252,7 @@ class Global(commands.Cog):
             return await ctx.send("Please pick at least one to blacklist.", ephemeral=True)
 
         if user and not self.bot.db.get_blacklist(ctx.guild.id, user.id):
-            await self.bot.db.add_blacklist(
-                ctx.guild.id, user.id, public, developer, False, FilterType.user, reason
-            )
+            await self.bot.db.add_blacklist(ctx.guild.id, user.id, public, developer, False, FilterType.user, reason)
 
             await ctx.send("Added User to blacklist sucessfully")
 
@@ -273,7 +270,9 @@ class Global(commands.Cog):
     async def blacklist_guild_autocomplete(self, interaction: discord.interaction, current: str) -> List[Choice]:
         # ignore current guild in results
 
-        records = [record for record in self.bot.db.global_chats if record.guild and record.server_id != interaction.guild_id]
+        records = [
+            record for record in self.bot.db.global_chats if record.guild and record.server_id != interaction.guild_id
+        ]
 
         guilds: list[Choice] = [Choice(name=f"{record.guild}", value=str(record.server_id)) for record in records]
         startswith: list[Choice] = [choices for choices in guilds if choices.name.startswith(current)]
@@ -284,7 +283,7 @@ class Global(commands.Cog):
         return startswith[0:25]
 
     @blacklist.error
-    async def blacklist_error(self, ctx : commands.Context, error):
+    async def blacklist_error(self, ctx: commands.Context, error):
         await ctx.send(error)
 
     @_global.command(name="unblacklist")
@@ -296,7 +295,6 @@ class Global(commands.Cog):
         user: Optional[discord.User],
         guild: Optional[str],
     ):
-
         if not ctx.interaction:
             return await ctx.send("You must run this as a slash command.")
 
@@ -306,7 +304,6 @@ class Global(commands.Cog):
             return await ctx.send("Sorry you must be owner to run this command for the time being.", ephemeral=True)
 
         if guild:
-
             if not guild.isdigit():
                 return await ctx.send("That's not a valid guild, please try again.", ephemeral=True)
 
@@ -332,27 +329,32 @@ class Global(commands.Cog):
             await ctx.send("Removed guild from blacklist sucessfully")
 
         else:
-            await ctx.send("You must have already unblacklisted them or not added them to the blacklist", ephemeral=True)
+            await ctx.send(
+                "You must have already unblacklisted them or not added them to the blacklist", ephemeral=True
+            )
 
     @unblacklist.autocomplete("guild")
     async def unblacklist_guild_autocomplete(self, interaction: discord.interaction, current: str) -> List[Choice]:
         # ignore current guild in results
 
-            records = [record for record in self.bot.db.blacklists if isinstance(record.entity, discord.Guild) and record.server_id == interaction.guild_id]
-            
-            guilds: list[Choice] = [Choice(name=f"{record.entity}", value=str(record.server_id)) for record in records]
+        records = [
+            record
+            for record in self.bot.db.blacklists
+            if isinstance(record.entity, discord.Guild) and record.server_id == interaction.guild_id
+        ]
 
-            startswith: list[Choice] = [choices for choices in guilds if choices.name.startswith(current)]
+        guilds: list[Choice] = [Choice(name=f"{record.entity}", value=str(record.server_id)) for record in records]
 
-            if not (current and startswith):
-                return guilds[0:25]
+        startswith: list[Choice] = [choices for choices in guilds if choices.name.startswith(current)]
 
-            return startswith[0:25]
+        if not (current and startswith):
+            return guilds[0:25]
+
+        return startswith[0:25]
 
     @unblacklist.error
-    async def unblacklist_error(self, ctx : commands.Context, error):
+    async def unblacklist_error(self, ctx: commands.Context, error):
         await ctx.send(error)
-
 
     def censor_links(self, string):
         changed_string = self.discord_regex.sub(":lock: [discord invite redacted] :lock: ", string)
