@@ -13,7 +13,7 @@ from discord.app_commands import Choice
 from discord.ext import commands
 
 from utils import views
-from utils.extra import ChatType, rules
+from utils.extra import ChatType, rules, FilterType
 from utils.views import Confirm
 
 if TYPE_CHECKING:
@@ -249,14 +249,14 @@ class Global(commands.Cog):
 
         if user and not self.bot.db.get_blacklist(ctx.guild.id, user.id):
             await self.bot.db.add_blacklist(
-                ctx.guild.id, user.id, public, developer, False, utils.FilterType.user, reason
+                ctx.guild.id, user.id, public, developer, False, FilterType.user, reason
             )
 
             await ctx.send("Added User to blacklist sucessfully")
 
         if valid_guild and not self.bot.db.get_blacklist(ctx.guild.id, guild_grab.id):
             await self.bot.db.add_blacklist(
-                ctx.guild.id, valid_guild.id, public, developer, False, utils.FilterType.server, reason
+                ctx.guild.id, valid_guild.id, public, developer, False, FilterType.server, reason
             )
 
             await ctx.send("Added guild to blacklist sucessfully")
