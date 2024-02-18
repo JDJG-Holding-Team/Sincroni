@@ -254,7 +254,7 @@ class Global(commands.Cog):
 
             await ctx.send("Added User to blacklist sucessfully")
 
-        if valid_guild and not self.bot.db.get_blacklist(ctx.guild.id, guild_grab.id):
+        if valid_guild and not self.bot.db.get_blacklist(ctx.guild.id, valid_guild.id):
             await self.bot.db.add_blacklist(
                 ctx.guild.id, valid_guild.id, public, developer, False, FilterType.server, reason
             )
