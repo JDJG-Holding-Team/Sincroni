@@ -11,6 +11,7 @@ class FilterType(enum.IntEnum):
     user = 0
     server = 1
 
+
 rules = """
 1. No advertising is allowed in the global chat. 
 2. Please refrain from sharing NSFW content in the global chat.

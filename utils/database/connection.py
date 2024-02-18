@@ -223,7 +223,6 @@ class DatabaseConnection:
         return self._whitelists[entity_id]
 
     def get_whitelist(self, entity_id: int, /) -> Optional[Whitelist]:
-
         return self._whitelists.get(entity_id)
 
     async def remove_whitelist(self, entity_id: int, /) -> Optional[Whitelist]:
@@ -284,7 +283,6 @@ class DatabaseConnection:
         return self._linked_channels[origin_channel_id]
 
     def get_linked_channel(self, origin_channel_id: int) -> Optional[LinkedChannel]:
-
         return self._linked_channels.get(origin_channel_id)
 
     async def remove_linked_channel(self, origin_channel_id: int, /) -> Optional[LinkedChannel]:

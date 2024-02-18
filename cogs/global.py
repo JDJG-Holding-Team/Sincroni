@@ -62,7 +62,6 @@ class Global(commands.Cog):
 
     @commands.hybrid_command(name="source")
     async def source(self, ctx: commands.Context):
-
         github_url = "https://github.com/JDJG-Holding-Team/Sincroni"
 
         embed = discord.Embed(
@@ -208,42 +207,49 @@ class Global(commands.Cog):
 
     @commands.hybrid_command(name="rules")
     async def rules(self, ctx: commands.Context):
-
-        embed = discord.Embed(
-            title="Rules",
-            description=utils.rules)
+        embed = discord.Embed(title="Rules", description=utils.rules)
 
         await ctx.send(embed=embed)
 
     @_global.command(name="blacklist")
     @commands.guild_only()
     @commands.has_permissions(manage_messages=True)
-    async def blacklist(self, ctx : commands.Context, user : Optional[discord.User], guild : Optional[int], public : bool = True, developer : bool = True):
-
+    async def blacklist(
+        self,
+        ctx: commands.Context,
+        user: Optional[discord.User],
+        guild: Optional[int],
+        public: bool = True,
+        developer: bool = True,
+    ):
         # make it require manage_messages only per guild
 
         # add documenation to the command
-    
+
         valid_guild = bot.get_guild(guild)
 
         if guild and not user and not valid_guild:
             return await ctx.send("That guild does not exist sadly.")
-        
+
         if not valid_guild and not user:
             return await ctx.send("Please pick at least one to blacklist.")
 
         if user:
             check_valid_user = self.db.get_blacklist(interaction.guild_id, user.id)
             if not check_valid_user:
-                await self.db.add_blacklist(interaction.guild_id, user.id, pub, dev, False, utils.FilterType.user, reason)
+                await self.db.add_blacklist(
+                    interaction.guild_id, user.id, pub, dev, False, utils.FilterType.user, reason
+                )
 
         if valid_guild:
             check_valid_guild = self.db.get_blacklist(interaction.guild_id, guild_grab.id)
             if not check_valid_guild:
-                await self.db.add_blacklist(interaction.guild_id, valid_guild.id, pub, dev, False, utils.FilterType.server, reason)
+                await self.db.add_blacklist(
+                    interaction.guild_id, valid_guild.id, pub, dev, False, utils.FilterType.server, reason
+                )
 
     @blacklist.autocomplete("guild")
-    async def blacklist_guild_autocomplete(self, interaction : discord.interaction, current: str):
+    async def blacklist_guild_autocomplete(self, interaction: discord.interaction, current: str):
         # ignore current guild in results
 
         records = [record for record in self.bot.db.global_chats if record.guild and not interaction.guild]
@@ -255,9 +261,7 @@ class Global(commands.Cog):
 
         return guilds
 
-
     def censor_links(self, string):
-
         changed_string = self.discord_regex.sub(":lock: [discord invite redacted] :lock: ", string)
         new_string = self.link_regex.sub(":lock: [link redacted] :lock: ", changed_string)
 
@@ -355,7 +359,6 @@ class Global(commands.Cog):
         # you do not check if the current guild is blacklisted as that is the origin.
 
         if global_blacklisted_user or blacklisted_guild or blacklisted_user:
-
             if self.mod_webhook:
                 try:
                     await self.mod_webhook.send(

@@ -33,7 +33,11 @@ class Sincroni(commands.Bot):
             *[self.load_extension(f"{cog}") for cog in EXTENSIONS],
             return_exceptions=True,
         )
-        [traceback.print_exception(type(c), c, c.__traceback__) for c in cogs if isinstance(c, commands.errors.ExtensionError)]
+        [
+            traceback.print_exception(type(c), c, c.__traceback__)
+            for c in cogs
+            if isinstance(c, commands.errors.ExtensionError)
+        ]
 
         await bot.db.fetch_global_chats()
         await bot.db.fetch_blacklists()
