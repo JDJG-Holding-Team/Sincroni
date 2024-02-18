@@ -221,6 +221,7 @@ class Global(commands.Cog):
         guild: Optional[int],
         public: bool = True,
         developer: bool = True,
+        reason : Optional[str],
     ):
         # make it require manage_messages only per guild
 
