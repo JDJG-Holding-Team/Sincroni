@@ -226,7 +226,7 @@ class Global(commands.Cog):
 
         # add documenation to the command
 
-        check_owner = await self.bot.is_owner(interaction.user)
+        check_owner = await self.bot.is_owner(ctx.author)
 
         if not check_owner:
             return await ctx.send("Sorry you must be owner to run this command for the time being.")
@@ -239,14 +239,14 @@ class Global(commands.Cog):
         if not valid_guild and not user:
             return await ctx.send("Please pick at least one to blacklist.")
 
-        if user and not self.db.get_blacklist(interaction.guild_id, user.id):
+        if user and not self.db.get_blacklist(ctx.guild.id, user.id):
             await self.db.add_blacklist(
-                interaction.guild_id, user.id, public, developer, False, utils.FilterType.user, reason
+                ctx.guild.id, user.id, public, developer, False, utils.FilterType.user, reason
             )
 
-        if valid_guild and not self.db.get_blacklist(interaction.guild_id, guild_grab.id):
+        if valid_guild and not self.db.get_blacklist(ctx.guild.id, guild_grab.id):
             await self.db.add_blacklist(
-                interaction.guild_id, valid_guild.id, public, developer, False, utils.FilterType.server, reason
+                ctx.guild.id, valid_guild.id, public, developer, False, utils.FilterType.server, reason
             )
 
     @blacklist.autocomplete("guild")
