@@ -261,6 +261,8 @@ class Global(commands.Cog):
     async def blacklist_guild_autocomplete(self, interaction: discord.interaction, current: str) -> List[Choice]:
         # ignore current guild in results
 
+        print("running autocomplete")
+
         records = [record for record in self.bot.db.global_chats if record.guild and record.server_id != interaction.guild_id]
 
         guilds: list[Choice] = [Choice(name=f"{record.guild}", value=str(record.server_id)) for record in records]
