@@ -219,6 +219,10 @@ class Global(commands.Cog):
     @commands.guild_only()
     @commands.has_permissions(manage_messages=True)
     async def blacklist(self, ctx : commands.Context, user : Optional[discord.User], guild : Optional[int]):
+
+        # make it require manage_messages only per guild
+
+        # add documenation to the command
     
         guild_grab = bot.get_guild(guild)
 
