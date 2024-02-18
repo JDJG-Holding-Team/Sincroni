@@ -232,7 +232,7 @@ class Global(commands.Cog):
         if not check_owner:
             return await ctx.send("Sorry you must be owner to run this command for the time being.")
 
-        if not guild.isint():
+        if not guild.isdigit():
             return await ctx.send("That's not a valid guild, please try again.")
 
         valid_guild = bot.get_guild(int(guild))
