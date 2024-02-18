@@ -261,7 +261,7 @@ class Global(commands.Cog):
         if not (current and startswith):
             return guilds[0:25]
 
-        return startswith
+        return startswith[0:25]
 
     def censor_links(self, string):
         changed_string = self.discord_regex.sub(":lock: [discord invite redacted] :lock: ", string)
