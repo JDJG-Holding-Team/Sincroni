@@ -239,7 +239,7 @@ class Global(commands.Cog):
         if not guild.isdigit():
             return await ctx.send("That's not a valid guild, please try again.", ephemeral=True)
 
-        valid_guild = bot.get_guild(int(guild))
+        valid_guild = self.bot.get_guild(int(guild))
 
         if guild and not user and not valid_guild:
             return await ctx.send("That guild does not exist sadly.", ephemeral=True)
