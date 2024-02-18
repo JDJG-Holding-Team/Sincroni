@@ -355,7 +355,7 @@ class Global(commands.Cog):
 
             elif view.value is False:
                 return await view.message.edit(
-                    content=f"~~{view.message.content}~~ okay, not unblacklisting {valid_guild}}."
+                    content=f"~~{view.message.content}~~ okay, not unblacklisting {valid_guild}."
                 )
 
             await self.bot.db.remove_blacklist(ctx.guild.id, valid_guild.id)
