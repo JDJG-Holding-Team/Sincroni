@@ -310,7 +310,7 @@ class Global(commands.Cog):
 
         # have an anti spam check here.
         # this new filter seems to work fine.
-        # maybe make this records filter into something that can handle pub, developer, private types ie detect the chat_type and only grab blacklist stuff from that sort of thing.
+        # maybe make this records filter into something that can handle pub, developer, private, and repeat types ie detect the chat_type and only grab blacklist stuff from that sort of thing.
         # custom function likely needed
 
         guild_icon = message.guild.icon.url if message.guild.icon else "https://i.imgur.com/3ZUrjUP.png"
