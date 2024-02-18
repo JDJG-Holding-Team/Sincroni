@@ -265,7 +265,7 @@ class Global(commands.Cog):
 
         guilds: list[Choice] = [Choice(name=f"{record.guild}", value=str(record.server_id)) for record in records]
 
-        print((guild)
+        print(guilds)
 
         startswith: list[Choice] = [choices for choices in guilds if guilds.name.startswith(current)]
 
