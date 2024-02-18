@@ -234,7 +234,7 @@ class Global(commands.Cog):
         check_owner = await self.bot.is_owner(ctx.author)
 
         if not check_owner:
-            return await ctx.send("Sorry you must be owner to run this command for the time being.")
+            return await ctx.send("Sorry you must be owner to run this command for the time being.", ephemeral=True)
 
         if not guild.isdigit():
             return await ctx.send("That's not a valid guild, please try again.")
@@ -242,7 +242,7 @@ class Global(commands.Cog):
         valid_guild = bot.get_guild(int(guild))
 
         if guild and not user and not valid_guild:
-            return await ctx.send("That guild does not exist sadly.")
+            return await ctx.send("That guild does not exist sadly.", ephemeral=True)
 
         if not valid_guild and not user:
             return await ctx.send("Please pick at least one to blacklist.")
@@ -252,10 +252,14 @@ class Global(commands.Cog):
                 ctx.guild.id, user.id, public, developer, False, utils.FilterType.user, reason
             )
 
+            await ctx.send("Added User to blacklist sucessfully")
+
         if valid_guild and not self.db.get_blacklist(ctx.guild.id, guild_grab.id):
             await self.db.add_blacklist(
                 ctx.guild.id, valid_guild.id, public, developer, False, utils.FilterType.server, reason
             )
+
+            await ctx.send("Added guild to blacklist sucessfully")
 
     @blacklist.autocomplete("guild")
     async def blacklist_guild_autocomplete(self, interaction: discord.interaction, current: str) -> List[Choice]:
