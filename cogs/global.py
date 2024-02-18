@@ -218,27 +218,20 @@ class Global(commands.Cog):
     @_global.command(name="blacklist")
     @commands.guild_only()
     @commands.has_permissions(manage_messages=True)
-    async def blacklist(self, ctx : commands.Context, user : Optional[discord.User], guild : Optional[str]):
+    async def blacklist(self, ctx : commands.Context, user : Optional[discord.User], guild : Optional[int]):
+    
+        guild_grab = bot.get_guild(int(guild))
 
-        # should be documentation here like the link command.
-
-        if not guild.isint():
-            return await ctx.send("Um Boss I don't think that guild exists")
-
-        guild_id = int(guild)
-        # should be guild_id
-
-        guild = [record.guild for record in self.bot.db.global_chats if record.server_id == guild_int][0]
-        # I don't remeber the better method for this.
-        # should also make sure it is a valid global chat guild to prevent people from using fake integers
+        if guild and not user and not guild_grab:
+            return await ctx.send("That guild does not exist sadly.")
         
-        if not guild and not user:
+        if not guild_grab and not user:
             return await ctx.send("Please pick at least one to blacklist.")
 
         if user:
             check_valid_user = self.db.get_blacklist(interaction.guild_id, user.id)
 
-        if guild:
+        if guild_grab:
             check_valid_guild = self.db.get_blacklist(interaction.guild_id, guild_id)
 
         # should I make an unblacklist command or manage blacklisting and unblackisting the same command?
@@ -250,7 +243,7 @@ class Global(commands.Cog):
 
         records = [record for record in self.bot.db.global_chats if record.guild and not interaction.guild]
 
-        guilds = [app_commands.Choice(name=f"{record.guild}", value=str(record.server_id)) for record in records]
+        guilds = [app_commands.Choice(name=f"{record.guild}", value=record.server_id) for record in records]
         startswith: list[Choice] = [choices for choices in guilds if guilds.name.startswith(current)]
         if not (current and startswith):
             return guilds[0:25]
