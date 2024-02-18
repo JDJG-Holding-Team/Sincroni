@@ -236,7 +236,7 @@ class Global(commands.Cog):
             check_valid_user = self.db.get_blacklist(interaction.guild_id, user.id)
 
         if guild_grab:
-            check_valid_guild = self.db.get_blacklist(interaction.guild_id, guild_id)
+            check_valid_guild = self.db.get_blacklist(interaction.guild_id, guild.id)
 
         # should I make an unblacklist command or manage blacklisting and unblackisting the same command?
         
