@@ -263,7 +263,7 @@ class Global(commands.Cog):
 
         records = [record for record in self.bot.db.global_chats if record.guild and record.server_id != interaction.guild_id]
 
-        guilds : list[Choice] = [Choice(name=f"{record.guild}", value=str(record.server_id)) for record in records]
+        guilds: list[Choice] = [Choice(name=f"{record.guild}", value=str(record.server_id)) for record in records]
         startswith: list[Choice] = [choices for choices in guilds if guilds.name.startswith(current)]
 
         print(guilds[0:25])
