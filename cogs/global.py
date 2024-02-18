@@ -226,6 +226,12 @@ class Global(commands.Cog):
 
         # add documenation to the command
 
+        check_owner = await self.bot.is_owner(interaction.user)
+
+        if not check_owner:
+            return await ctx.send("Sorry you must be owner to run this command for the time being.")
+
+
         valid_guild = bot.get_guild(guild)
 
         if guild and not user and not valid_guild:
