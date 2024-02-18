@@ -222,6 +222,7 @@ class Global(commands.Cog):
         reason: Optional[str],
         public: bool = True,
         developer: bool = True,
+        repeat : bool = True,
     ):
         # make it require manage_messages plus option of also manage_guild only per guild
         # should allow either or if possible.
@@ -247,13 +248,13 @@ class Global(commands.Cog):
             return await ctx.send("Please pick at least one to blacklist.", ephemeral=True)
 
         if user and not self.bot.db.get_blacklist(ctx.guild.id, user.id):
-            await self.bot.db.add_blacklist(ctx.guild.id, user.id, public, developer, False, FilterType.user, reason)
+            await self.bot.db.add_blacklist(ctx.guild.id, user.id, public, developer, repeat, False, FilterType.user, reason)
 
             await ctx.send("Added User to blacklist sucessfully")
 
         if valid_guild and not self.bot.db.get_blacklist(ctx.guild.id, valid_guild.id):
             await self.bot.db.add_blacklist(
-                ctx.guild.id, valid_guild.id, public, developer, False, FilterType.server, reason
+                ctx.guild.id, valid_guild.id, public, developer, repeat, False, FilterType.server, reason
             )
 
             await ctx.send("Added guild to blacklist sucessfully")
