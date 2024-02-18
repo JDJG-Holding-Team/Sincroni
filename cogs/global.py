@@ -218,8 +218,8 @@ class Global(commands.Cog):
         self,
         ctx: commands.Context,
         user: Optional[discord.User],
-        reason : Optional[str],
         guild: Optional[int],
+        reason : Optional[str],
         public: bool = True,
         developer: bool = True,
     ):
