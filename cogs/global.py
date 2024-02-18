@@ -228,7 +228,7 @@ class Global(commands.Cog):
         # add documenation to the command
 
         if not ctx.interaction:
-            return await ctx.send("you can't run this in text command mode.")
+            return await ctx.send("You must run this as a slash command.")
 
         check_owner = await self.bot.is_owner(ctx.author)
 
