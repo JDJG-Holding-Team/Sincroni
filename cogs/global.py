@@ -305,8 +305,49 @@ class Global(commands.Cog):
         if not check_owner:
             return await ctx.send("Sorry you must be owner to run this command for the time being.", ephemeral=True)
 
-        # await self.bot.db.remove_blacklist(ctx.guild.id, user.id)
-        # await self.bot.db.remove_blacklist(ctx.guild.id, guild.id)
+        if guild:
+
+            if not guild.isdigit():
+                return await ctx.send("That's not a valid guild, please try again.", ephemeral=True)
+
+            valid_guild = self.bot.get_guild(int(guild))
+
+        else:
+            valid_guild = None
+
+        if guild and not user and not valid_guild:
+            return await ctx.send("Please pick something to unblacklist", ephemeral=True)
+
+        if not valid_guild and not user:
+            return await ctx.send("Please pick at least one to unblacklist.", ephemeral=True)
+
+        if user and self.bot.db.get_blacklist(ctx.guild.id, user.id):
+            await self.bot.db.remove_blacklist(ctx.guild.id, user.id)
+
+            await ctx.send("Removed User from blacklist sucessfully")
+
+        if valid_guild and self.bot.db.get_blacklist(ctx.guild.id, valid_guild.id):
+            await self.bot.db.remove_blacklist(ctx.guild.id, valid_guild.id)
+
+            await ctx.send("Removed guild from blacklist sucessfully")
+
+        else:
+            await ctx.send("You must have already unblacklisted them or not added them to the blacklist", ephemeral=True)
+
+        @unblacklist.complete("guild")
+        async def unblacklist_guild_autocomplete(self, interaction: discord.interaction, current: str) -> List[Choice]:
+        # ignore current guild in results
+
+            records = [record for record in self.bot.db.blacklists if isinstance(record.entity, discord.Guild) and record.server_id == interaction.guild_id]
+            
+            guilds: list[Choice] = [Choice(name=f"{record.entity}", value=str(record.server_id)) for record in records]
+
+            startswith: list[Choice] = [choices for choices in guilds if choices.name.startswith(current)]
+
+            if not (current and startswith):
+                return guilds[0:25]
+
+            return startswith[0:25]
 
 
     def censor_links(self, string):
