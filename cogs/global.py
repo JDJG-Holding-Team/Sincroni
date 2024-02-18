@@ -224,12 +224,12 @@ class Global(commands.Cog):
 
         # add documenation to the command
     
-        guild_grab = bot.get_guild(guild)
+        valid_guild = bot.get_guild(guild)
 
-        if guild and not user and not guild_grab:
+        if guild and not user and not valid_guild:
             return await ctx.send("That guild does not exist sadly.")
         
-        if not guild_grab and not user:
+        if not valid_guild and not user:
             return await ctx.send("Please pick at least one to blacklist.")
 
         if user:
@@ -237,10 +237,10 @@ class Global(commands.Cog):
             if not check_valid_user:
                 await self.db.add_blacklist(interaction.guild_id, user.id, pub, dev, False, utils.FilterType.user, reason)
 
-        if guild_grab:
-            check_valid_guild = self.db.get_blacklist(interaction.guild_id, guild.id)
+        if valid_guild:
+            check_valid_guild = self.db.get_blacklist(interaction.guild_id, guild_grab.id)
             if not check_valid_guild:
-                await self.db.add_blacklist(interaction.guild_id, guild.id, pub, dev, False, utils.FilterType.server, reason)
+                await self.db.add_blacklist(interaction.guild_id, valid_guild.id, pub, dev, False, utils.FilterType.server, reason)
 
     @blacklist.autocomplete("guild")
     async def blacklist_guild_autocomplete(self, interaction : discord.interaction, current: str):
