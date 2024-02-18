@@ -5,6 +5,7 @@ class ChatType(enum.IntEnum):
     public = 0
     developer = 1
     private = 2
+    repeat = 3
 
 
 class FilterType(enum.IntEnum):

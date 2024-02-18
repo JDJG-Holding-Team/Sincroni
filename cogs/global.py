@@ -89,7 +89,7 @@ class Global(commands.Cog):
         self,
         ctx: commands.Context,
         channel: Union[discord.TextChannel, discord.Thread] = commands.CurrentChannel,
-        _type: Literal["public", "developer"] = "public",
+        _type: Literal["public", "developer", "repeat"] = "public",
     ):
         """Link a channel as global chat.
 
