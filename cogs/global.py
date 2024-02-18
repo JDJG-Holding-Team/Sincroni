@@ -334,7 +334,7 @@ class Global(commands.Cog):
         else:
             await ctx.send("You must have already unblacklisted them or not added them to the blacklist", ephemeral=True)
 
-        @unblacklist.complete("guild")
+        @unblacklist.autocomplete("guild")
         async def unblacklist_guild_autocomplete(self, interaction: discord.interaction, current: str) -> List[Choice]:
         # ignore current guild in results
 
