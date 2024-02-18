@@ -103,6 +103,7 @@ class Blacklist:
         self.private: bool = data["private"]
         self.raw_blacklist_type: FilterTypePayload = data["blacklist_type"]
         self.reason: str = data["reason"]
+        self.repeat: bool = data["repeat"]
 
     def __repr__(self) -> str:
         return f"<Blacklist id={self.id} server_id={self.server_id} entity_id={self.entity_id} blacklist_type={self.blacklist_type.name}>"

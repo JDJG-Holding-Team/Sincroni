@@ -174,6 +174,7 @@ class DatabaseConnection:
         entity_id: int,
         pub: bool = False,
         dev: bool = False,
+        repeat: bool = False,
         private: bool = False,
         blacklist_type: FilterType = FilterType.user,
         reason: Optional[str] = None,
@@ -186,13 +187,14 @@ class DatabaseConnection:
                 dev,
                 private,
                 blacklist_type,
-                reason
+                reason,
+                repeat
             ) 
-            VALUES ($1, $2, $3, $4, $5, $6, $7) 
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8) 
             RETURNING *
             """
 
-        res = await self.fetchrow(query, server_id, entity_id, pub, dev, private, blacklist_type, reason)
+        res = await self.fetchrow(query, server_id, entity_id, pub, dev, private, blacklist_type, reason, repeat)
 
         self._blacklists[(server_id, entity_id)] = Blacklist(self, res)
         return self._blacklists[(server_id, entity_id)]

@@ -39,7 +39,8 @@ CREATE TABLE public.sincroni_blacklist (
     dev boolean DEFAULT false,
     private boolean DEFAULT false,
     blacklist_type smallint DEFAULT 0,
-    reason text
+    reason text,
+    repeat boolean DEFAULT false
 );
 
 
