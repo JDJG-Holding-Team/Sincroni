@@ -218,10 +218,10 @@ class Global(commands.Cog):
         self,
         ctx: commands.Context,
         user: Optional[discord.User],
+        reason : Optional[str],
         guild: Optional[int],
         public: bool = True,
         developer: bool = True,
-        reason : Optional[str]
     ):
         # make it require manage_messages only per guild
 
