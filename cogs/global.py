@@ -231,11 +231,6 @@ class Global(commands.Cog):
         if not ctx.interaction:
             return await ctx.send("You must run this as a slash command.")
 
-        check_owner = await self.bot.is_owner(ctx.author)
-
-        if not check_owner:
-            return await ctx.send("Sorry you must be owner to run this command for the time being.", ephemeral=True)
-
         if guild:
             if not guild.isdigit():
                 return await ctx.send("That's not a valid guild, please try again.", ephemeral=True)
@@ -297,11 +292,6 @@ class Global(commands.Cog):
     ):
         if not ctx.interaction:
             return await ctx.send("You must run this as a slash command.")
-
-        check_owner = await self.bot.is_owner(ctx.author)
-
-        if not check_owner:
-            return await ctx.send("Sorry you must be owner to run this command for the time being.", ephemeral=True)
 
         if guild:
             if not guild.isdigit():
