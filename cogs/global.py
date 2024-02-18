@@ -9,6 +9,7 @@ from typing import TYPE_CHECKING, Literal, Optional, Union
 import discord
 from better_profanity import profanity
 from discord import app_commands
+from discord.app_commands import Choice
 from discord.ext import commands
 
 from utils import views
@@ -257,12 +258,12 @@ class Global(commands.Cog):
             )
 
     @blacklist.autocomplete("guild")
-    async def blacklist_guild_autocomplete(self, interaction: discord.interaction, current: str):
+    async def blacklist_guild_autocomplete(self, interaction: discord.interaction, current: str) -> List[Choice]:
         # ignore current guild in results
 
         records = [record for record in self.bot.db.global_chats if record.guild and record.server_id != interaction.guild_id]
 
-        guilds = [app_commands.Choice(name=f"{record.guild}", value=str(record.server_id)) for record in records]
+        guilds : list[Choice] = [Choice(name=f"{record.guild}", value=str(record.server_id)) for record in records]
         startswith: list[Choice] = [choices for choices in guilds if guilds.name.startswith(current)]
 
         print(guilds[0:25])
