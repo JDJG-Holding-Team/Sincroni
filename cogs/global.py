@@ -247,7 +247,7 @@ class Global(commands.Cog):
             valid_guild = None
 
         if guild and not user and not valid_guild:
-            return await ctx.send("That guild does not exist sadly.", ephemeral=True)
+            return await ctx.send("Please pick something to blacklist", ephemeral=True)
 
         if not valid_guild and not user:
             return await ctx.send("Please pick at least one to blacklist.", ephemeral=True)
