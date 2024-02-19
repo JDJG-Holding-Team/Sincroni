@@ -439,6 +439,8 @@ class Global(commands.Cog):
             embed.set_footer(text=f"Chat type: {_type}")
             await ctx.send("Color Check", embed=embed)
 
+            # unsure what how to handle this.
+
             return
 
         if not color_text.isdigit():
