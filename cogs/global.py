@@ -225,6 +225,29 @@ class Global(commands.Cog):
         developer: bool = False,
         repeat : bool = False,
     ):
+        """Adds the option of user and guild to guild blacklist.
+
+        Parameters
+        ----------
+        user : Optional[discord.User]
+            The user to blacklist.
+
+        guild: Optional[str]
+            The guild to blacklist.
+
+        reason: Optional[str]
+            A reason why the entity or entities were blacklisted.
+
+        public: bool
+            Whatever or not the entity is blacklisted in the public global chat. Defaults to True.
+
+        developer: bool
+            Whatever or not the entity is blacklisted in the developer global chat. Defaults to False.
+
+        repeat: bool
+            Whatever or not the entity is blacklisted in the repeat global chat. Defaults to False.
+        """
+
         # make it require manage_messages plus option of also manage_guild only per guild
         # should allow either or if possible.
 
@@ -293,6 +316,17 @@ class Global(commands.Cog):
         user: Optional[discord.User],
         guild: Optional[str],
     ):
+        """Removes or Guild from guild blacklist.
+
+        Parameters
+        ----------
+        user : Optional[discord.User]
+            The user to remove from the blacklist.
+
+        guild: Optional[str]
+            The guild to remove from the guild blacklist (only blacklisted guilds show up).
+        """
+
         if not ctx.interaction:
             return await ctx.send("You must run this as a slash command.")
 
@@ -400,8 +434,7 @@ class Global(commands.Cog):
     ):
 
         # needs documenation
-
-        print(color_text)
+        # soheab may have a better method so no docs for it yet.
 
         if not ctx.interaction:
             await ctx.send("you must use this as a slash command.")
