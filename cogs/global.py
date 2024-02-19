@@ -404,9 +404,6 @@ class Global(commands.Cog):
         if not ctx.interaction:
             await ctx.send("you must use this as a slash command.")
 
-        if not color_integer and not color_text:
-            return await ctx.send("You must pick one in order to run this command.", ephemeral=True)
-
         if not color_text and color_integer:
             embed = discord.Embed(title = "Please Review", color=color_integer)
             await ctx.send("Color Check", embed=embed)
