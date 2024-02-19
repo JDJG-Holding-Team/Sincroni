@@ -401,6 +401,8 @@ class Global(commands.Cog):
 
         # needs documenation
 
+        print(color_text)
+
         if not ctx.interaction:
             await ctx.send("you must use this as a slash command.")
 
