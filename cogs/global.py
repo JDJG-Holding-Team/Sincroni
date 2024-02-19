@@ -433,7 +433,7 @@ class Global(commands.Cog):
         startswith: list[Choice] = [choices for choices in colors if choices.name.startswith(current)]
 
         if not (current and startswith):
-            return guilds[0:25]
+            return colors[0:25]
 
         return startswith[0:25]
 
