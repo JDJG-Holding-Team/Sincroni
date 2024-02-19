@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import functools
 import os
+import random
 import re
 import traceback
 from typing import TYPE_CHECKING, Literal, Optional, Union
@@ -382,6 +383,34 @@ class Global(commands.Cog):
     @unblacklist.error
     async def unblacklist_error(self, ctx: commands.Context, error):
         await ctx.send(error)
+
+    @_global.command(name="color")
+    @commands.guild_only()
+    @commands.has_permissions(manage_guild=True)
+    @app_commands.rename(_type="type")
+    async def color(
+        self,
+        ctx: commands.Context,
+        color_text: Optional[str],
+        _type: Literal["public", "developer", "repeat"] = "public",
+        color_integer: app_commands.Range[int, 0, 16777215] = random.randint(0, 0xFFFFFF),
+    ):
+        if not ctx.interaction:
+            await ctx.send("you must use this as a slash command.")
+
+    @color.autocomplete("color_text")
+    async def color_text_autocomplete(self, interaction: discord.interaction, current: str) -> List[Choice]:
+        # do color logic here
+        # so how get the list of dpy colors.
+
+        colors: list[Choice] = [Choice(name=f"{color}", value=str(color.value)) for color in colors]
+        startswith: list[Choice] = [choices for choices in guilds if choices.name.startswith(current)]
+
+        if not (current and startswith):
+            return guilds[0:25]
+
+        return startswith[0:25]
+
 
     def censor_links(self, string):
         changed_string = self.discord_regex.sub(":lock: [discord invite redacted] :lock: ", string)
