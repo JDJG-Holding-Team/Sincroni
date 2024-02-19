@@ -420,6 +420,10 @@ class Global(commands.Cog):
 
         await ctx.send("Please Pick which one you prefer", embeds=embeds)
 
+    @color.error
+    async def color_error(self, ctx: commands.Context, error):
+        await ctx.send(error)
+
     @color.autocomplete("color_text")
     async def color_text_autocomplete(self, interaction: discord.interaction, current: str) -> List[Choice]:
         colors = {'blue': '0x3498db', 'blurple': '0x5865f2', 'brand_green': '0x57f287', 'brand_red': '0xed4245', 'dark_blue': '0x206694', 'dark_embed': '0x2b2d31', 'dark_gold': '0xc27c0e', 'dark_gray': '0x607d8b', 'dark_green': '0x1f8b4c', 'dark_grey': '0x607d8b', 'dark_magenta': '0xad1457', 'dark_orange': '0xa84300', 'dark_purple': '0x71368a', 'dark_red': '0x992d22', 'dark_teal': '0x11806a', 'dark_theme': '0x313338', 'darker_gray': '0x546e7a', 'darker_grey': '0x546e7a', 'fuchsia': '0xeb459e', 'gold': '0xf1c40f', 'green': '0x2ecc71', 'greyple': '0x99aab5', 'light_embed': '0xeeeff1', 'light_gray': '0x979c9f', 'light_grey': '0x979c9f', 'lighter_gray': '0x95a5a6', 'lighter_grey': '0x95a5a6', 'magenta': '0xe91e63', 'og_blurple': '0x7289da', 'orange': '0xe67e22', 'pink': '0xeb459f', 'purple': '0x9b59b6', 'red': '0xe74c3c', 'teal': '0x1abc9c', 'yellow': '0xfee75c'}
