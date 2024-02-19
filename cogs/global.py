@@ -437,22 +437,62 @@ class Global(commands.Cog):
         if not color_text and color_integer:
             embed = discord.Embed(title = "Please Review", color=color_integer, description="Choosen through Color Integer")
             embed.set_footer(text=f"Chat type: {_type}")
-            await ctx.send("Color Check", embed=embed)
 
-            # unsure what how to handle this.
+            view = await Confirm.prompt(
+                ctx,
+                user_id=ctx.author.id,
+                content=f"Color Check. Would you like to make this your custom color?",
+                embed=embed
+            )
 
-            return
+            if view.value is None:
+                await view.message.edit(
+                    content=f"~~{view.message.content}~~ you didn't respond on time!... not doing anything."
+                )
+                return
+
+            elif view.value is False:
+                await view.message.edit(
+                    content=f"~~{view.message.content}~~ okay, not adding custom color for {_type} in {ctx.guild}."
+                )
+                return
+            
+            else:
+                await view.message.edit(content="Added the custom color succesfully")
+                await self.bot.db.add_embed_color(ctx.guild.id, enum_type, color_integer)
+                return
 
         if not color_text.isdigit():
             await ctx.send("Ignoring color text using color integer.", ephemeral=True)
 
             embed = discord.Embed(title = "Please Review", color=color_integer, description="Choosen through Color Integer")
             embed.set_footer(text=f"Chat type: {_type}")
-            await ctx.send("Color Check", embed=embed)
+            
+            view = await Confirm.prompt(
+                ctx,
+                user_id=ctx.author.id,
+                content=f"Color Check. Would you like to make this your custom color?",
+                embed=embed
+            )
+
+            if view.value is None:
+                await view.message.edit(
+                    content=f"~~{view.message.content}~~ you didn't respond on time!... not doing anything."
+                )
+                return
+
+            elif view.value is False:
+                await view.message.edit(
+                    content=f"~~{view.message.content}~~ okay, not adding custom color for {_type} in {ctx.guild}."
+                )
+                return
+            
+            else:
+                await view.message.edit(content="Added the custom color succesfully")
+                await self.bot.db.add_embed_color(ctx.guild.id, enum_type, color_integer)
+                return
 
             # does only color integer only
-
-            return
 
         embed_text = discord.Embed(title = "Please Review", color=int(color_text), description="Choosen through Color Integer")
         embed_text.set_footer(text=f"Chat type: {_type}")
