@@ -445,15 +445,18 @@ class Global(commands.Cog):
             await ctx.send("Ignoring color text using color integer.", ephemeral=True)
 
             embed = discord.Embed(title = "Please Review", color=color_integer)
+            embed.set_footer(text=f"Chat type: {_type}")
             await ctx.send("Color Check", embed=embed)
 
             # does only color integer only
 
             return
 
-        embeds = [discord.Embed(title = "Please Review", color=int(color_text)), discord.Embed(title = "Please Review", color=color_integer)]
-
-        await ctx.send("Please Pick which one you prefer", embeds=embeds)
+        embed_text = discord.Embed(title = "Please Review", color=int(color_text), description="Choosen through Color Integer")
+        embed_text.set_footer(text=f"Chat type: {_type}")
+        embed_integer = discord.Embed(title = "Please Review", color=color_integer, description="Choosen through Color Text autocomplete")
+        embed_integer.set_footer(text=f"Chat type: {_type}")
+        await ctx.send("Please Pick which one you prefer", embeds=[embed_text, embed_integer])
 
     @color.error
     async def color_error(self, ctx: commands.Context, error):
