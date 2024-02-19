@@ -39,7 +39,7 @@ class Confirm(ui.View):
         self.value = True
         self.stop()
         self._disable_all_buttons()
-        await interaction.response.edit_message(view=self)
+        await interaction.response.edit_message(view=None)
 
     @ui.button(
         label="No",
@@ -50,11 +50,11 @@ class Confirm(ui.View):
         self.value = False
         self.stop()
         self._disable_all_buttons()
-        await interaction.response.edit_message(view=self)
+        await interaction.response.edit_message(view=None)
 
     async def on_timeout(self) -> None:
         self._disable_all_buttons()
-        await self.message.edit(view=self)
+        await self.message.edit(view=None)
 
     @classmethod
     async def prompt(
