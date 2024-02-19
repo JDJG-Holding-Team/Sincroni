@@ -435,7 +435,7 @@ class Global(commands.Cog):
             return
 
         if not color_text and color_integer:
-            embed = discord.Embed(title = "Please Review", color=color_integer)
+            embed = discord.Embed(title = "Please Review", color=color_integer, description="Choosen through Color Integer")
             embed.set_footer(text=f"Chat type: {_type}")
             await ctx.send("Color Check", embed=embed)
 
@@ -444,7 +444,7 @@ class Global(commands.Cog):
         if not color_text.isdigit():
             await ctx.send("Ignoring color text using color integer.", ephemeral=True)
 
-            embed = discord.Embed(title = "Please Review", color=color_integer)
+            embed = discord.Embed(title = "Please Review", color=color_integer, description="Choosen through Color Integer")
             embed.set_footer(text=f"Chat type: {_type}")
             await ctx.send("Color Check", embed=embed)
 
@@ -457,6 +457,9 @@ class Global(commands.Cog):
         embed_integer = discord.Embed(title = "Please Review", color=color_integer, description="Choosen through Color Text autocomplete")
         embed_integer.set_footer(text=f"Chat type: {_type}")
         await ctx.send("Please Pick which one you prefer", embeds=[embed_text, embed_integer])
+
+        # make a button to choose the color, 1 - color integer, 2 - color text, and finally a neither option.
+        # after this add it to the custom color list or go "Alright I will not set a custom color for you"
 
     @color.error
     async def color_error(self, ctx: commands.Context, error):
