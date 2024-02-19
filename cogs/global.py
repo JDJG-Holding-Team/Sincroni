@@ -404,8 +404,37 @@ class Global(commands.Cog):
         if not ctx.interaction:
             await ctx.send("you must use this as a slash command.")
 
+        enum_type = ChatType[_type.lower()]
+        # check to make sure the same chat_type doesn't exist.
+
+        if self.db.bot.get_embed_color(ctx.guild.id, enum_type):
+            view = await Confirm.prompt(
+                ctx,
+                user_id=ctx.author.id,
+                content=f"{_type} already exists for {ctx.guild} \nWould you like to remove the custom color?",
+            )
+
+            if view.value is None:
+                await view.message.edit(
+                    content=f"~~{view.message.content}~~ you didn't respond on time!... not doing anything."
+                )
+                return
+
+            elif view.value is False:
+                await view.message.edit(
+                    content=f"~~{view.message.content}~~ okay, not removing custom color for {_type} in {ctx.guild}."
+                )
+                return
+            
+            else:
+                await view.message.edit(content="Removed custom color succesfully")
+                await self.bot.db.remove_embed_color(ctx.guild.id, enum_type)
+
+            return
+
         if not color_text and color_integer:
             embed = discord.Embed(title = "Please Review", color=color_integer)
+            embed.set_footer(text=f"Chat type: {_type}")
             await ctx.send("Color Check", embed=embed)
 
             return
