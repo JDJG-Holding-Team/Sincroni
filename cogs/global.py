@@ -434,7 +434,7 @@ class Global(commands.Cog):
 
         # mined list from discord.py
 
-        colors: list[Choice] = [Choice(name=name, value=str(value)) for name, value in colors]
+        colors: list[Choice] = [Choice(name=name, value=str(value)) for name, value in colors.items()]
         startswith: list[Choice] = [choices for choices in colors if choices.name.startswith(current)]
 
         if not (current and startswith):
