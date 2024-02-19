@@ -407,7 +407,7 @@ class Global(commands.Cog):
         enum_type = ChatType[_type.lower()]
         # check to make sure the same chat_type doesn't exist.
 
-        if self.db.bot.get_embed_color(ctx.guild.id, enum_type):
+        if self.bot.db.get_embed_color(ctx.guild.id, enum_type):
             view = await Confirm.prompt(
                 ctx,
                 user_id=ctx.author.id,
