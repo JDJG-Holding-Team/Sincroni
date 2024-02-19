@@ -408,13 +408,17 @@ class Global(commands.Cog):
             embed = discord.Embed(title = "Please Review", color=color_integer)
             await ctx.send("Color Check", embed=embed)
 
+            return
+
         if not color_text.isdigit():
             await ctx.send("Ignoring color text using color integer.", ephemeral=True)
 
             embed = discord.Embed(title = "Please Review", color=color_integer)
-            return await ctx.send("Color Check", embed=embed)
+            await ctx.send("Color Check", embed=embed)
 
             # does only color integer only
+
+            return
 
         embeds = [discord.Embed(title = "Please Review", color=int(color_text)), discord.Embed(title = "Please Review", color=color_integer)]
 
