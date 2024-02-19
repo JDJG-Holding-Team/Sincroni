@@ -229,6 +229,7 @@ class Global(commands.Cog):
         # should allow either or if possible.
 
         # add documenation to the command
+        # remove this comment when docs are added
 
         if not ctx.interaction:
             return await ctx.send("You must run this as a slash command.")
@@ -294,6 +295,8 @@ class Global(commands.Cog):
     ):
         if not ctx.interaction:
             return await ctx.send("You must run this as a slash command.")
+
+        # needs docs
 
         if guild:
             if not guild.isdigit():
@@ -395,6 +398,9 @@ class Global(commands.Cog):
         _type: Literal["public", "developer", "repeat"] = "public",
         color_integer: app_commands.Range[int, 0, 0xFFFFFF] = random.randint(0, 0xFFFFFF),
     ):
+
+        # needs documenation
+
         if not ctx.interaction:
             await ctx.send("you must use this as a slash command.")
 
