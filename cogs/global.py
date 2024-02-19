@@ -389,7 +389,7 @@ class Global(commands.Cog):
 
         return new_string
 
-    def blacklist_lookup(self, chat_type : ChatType):
+    def blacklist_lookup(self, chat_type : ChatType, message : discord.Message):
         
         match chat_type:
             case chat_type.public:
@@ -427,7 +427,7 @@ class Global(commands.Cog):
         if not global_chat:
             return
 
-        blacklisted_servers = self.blacklist_lookup(global_chat.chat_type)
+        blacklisted_servers = self.blacklist_lookup(global_chat.chat_type, ctx.message)
 
         records = list(
             filter(
