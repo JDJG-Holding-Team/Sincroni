@@ -214,7 +214,7 @@ class Global(commands.Cog):
 
     @_global.command(name="blacklist")
     @commands.guild_only()
-    @commands.has_permissions(manage_messages=True)
+    @commands.check_any(commands.has_permissions(manage_messages=True), commands.has_permissions(manage_guild=True))
     async def blacklist(
         self,
         ctx: commands.Context,
@@ -247,12 +247,6 @@ class Global(commands.Cog):
         repeat: bool
             Whatever or not the entity is blacklisted in the repeat global chat. Defaults to False.
         """
-
-        # make it require manage_messages plus option of also manage_guild only per guild
-        # should allow either or if possible.
-
-        # add documenation to the command
-        # remove this comment when docs are added
 
         if not ctx.interaction:
             return await ctx.send("You must run this as a slash command.")
@@ -309,7 +303,7 @@ class Global(commands.Cog):
 
     @_global.command(name="unblacklist")
     @commands.guild_only()
-    @commands.has_permissions(manage_messages=True)
+    @commands.check_any(commands.has_permissions(manage_messages=True), commands.has_permissions(manage_guild=True))
     async def unblacklist(
         self,
         ctx: commands.Context,
@@ -329,8 +323,6 @@ class Global(commands.Cog):
 
         if not ctx.interaction:
             return await ctx.send("You must run this as a slash command.")
-
-        # needs docs
 
         if guild:
             if not guild.isdigit():
