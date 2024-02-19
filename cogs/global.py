@@ -389,6 +389,22 @@ class Global(commands.Cog):
 
         return new_string
 
+    def blacklist_lookup(self, chat_type : ChatType):
+        
+        match chat_type:
+            case chat_type.public:
+
+                attribute = "pub"
+            
+            case chat_type.developer:
+                attribute = "dev"
+
+            case _:
+                attribute = chat_type.name
+
+        return [record.entity_id for record in self.bot.db.blacklists if not record._global and record.blacklist_type.server and record.server_id == message.guild.id and getattr(record, attribute)]
+        
+
     @commands.Cog.listener("on_message")
     async def global_chat_handler(self, message: discord.Message):
         supported_message_types = (
@@ -411,11 +427,7 @@ class Global(commands.Cog):
         if not global_chat:
             return
 
-        blacklisted_servers = [
-            record.entity_id
-            for record in self.bot.db.blacklists
-            if not record._global and record.blacklist_type.server and record.server_id == message.guild.id
-        ]
+        blacklisted_servers = self.blacklist_lookup(global_chat.chat_type)
 
         records = list(
             filter(
