@@ -502,7 +502,7 @@ class Global(commands.Cog):
         embed.set_footer(text=f"Chat type: {_type}")
         url = f"https://api.alexflipnote.dev/color/image/{color_value.value}"
 
-        res = await bot.session.get(url)
+        res = await self.bot.session.get(url)
 
         if res.ok:
             buffer = BytesIO(await res.read())
