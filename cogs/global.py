@@ -14,7 +14,7 @@ from discord import app_commands
 from discord.app_commands import Choice
 from discord.ext import commands
 
-from pillow import Image
+from PIL import Image
 
 from utils import views
 from utils.extra import ChatType, FilterType, rules
