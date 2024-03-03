@@ -519,7 +519,7 @@ class Global(commands.Cog):
         
         else:
             await view.message.edit(content="Added the custom color succesfully")
-            await self.bot.db.add_embed_color(ctx.guild.id, enum_type, color_integer)
+            await self.bot.db.add_embed_color(ctx.guild.id, enum_type, color.value)
             return
 
     @color.error
