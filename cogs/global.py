@@ -419,7 +419,7 @@ class Global(commands.Cog):
 
     def get_dpy_colors(self) -> dict[str, int]:
         """Returns a dictionary of discord.py colors.
-        
+
         These are hard-coded because discord.py could change
         them at any time, and we don't want to rely on that.
 
@@ -479,7 +479,7 @@ class Global(commands.Cog):
             ``discord.Color``. The names are hard-coded in the function.
         4. Checks if the color is "random" and returns a random ``discord.Color`` using the
             following: ``discord.Color(random.randint(0, 0xFFFFFF))``.
-        
+
         If none of the above checks pass, it tries using the ``from_str`` method on ``discord.Color``.
 
         Parameters
@@ -491,7 +491,7 @@ class Global(commands.Cog):
         Returns
         -------
         discord.Color | None
-            The validated color. ``None`` if the color is invalid 
+            The validated color. ``None`` if the color is invalid
             or ``color`` is ``None`` / falsy.
         """
         if not color:
