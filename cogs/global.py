@@ -424,7 +424,7 @@ class Global(commands.Cog):
         # will use the stored dictionary eventually but this works fine for now.
 
 
-    def validate_color(_color: str, /) -> discord.Color | None:
+    def validate_color(self, _color: str, /) -> discord.Color | None:
         dpy_colors = self.get_dpy_colors()
         if _color.startswith("#"):
             color = _color[1:]
