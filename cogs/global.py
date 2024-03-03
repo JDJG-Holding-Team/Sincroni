@@ -449,8 +449,8 @@ class Global(commands.Cog):
 
     def generate_color_block(self, color_int : int):
         
-        width = 100
-        height = 100
+        width = 250
+        height = 250
 
         red = (color_int & 0x00FF0000) >> 16
         green = (color_int & 0x0000FF00) >> 8
