@@ -642,7 +642,7 @@ class Global(commands.Cog):
     async def color_error(self, ctx: commands.Context, error):
         await ctx.send(error)
 
-    @color.autocomplete("color")
+    @color.autocomplete("_color")
     async def color_autocomplete(self, _: discord.Interaction, current: str) -> list[Choice[str]]:
         dpy_colors: dict[str, int] = self.get_dpy_colors()
 
