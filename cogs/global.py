@@ -395,7 +395,7 @@ class Global(commands.Cog):
             # bug where this responds when this should not.
 
     @unblacklist.autocomplete("guild")
-    async def unblacklist_guild_autocomplete(self, interaction: discord.interaction, current: str) -> List[Choice]:
+    async def unblacklist_guild_autocomplete(self, interaction: discord.Interaction, current: str) -> List[Choice]:
         # ignore current guild in results
 
         records = [
@@ -418,6 +418,16 @@ class Global(commands.Cog):
         await ctx.send(error)
 
     def get_dpy_colors(self) -> dict[str, int]:
+        """Returns a dictionary of discord.py colors.
+        
+        These are hard-coded because discord.py could change
+        them at any time, and we don't want to rely on that.
+
+        Returns
+        -------
+        dict[str, int]
+            A dictionary of discord.py colors. ``{color_name: color_int, ...}``
+        """
         colors = {
             "blue": 3447003,
             "blurple": 5793266,
@@ -455,33 +465,53 @@ class Global(commands.Cog):
             "teal": 1752220,
             "yellow": 16705372,
         }
-
         return colors
 
-    def validate_color(self, _color: str, /) -> discord.Color | None:
-        dpy_colors = self.get_dpy_colors()
-        if _color.startswith("#"):
-            color = _color[1:]
-        elif _color.startswith("0x"):
-            color = _color[2:]
+    def validate_color(self, color: str | None, /) -> discord.Color | None:
+        """Validate a color string. Basically tries to convert it to a discord.Color.
 
-        elif _color.isdigit():
-            color = int(_color)
-            return discord.Color(color)
+        What it does in-order:
+
+        1. Checks if the color is falsy or ``None`` (`if not color: ...`) and returns ``None``.
+        2. Checks if the color is a digit, and if so, try casting to ``int`` with base 16 and
+            then to a ``discord.Color``.
+        3. Checks if the color is a valid discord.py color name and returns the corresponding
+            ``discord.Color``. The names are hard-coded in the function.
+        4. Checks if the color is "random" and returns a random ``discord.Color`` using the
+            following: ``discord.Color(random.randint(0, 0xFFFFFF))``.
+        
+        If none of the above checks pass, it tries using the ``from_str`` method on ``discord.Color``.
+
+        Parameters
+        ----------
+        color: str | None
+            The color to validate. Can be a hex code, decimal, or one of discord.py's
+            built-in colors.
+
+        Returns
+        -------
+        discord.Color | None
+            The validated color. ``None`` if the color is invalid 
+            or ``color`` is ``None`` / falsy.
+        """
+        if not color:
+            return None
+
+        dpy_colors = self.get_dpy_colors()
 
         try:
-            color = int(_color, 16)
-        except ValueError:
-            if _color.lower() in dpy_colors:
-                color = dpy_colors[_color.lower()]
-            elif _color.lower() == "random":
-                color = random.randint(0, 0xFFFFFF)
+            if color.isdigit():
+                return discord.Color(int(str(color), 16))
+            elif dpy_color := dpy_colors.get(color.lower()):
+                return discord.Color(dpy_color)
+            elif color.lower() == "random":
+                return discord.Color(random.randint(0, 0xFFFFFF))
             else:
-                return None
+                return discord.Color.from_str(color)
+        except ValueError:
+            return None
 
-        return discord.Color(color)
-
-    def generate_color_block(self, color_int: int):
+    def generate_color_block(self, color_int: int) -> discord.File:
         width = 250
         height = 250
 
@@ -497,83 +527,116 @@ class Global(commands.Cog):
 
         return discord.File(buffer, filename="color.png")
 
-    @_global.command(name="color")
+    @_global.command(
+        name="color",
+    )
     @commands.guild_only()
     @commands.has_permissions(manage_guild=True)
-    @app_commands.rename(_type="type")
-    @app_commands.rename(_color="color")
     async def color(
-        self, ctx: commands.Context, _color: str, _type: Literal["public", "developer", "repeat"] = "public"
+        self,
+        ctx: commands.Context,
+        color: str | None = None,
+        chat_type: Literal["public", "developer", "repeat"] = "public",
     ):
-        # needs documenation
-        # soheab may have a better method so no docs for it yet.
+        """Set a custom color for the specified chat type.
+
+        Parameters
+        ----------
+        color: str
+            The color to set. Can be a hex code, decimal, or one of the following:
+
+            `blue, blurple, brand_green, brand_red, dark_blue, dark_embed, dark_gold, dark_gray, dark_green,
+            dark_grey, dark_magenta, dark_orange, dark_purple, dark_red, dark_teal, dark_theme, darker_gray,
+            darker_grey, fuchsia, gold, green, greyple, light_embed, light_gray, light_grey, lighter_gray,
+            lighter_grey, magenta, og_blurple, orange, pink, purple, red, teal, yellow`.
+        chat_type: str
+            The chat type to set the color for. Must be one of `public`, `developer`, or `repeat`.
+            Defaults to `public`.
+        """
 
         if not ctx.interaction:
-            await ctx.send("you must use this as a slash command.")
+            return await ctx.send("you must use this as a slash command.")
+        if not ctx.guild:
+            return await ctx.send("This command can only be used in a guild.", ephemeral=True)
 
-        enum_type = ChatType[_type.lower()]
+        enum_type = ChatType[chat_type.lower()]
+
         # check to make sure the same chat_type doesn't exist.
-
         if self.bot.db.get_embed_color(ctx.guild.id, enum_type):
+            msg = f"A custom color for {chat_type} already exists in this guild."
+            if not color:
+                msg += " Do you want to remove it?"
+            else:
+                msg += " Do you want to change it?"
+
             view = await Confirm.prompt(
                 ctx,
                 user_id=ctx.author.id,
-                content=f"{_type} already exists for {ctx.guild} \nWould you like to remove the custom color?",
+                content=f"A custom color for {chat_type} already exists in this guild. Do you want to change it?",
             )
 
             if view.value is None:
                 await view.message.edit(
-                    content=f"~~{view.message.content}~~ you didn't respond on time!... not doing anything."
+                    content=f"~~{view.message.content}~~ you didn't respond on time!... not doing anything.",
+                    view=None,
                 )
                 return
 
             elif view.value is False:
                 await view.message.edit(
-                    content=f"~~{view.message.content}~~ okay, not removing custom color for {_type} in {ctx.guild}."
+                    content=f"~~{view.message.content}~~ okay, not doing anything.",
+                    view=None,
                 )
                 return
 
             else:
-                await view.message.edit(content="Removed custom color succesfully")
-                await self.bot.db.remove_embed_color(ctx.guild.id, enum_type)
+                if not color:
+                    await self.bot.db.remove_embed_color(ctx.guild.id, enum_type)
+                    await view.message.edit(content="Removed custom color succesfully", view=None)
+                    return
+                else:
+                    await view.message.edit(content="Okay, changing the custom color.", view=None)
+                    pass
 
-            return
-
-        color_value = self.validate_color(_color)
-        if not color_value:
-            return await ctx.send("Color not found.", ephemeral=True)
-
-        if color_value.value > 16777215:
-            return (await ctx.send(f"Color {color_value.value} too big", ephemeral=True),)
+        color_value = self.validate_color(color)
+        if not color or not color_value:
+            dpy_colors = self.get_dpy_colors()
+            return await ctx.send(
+                (
+                    "Invalid color! Please recheck what you passed. "
+                    "It must be a valid hex code, digits, 'random', or one of the following: "
+                    f"`{', '.join(dpy_colors.keys())}`"
+                ),
+                ephemeral=True,
+            )
 
         embed = discord.Embed(title="Please Review", color=color_value.value, description="Color")
-        embed.set_footer(text=f"Chat type: {_type} \nColor value: {color_value.value}")
+        embed.set_footer(text=f"Chat type: {chat_type}\nColor value: {color_value.value}")
 
         file = await asyncio.to_thread(self.generate_color_block, color_value.value)
-        embed.set_image(url="attachment://color.png")
+        embed.set_image(url=f"attachment://{file.filename}")
 
         view = await Confirm.prompt(
             ctx,
             user_id=ctx.author.id,
-            content=f"Color Check. Would you like to make this your custom color?",
+            content="Color Check. Would you like to make this your custom color?",
             embed=embed,
             file=file,
         )
 
         if view.value is None:
             await view.message.edit(
-                content=f"~~{view.message.content}~~ you didn't respond on time!... not doing anything."
+                content=f"~~{view.message.content}~~ you didn't respond on time!... not doing anything.", view=None
             )
             return
 
         elif view.value is False:
-            await view.message.edit(
-                content=f"~~{view.message.content}~~ okay, not adding custom color for {_type} in {ctx.guild}."
-            )
+            await view.message.edit(content=f"~~{view.message.content}~~ okay, not setting it.", view=None)
             return
-
         else:
-            await view.message.edit(content="Added the custom color succesfully")
+            await view.message.edit(
+                content="Set the custom color succesfully for {chat_type} to {str(color_value)}.", view=None
+            )
             await self.bot.db.add_embed_color(ctx.guild.id, enum_type, color_value.value)
             return
 
@@ -582,16 +645,12 @@ class Global(commands.Cog):
         await ctx.send(error)
 
     @color.autocomplete("_color")
-    async def color_autocomplete(self, interaction: discord.interaction, current: str) -> List[Choice]:
-        colors = self.get_dpy_colors()
+    async def color_autocomplete(self, _: discord.Interaction, current: str) -> list[Choice[str]]:
+        dpy_colors: dict[str, int] = self.get_dpy_colors()
 
-        colors: list[Choice] = [Choice(name=name, value=str(value)) for name, value in colors.items()]
-        startswith: list[Choice] = [choices for choices in colors if choices.name.startswith(current)]
-
-        if not (current and startswith):
-            return colors[0:25]
-
-        return startswith[0:25]
+        colors: list[Choice] = [Choice(name=name.lower(), value=str(value)) for name, value in dpy_colors.items()]
+        startswith: list[Choice] = [choice for choice in colors if choice.name.startswith(current.lower())]
+        return ((startswith or colors) if current else colors)[:25]
 
     def censor_links(self, string):
         changed_string = self.discord_regex.sub(":lock: [discord invite redacted] :lock: ", string)
