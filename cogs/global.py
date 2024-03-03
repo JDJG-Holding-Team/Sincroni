@@ -426,6 +426,9 @@ class Global(commands.Cog):
         elif _color.startswith("0x"):
             color = _color[2:]
 
+        if _color.isdigit():
+            color = int(_color)
+
         try:
             color = int(_color, 16)
         except ValueError:
