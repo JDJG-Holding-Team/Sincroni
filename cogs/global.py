@@ -501,7 +501,7 @@ class Global(commands.Cog):
 
         try:
             if color.isdigit():
-                return discord.Color(int(str(color), 16))
+                return discord.Color(int(color))
             elif dpy_color := dpy_colors.get(color.lower()):
                 return discord.Color(dpy_color)
             elif color.lower() == "random":
