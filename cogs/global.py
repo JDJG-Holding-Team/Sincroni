@@ -460,7 +460,7 @@ class Global(commands.Cog):
 
         buffer = BytesIO()
         image.save(buffer, format="PNG")
-        buffer.getvalue()
+        buffer.seek(0)
         
         return discord.File(buffer, filename="color.png")
 
