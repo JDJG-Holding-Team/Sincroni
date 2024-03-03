@@ -6,6 +6,7 @@ import random
 import re
 import traceback
 from typing import TYPE_CHECKING, Literal, Optional, Union
+from io import BytesIO
 
 import discord
 from better_profanity import profanity
@@ -499,13 +500,25 @@ class Global(commands.Cog):
 
         embed = discord.Embed(title = "Please Review", color=color_value.value, description="Color")
         embed.set_footer(text=f"Chat type: {_type}")
-        embed.set_image(url=f"https://api.alexflipnote.dev/color/image/{color_value.value}")
+        url = f"https://api.alexflipnote.dev/color/image/{color_value.value}"
+
+        res = await bot.session.get(url)
+
+        if res.ok:
+            buffer = BytesIO(await res.read())
+            buffer.seek(0)
+            file = discord.File(buffer, filename="color.png")
+            embed.set_image(url="attachment://color.png")
+
+        if not res.ok:
+            file = None
             
         view = await Confirm.prompt(
             ctx,
             user_id=ctx.author.id,
             content=f"Color Check. Would you like to make this your custom color?",
-            embed=embed
+            embed=embed,
+            file=file
         )
 
         if view.value is None:
