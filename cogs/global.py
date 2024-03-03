@@ -413,7 +413,7 @@ class Global(commands.Cog):
     async def unblacklist_error(self, ctx: commands.Context, error):
         await ctx.send(error)
 
-    def get_dpy_colors() -> dict[str, int]:
+    def get_dpy_colors(self) -> dict[str, int]:
         unfiltered_colors = inspect.getmembers(discord.Color)
         return {
             name: member().value
