@@ -531,7 +531,7 @@ class Global(commands.Cog):
     async def color_autocomplete(self, interaction: discord.interaction, current: str) -> List[Choice]:
         
         colors = self.get_dpy_colors()
-        choices = [Choice(name=name, value=value) for name, value in colors]
+        choices = [Choice(name=name, value=str(value)) for name, value in colors]
 
         colors: list[Choice] = [Choice(name=name, value=str(value)) for name, value in colors.items()]
         startswith: list[Choice] = [choices for choices in colors if choices.name.startswith(current)]
