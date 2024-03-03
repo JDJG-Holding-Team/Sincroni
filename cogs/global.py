@@ -452,11 +452,9 @@ class Global(commands.Cog):
         width = 250
         height = 250
 
-        red = (color_int & 0x00FF0000) >> 16
-        green = (color_int & 0x0000FF00) >> 8
-        blue = color_int & 0x000000FF
+        color_value = discord.Color(color_int)
 
-        image = Image.new("RGB", (width, height), color=(red, green, blue))
+        image = Image.new("RGB", (width, height), color=(color_value.r, color_value.g, color_value.b))
 
         buffer = BytesIO()
         image.save(buffer, format="PNG")
