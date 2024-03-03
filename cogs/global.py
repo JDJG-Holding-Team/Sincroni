@@ -511,7 +511,8 @@ class Global(commands.Cog):
             embed.set_image(url="attachment://color.png")
 
         if not res.ok:
-            file = None
+            file = discord.File("unknown.png")
+            embed.set_image(url="attachment://unknown.png")
             
         view = await Confirm.prompt(
             ctx,
