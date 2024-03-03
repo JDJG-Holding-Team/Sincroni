@@ -499,8 +499,10 @@ class Global(commands.Cog):
             return await ctx.send(f"Color {color_value.value} too big", ephemeral=True), 
 
         embed = discord.Embed(title = "Please Review", color=color_value.value, description="Color")
-        embed.set_footer(text=f"Chat type: {_type}\ncolor value:{color_value.value}")
+        embed.set_footer(text=f"Chat type: {_type} \nColor value: {color_value.value}")
         url = f"https://api.alexflipnote.dev/color/image/{color_value.value}"
+
+        print(url)
 
         res = await self.bot.session.get(url)
 
