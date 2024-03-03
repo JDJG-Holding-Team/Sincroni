@@ -633,7 +633,7 @@ class Global(commands.Cog):
             return
         else:
             await view.message.edit(
-                content="Set the custom color succesfully for {chat_type} to {str(color_value)}.", view=None
+                content=f"Set the custom color succesfully for {chat_type} to {str(color_value)}.", view=None
             )
             await self.bot.db.add_embed_color(ctx.guild.id, enum_type, color_value.value)
             return
