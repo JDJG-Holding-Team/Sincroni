@@ -461,7 +461,8 @@ class Global(commands.Cog):
         buffer = BytesIO()
         image.save(buffer, format="PNG")
         buffer.getvalue()
-        return buffer
+        
+        return discord.File(buffer, filename="color.png")
 
     @_global.command(name="color")
     @commands.guild_only()
@@ -519,8 +520,7 @@ class Global(commands.Cog):
         embed = discord.Embed(title = "Please Review", color=color_value.value, description="Color")
         embed.set_footer(text=f"Chat type: {_type} \nColor value: {color_value.value}")
 
-        buffer = await asyncio.to_thread(self.generate_color_block, color_value.value)
-        file = discord.File(buffer, filename="color.png")
+        file = await asyncio.to_thread(self.generate_color_block, color_value.value)
         embed.set_image(url="attachment://color.png")
             
         view = await Confirm.prompt(
