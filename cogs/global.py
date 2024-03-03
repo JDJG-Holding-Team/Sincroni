@@ -426,7 +426,7 @@ class Global(commands.Cog):
         elif _color.startswith("0x"):
             color = _color[2:]
 
-        if _color.isdigit():
+        elif _color.isdigit():
             color = int(_color)
 
         try:
@@ -530,9 +530,8 @@ class Global(commands.Cog):
     @color.autocomplete("_color")
     async def color_autocomplete(self, interaction: discord.interaction, current: str) -> List[Choice]:
         
-        colors = {'blue': 3447003, 'blurple': 5793266, 'brand_green': 5763719, 'brand_red': 15548997, 'dark_blue': 2123412, 'dark_embed': 2829617, 'dark_gold': 12745742, 'dark_gray': 6323595, 'dark_green': 2067276, 'dark_grey': 6323595, 'dark_magenta': 11342935, 'dark_orange': 11027200, 'dark_purple': 7419530, 'dark_red': 10038562, 'dark_teal': 1146986, 'dark_theme': 3224376, 'darker_gray': 5533306, 'darker_grey': 5533306, 'fuchsia': 15418782, 'gold': 15844367, 'green': 3066993, 'greyple': 10070709, 'light_embed': 15658993, 'light_gray': 9936031, 'light_grey': 9936031, 'lighter_gray': 9807270, 'lighter_grey': 9807270, 'magenta': 15277667, 'og_blurple': 7506394, 'orange': 15105570, 'pink': 15418783, 'purple': 10181046, 'red': 15158332, 'teal': 1752220, 'yellow': 16705372}
-
-        # mined list from discord.py
+        colors = self.get_dpy_colors()
+        choices = [Choice(name=name, value=value) for name, value in colors]
 
         colors: list[Choice] = [Choice(name=name, value=str(value)) for name, value in colors.items()]
         startswith: list[Choice] = [choices for choices in colors if choices.name.startswith(current)]
