@@ -487,10 +487,10 @@ class Global(commands.Cog):
 
         color_value = self.validate_color(_color)
         if not _color:
-            return await ctx.send("Color not found.")
+            return await ctx.send("Color not found.", ephemeral=True)
 
         if color.value > 16777215:
-            return await ctx.send(f"Color {color_value.value} too big")
+            return await ctx.send(f"Color {color_value.value} too big", ephemeral=True), 
 
         embed = discord.Embed(title = "Please Review", color=color_value, description="Color")
         embed.set_footer(text=f"Chat type: {_type}")
