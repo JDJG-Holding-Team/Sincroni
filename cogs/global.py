@@ -227,7 +227,7 @@ class Global(commands.Cog):
         reason: Optional[str],
         public: bool = True,
         developer: bool = False,
-        repeat : bool = False,
+        repeat: bool = False,
     ):
         """Adds the option of user and guild to guild blacklist.
 
@@ -271,7 +271,9 @@ class Global(commands.Cog):
             return await ctx.send("Please pick at least one to blacklist.", ephemeral=True)
 
         if user and not self.bot.db.get_blacklist(ctx.guild.id, user.id):
-            await self.bot.db.add_blacklist(ctx.guild.id, user.id, public, developer, repeat, False, FilterType.user, reason)
+            await self.bot.db.add_blacklist(
+                ctx.guild.id, user.id, public, developer, repeat, False, FilterType.user, reason
+            )
 
             await ctx.send("Added User to blacklist sucessfully")
 
@@ -352,7 +354,7 @@ class Global(commands.Cog):
 
             if view.value is None:
                 await view.message.edit(
-                     content=f"~~{view.message.content}~~ you didn't respond on time!... not doing anything."
+                    content=f"~~{view.message.content}~~ you didn't respond on time!... not doing anything."
                 )
                 return
 
@@ -378,11 +380,9 @@ class Global(commands.Cog):
                 return
 
             elif view.value is False:
-                await view.message.edit(
-                    content=f"~~{view.message.content}~~ okay, not unblacklisting {valid_guild}."
-                )
+                await view.message.edit(content=f"~~{view.message.content}~~ okay, not unblacklisting {valid_guild}.")
                 return
-            
+
             else:
                 await view.message.edit(content="Removed guild from blacklist sucessfully")
                 await self.bot.db.remove_blacklist(ctx.guild.id, valid_guild.id)
@@ -418,10 +418,45 @@ class Global(commands.Cog):
         await ctx.send(error)
 
     def get_dpy_colors(self) -> dict[str, int]:
-        colors = {'blue': 3447003, 'blurple': 5793266, 'brand_green': 5763719, 'brand_red': 15548997, 'dark_blue': 2123412, 'dark_embed': 2829617, 'dark_gold': 12745742, 'dark_gray': 6323595, 'dark_green': 2067276, 'dark_grey': 6323595, 'dark_magenta': 11342935, 'dark_orange': 11027200, 'dark_purple': 7419530, 'dark_red': 10038562, 'dark_teal': 1146986, 'dark_theme': 3224376, 'darker_gray': 5533306, 'darker_grey': 5533306, 'fuchsia': 15418782, 'gold': 15844367, 'green': 3066993, 'greyple': 10070709, 'light_embed': 15658993, 'light_gray': 9936031, 'light_grey': 9936031, 'lighter_gray': 9807270, 'lighter_grey': 9807270, 'magenta': 15277667, 'og_blurple': 7506394, 'orange': 15105570, 'pink': 15418783, 'purple': 10181046, 'red': 15158332, 'teal': 1752220, 'yellow': 16705372}
+        colors = {
+            "blue": 3447003,
+            "blurple": 5793266,
+            "brand_green": 5763719,
+            "brand_red": 15548997,
+            "dark_blue": 2123412,
+            "dark_embed": 2829617,
+            "dark_gold": 12745742,
+            "dark_gray": 6323595,
+            "dark_green": 2067276,
+            "dark_grey": 6323595,
+            "dark_magenta": 11342935,
+            "dark_orange": 11027200,
+            "dark_purple": 7419530,
+            "dark_red": 10038562,
+            "dark_teal": 1146986,
+            "dark_theme": 3224376,
+            "darker_gray": 5533306,
+            "darker_grey": 5533306,
+            "fuchsia": 15418782,
+            "gold": 15844367,
+            "green": 3066993,
+            "greyple": 10070709,
+            "light_embed": 15658993,
+            "light_gray": 9936031,
+            "light_grey": 9936031,
+            "lighter_gray": 9807270,
+            "lighter_grey": 9807270,
+            "magenta": 15277667,
+            "og_blurple": 7506394,
+            "orange": 15105570,
+            "pink": 15418783,
+            "purple": 10181046,
+            "red": 15158332,
+            "teal": 1752220,
+            "yellow": 16705372,
+        }
 
         return colors
-
 
     def validate_color(self, _color: str, /) -> discord.Color | None:
         dpy_colors = self.get_dpy_colors()
@@ -433,7 +468,6 @@ class Global(commands.Cog):
         elif _color.isdigit():
             color = int(_color)
             return discord.Color(color)
-
 
         try:
             color = int(_color, 16)
@@ -447,8 +481,7 @@ class Global(commands.Cog):
 
         return discord.Color(color)
 
-    def generate_color_block(self, color_int : int):
-        
+    def generate_color_block(self, color_int: int):
         width = 250
         height = 250
 
@@ -461,7 +494,7 @@ class Global(commands.Cog):
         buffer = BytesIO()
         image.save(buffer, format="PNG")
         buffer.seek(0)
-        
+
         return discord.File(buffer, filename="color.png")
 
     @_global.command(name="color")
@@ -470,12 +503,8 @@ class Global(commands.Cog):
     @app_commands.rename(_type="type")
     @app_commands.rename(_color="color")
     async def color(
-        self,
-        ctx: commands.Context,
-        _color: str,
-        _type: Literal["public", "developer", "repeat"] = "public"
+        self, ctx: commands.Context, _color: str, _type: Literal["public", "developer", "repeat"] = "public"
     ):
-
         # needs documenation
         # soheab may have a better method so no docs for it yet.
 
@@ -503,7 +532,7 @@ class Global(commands.Cog):
                     content=f"~~{view.message.content}~~ okay, not removing custom color for {_type} in {ctx.guild}."
                 )
                 return
-            
+
             else:
                 await view.message.edit(content="Removed custom color succesfully")
                 await self.bot.db.remove_embed_color(ctx.guild.id, enum_type)
@@ -515,20 +544,20 @@ class Global(commands.Cog):
             return await ctx.send("Color not found.", ephemeral=True)
 
         if color_value.value > 16777215:
-            return await ctx.send(f"Color {color_value.value} too big", ephemeral=True), 
+            return (await ctx.send(f"Color {color_value.value} too big", ephemeral=True),)
 
-        embed = discord.Embed(title = "Please Review", color=color_value.value, description="Color")
+        embed = discord.Embed(title="Please Review", color=color_value.value, description="Color")
         embed.set_footer(text=f"Chat type: {_type} \nColor value: {color_value.value}")
 
         file = await asyncio.to_thread(self.generate_color_block, color_value.value)
         embed.set_image(url="attachment://color.png")
-            
+
         view = await Confirm.prompt(
             ctx,
             user_id=ctx.author.id,
             content=f"Color Check. Would you like to make this your custom color?",
             embed=embed,
-            file=file
+            file=file,
         )
 
         if view.value is None:
@@ -542,7 +571,7 @@ class Global(commands.Cog):
                 content=f"~~{view.message.content}~~ okay, not adding custom color for {_type} in {ctx.guild}."
             )
             return
-        
+
         else:
             await view.message.edit(content="Added the custom color succesfully")
             await self.bot.db.add_embed_color(ctx.guild.id, enum_type, color_value.value)
@@ -554,9 +583,8 @@ class Global(commands.Cog):
 
     @color.autocomplete("_color")
     async def color_autocomplete(self, interaction: discord.interaction, current: str) -> List[Choice]:
-        
         colors = self.get_dpy_colors()
-        
+
         colors: list[Choice] = [Choice(name=name, value=str(value)) for name, value in colors.items()]
         startswith: list[Choice] = [choices for choices in colors if choices.name.startswith(current)]
 
@@ -565,28 +593,31 @@ class Global(commands.Cog):
 
         return startswith[0:25]
 
-
     def censor_links(self, string):
         changed_string = self.discord_regex.sub(":lock: [discord invite redacted] :lock: ", string)
         new_string = self.link_regex.sub(":lock: [link redacted] :lock: ", changed_string)
 
         return new_string
 
-    def blacklist_lookup(self, chat_type : ChatType, guild_id : int):
-        
+    def blacklist_lookup(self, chat_type: ChatType, guild_id: int):
         match chat_type:
             case chat_type.public:
-
                 attribute = "pub"
-            
+
             case chat_type.developer:
                 attribute = "dev"
 
             case _:
                 attribute = chat_type.name
 
-        return [record.entity_id for record in self.bot.db.blacklists if not record._global and record.blacklist_type.server and record.server_id == guild_id and getattr(record, attribute)]
-        
+        return [
+            record.entity_id
+            for record in self.bot.db.blacklists
+            if not record._global
+            and record.blacklist_type.server
+            and record.server_id == guild_id
+            and getattr(record, attribute)
+        ]
 
     @commands.Cog.listener("on_message")
     async def global_chat_handler(self, message: discord.Message):
