@@ -490,13 +490,13 @@ class Global(commands.Cog):
 
             return
 
-        color = self.validate_color(color)
-        if not color:
+        color_value = self.validate_color(_color)
+        if not _color:
             return await ctx.send("Color not found.")
 
-        embed = discord.Embed(title = "Please Review", color=color, description="Color")
+        embed = discord.Embed(title = "Please Review", color=color_value, description="Color")
         embed.set_footer(text=f"Chat type: {_type}")
-        embed.set_image(url=f"https://api.alexflipnote.dev/color/image/{color.value}")
+        embed.set_image(url=f"https://api.alexflipnote.dev/color/image/{color_value.value}")
             
         view = await Confirm.prompt(
             ctx,
@@ -519,7 +519,7 @@ class Global(commands.Cog):
         
         else:
             await view.message.edit(content="Added the custom color succesfully")
-            await self.bot.db.add_embed_color(ctx.guild.id, enum_type, color.value)
+            await self.bot.db.add_embed_color(ctx.guild.id, enum_type, color_value.value)
             return
 
     @color.error
