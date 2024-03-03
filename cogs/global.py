@@ -413,16 +413,47 @@ class Global(commands.Cog):
     async def unblacklist_error(self, ctx: commands.Context, error):
         await ctx.send(error)
 
+    def get_dpy_colors() -> dict[str, int]:
+        unfiltered_colors = inspect.getmembers(discord.Color)
+        return {
+            name: member().value
+            for name, member in unfiltered_colors
+            if inspect.ismethod(member) and not name.startswith(("from_", "random", "default"))
+        }
+
+        # will use the stored dictionary eventually but this works fine for now.
+
+
+    def validate_color(_color: str, /) -> discord.Color | None:
+        dpy_colors = self.get_dpy_colors()
+        if _color.startswith("#"):
+            color = _color[1:]
+        elif _color.startswith("0x"):
+            color = _color[2:]
+
+        try:
+            color = int(_color, 16)
+        except ValueError:
+            if _color.lower() in dpy_colors:
+                color = dpy_colors[_color.lower()]
+            elif _color.lower() == "random":
+                color = random.randint(0, 0xFFFFFF)
+            else:
+                return None
+
+        return discord.Color(color)
+
+
     @_global.command(name="color")
     @commands.guild_only()
     @commands.has_permissions(manage_guild=True)
     @app_commands.rename(_type="type")
+    @app_commands.rename(_color="color")
     async def color(
         self,
         ctx: commands.Context,
-        color_text: Optional[str],
-        _type: Literal["public", "developer", "repeat"] = "public",
-        color_integer: app_commands.Range[int, 0, 0xFFFFFF] = random.randint(0, 0xFFFFFF),
+        _color: str,
+        _type: Literal["public", "developer", "repeat"] = "public"
     ):
 
         # needs documenation
@@ -459,74 +490,37 @@ class Global(commands.Cog):
 
             return
 
-        if not color_text and color_integer:
-            embed = discord.Embed(title = "Please Review", color=color_integer, description="Choosen through Color Integer")
-            embed.set_footer(text=f"Chat type: {_type}")
+        color = self.validate_color(color)
+        if not color:
+            return await ctx.send("Color not found.")
 
-            view = await Confirm.prompt(
-                ctx,
-                user_id=ctx.author.id,
-                content=f"Color Check. Would you like to make this your custom color?",
-                embed=embed
+        embed = discord.Embed(title = "Please Review", color=color, description="Color")
+        embed.set_footer(text=f"Chat type: {_type}")
+        embed.set_image(url=f"https://api.alexflipnote.dev/color/image/{color.value}")
+            
+        view = await Confirm.prompt(
+            ctx,
+            user_id=ctx.author.id,
+            content=f"Color Check. Would you like to make this your custom color?",
+            embed=embed
+        )
+
+        if view.value is None:
+            await view.message.edit(
+                content=f"~~{view.message.content}~~ you didn't respond on time!... not doing anything."
             )
+            return
 
-            if view.value is None:
-                await view.message.edit(
-                    content=f"~~{view.message.content}~~ you didn't respond on time!... not doing anything."
-                )
-                return
-
-            elif view.value is False:
-                await view.message.edit(
-                    content=f"~~{view.message.content}~~ okay, not adding custom color for {_type} in {ctx.guild}."
-                )
-                return
-            
-            else:
-                await view.message.edit(content="Added the custom color succesfully")
-                await self.bot.db.add_embed_color(ctx.guild.id, enum_type, color_integer)
-                return
-
-        if not color_text.isdigit():
-            await ctx.send("Ignoring color text using color integer.", ephemeral=True)
-
-            embed = discord.Embed(title = "Please Review", color=color_integer, description="Choosen through Color Integer")
-            embed.set_footer(text=f"Chat type: {_type}")
-            
-            view = await Confirm.prompt(
-                ctx,
-                user_id=ctx.author.id,
-                content=f"Color Check. Would you like to make this your custom color?",
-                embed=embed
+        elif view.value is False:
+            await view.message.edit(
+                content=f"~~{view.message.content}~~ okay, not adding custom color for {_type} in {ctx.guild}."
             )
-
-            if view.value is None:
-                await view.message.edit(
-                    content=f"~~{view.message.content}~~ you didn't respond on time!... not doing anything."
-                )
-                return
-
-            elif view.value is False:
-                await view.message.edit(
-                    content=f"~~{view.message.content}~~ okay, not adding custom color for {_type} in {ctx.guild}."
-                )
-                return
-            
-            else:
-                await view.message.edit(content="Added the custom color succesfully")
-                await self.bot.db.add_embed_color(ctx.guild.id, enum_type, color_integer)
-                return
-
-            # does only color integer only
-
-        embed_text = discord.Embed(title = "Please Review", color=int(color_text), description="Choosen through Color Integer")
-        embed_text.set_footer(text=f"Chat type: {_type}")
-        embed_integer = discord.Embed(title = "Please Review", color=color_integer, description="Choosen through Color Text autocomplete")
-        embed_integer.set_footer(text=f"Chat type: {_type}")
-        await ctx.send("Please Pick which one you prefer", embeds=[embed_text, embed_integer])
-
-        # make a button to choose the color, 1 - color integer, 2 - color text, and finally a neither option.
-        # after this add it to the custom color list or go "Alright I will not set a custom color for you"
+            return
+        
+        else:
+            await view.message.edit(content="Added the custom color succesfully")
+            await self.bot.db.add_embed_color(ctx.guild.id, enum_type, color_integer)
+            return
 
     @color.error
     async def color_error(self, ctx: commands.Context, error):
