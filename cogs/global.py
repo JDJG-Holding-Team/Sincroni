@@ -570,7 +570,7 @@ class Global(commands.Cog):
             view = await Confirm.prompt(
                 ctx,
                 user_id=ctx.author.id,
-                content=f"A custom color for {chat_type} already exists in this guild. Do you want to change it?",
+                content=msg,
             )
 
             if view.value is None:
