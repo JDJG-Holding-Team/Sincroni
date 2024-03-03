@@ -489,7 +489,7 @@ class Global(commands.Cog):
             return
 
         color_value = self.validate_color(_color)
-        if not _color:
+        if not color_value:
             return await ctx.send("Color not found.", ephemeral=True)
 
         if color_value.value > 16777215:
