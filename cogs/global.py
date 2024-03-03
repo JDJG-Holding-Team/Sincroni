@@ -489,7 +489,7 @@ class Global(commands.Cog):
         if not _color:
             return await ctx.send("Color not found.", ephemeral=True)
 
-        if color.value > 16777215:
+        if color_value.value > 16777215:
             return await ctx.send(f"Color {color_value.value} too big", ephemeral=True), 
 
         embed = discord.Embed(title = "Please Review", color=color_value.value, description="Color")
