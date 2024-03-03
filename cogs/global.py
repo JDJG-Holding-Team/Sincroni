@@ -428,6 +428,8 @@ class Global(commands.Cog):
 
         elif _color.isdigit():
             color = int(_color)
+            return discord.Color(color)
+
 
         try:
             color = int(_color, 16)
