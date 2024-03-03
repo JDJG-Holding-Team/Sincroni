@@ -492,7 +492,7 @@ class Global(commands.Cog):
         if color.value > 16777215:
             return await ctx.send(f"Color {color_value.value} too big", ephemeral=True), 
 
-        embed = discord.Embed(title = "Please Review", color=color_value, description="Color")
+        embed = discord.Embed(title = "Please Review", color=color_value.value, description="Color")
         embed.set_footer(text=f"Chat type: {_type}")
         embed.set_image(url=f"https://api.alexflipnote.dev/color/image/{color_value.value}")
             
