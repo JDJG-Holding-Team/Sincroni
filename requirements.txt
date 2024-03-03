@@ -2,3 +2,4 @@ asyncpg
 better-profanity
 discord.py
 jishaku @ git+https://github.com/Gorialis/jishaku
+pillow

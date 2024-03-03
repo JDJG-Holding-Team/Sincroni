@@ -14,6 +14,8 @@ from discord import app_commands
 from discord.app_commands import Choice
 from discord.ext import commands
 
+from pillow import Image
+
 from utils import views
 from utils.extra import ChatType, FilterType, rules
 from utils.views import Confirm
@@ -444,6 +446,21 @@ class Global(commands.Cog):
 
         return discord.Color(color)
 
+    def generate_color_block(self, color_int : int):
+        
+        width = 100
+        height = 100
+
+        red = (color_int & 0x00FF0000) >> 16
+        green = (color_int & 0x0000FF00) >> 8
+        blue = color_int & 0x000000FF
+
+        image = Image.new("RGB", (width, height), color=(red, green, blue))
+
+        buffer = BytesIO()
+        image.save(buffer, format="PNG")
+        buffer.getvalue()
+        return buffer
 
     @_global.command(name="color")
     @commands.guild_only()
@@ -500,21 +517,10 @@ class Global(commands.Cog):
 
         embed = discord.Embed(title = "Please Review", color=color_value.value, description="Color")
         embed.set_footer(text=f"Chat type: {_type} \nColor value: {color_value.value}")
-        url = f"https://api.alexflipnote.dev/color/image/{color_value.value}"
 
-        print(url)
-
-        res = await self.bot.session.get(url)
-
-        if res.ok:
-            buffer = BytesIO(await res.read())
-            buffer.seek(0)
-            file = discord.File(buffer, filename="color.png")
-            embed.set_image(url="attachment://color.png")
-
-        if not res.ok:
-            file = discord.File("unknown.png")
-            embed.set_image(url="attachment://unknown.png")
+        buffer = await asyncio.to_thread(self.generate_color_block, color_value.value)
+        file = discord.File(buffer, filename="color.png")
+        embed.set_image(url="attachment://color.png")
             
         view = await Confirm.prompt(
             ctx,
