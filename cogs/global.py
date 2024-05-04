@@ -578,23 +578,24 @@ class Global(commands.Cog):
                     content=f"~~{view.message.content}~~ you didn't respond on time!... not doing anything.",
                     view=None,
                 )
-                return
+                # no return needed here.
 
             elif view.value is False:
                 await view.message.edit(
                     content=f"~~{view.message.content}~~ okay, not doing anything.",
                     view=None,
                 )
-                return
+                # no return needed
 
             else:
                 if not color:
                     await self.bot.db.remove_embed_color(ctx.guild.id, enum_type)
                     await view.message.edit(content="Removed custom color succesfully", view=None)
-                    return
+                    # no return needed
+
                 else:
                     await view.message.edit(content="Okay, changing the custom color.", view=None)
-                    pass
+                    # works fairly well.
 
         color_value = self.validate_color(color)
         if not color or not color_value:
@@ -626,17 +627,18 @@ class Global(commands.Cog):
             await view.message.edit(
                 content=f"~~{view.message.content}~~ you didn't respond on time!... not doing anything.", view=None
             )
-            return
+           # not needed return
 
         elif view.value is False:
             await view.message.edit(content=f"~~{view.message.content}~~ okay, not setting it.", view=None)
-            return
+            # not needed return
+        
         else:
             await view.message.edit(
                 content=f"Set the custom color succesfully for {chat_type} to {str(color_value)}.", view=None
             )
             await self.bot.db.add_embed_color(ctx.guild.id, enum_type, color_value.value)
-            return
+            # not needed return
 
     @color.error
     async def color_error(self, ctx: commands.Context, error):
@@ -818,7 +820,7 @@ class Global(commands.Cog):
                 except (discord.HTTPException, discord.Forbidden) as err:
                     print(record.channel_id)
                     traceback.print_exception(type(err), err, err.__traceback__)
-                    pass
+                    # handle error in here.
 
                 continue
 
@@ -839,7 +841,7 @@ class Global(commands.Cog):
                 print(record.webhook_url)
 
                 traceback.print_exception(type(err), err, err.__traceback__)
-                pass
+                # handle in here.
 
     @commands.Cog.listener("on_message")
     async def linked_channel_handler(self, message: discord.Message):
@@ -892,7 +894,7 @@ class Global(commands.Cog):
             print(linked_channel.origin_channel_id)
             print(linked_channel.destination_channel_id)
             traceback.print_exception(type(err), err, err.__traceback__)
-            pass
+            # handle error for non working linked channel.
 
 
 async def setup(bot: Sincroni):
