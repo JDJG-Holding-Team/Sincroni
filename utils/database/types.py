@@ -22,7 +22,7 @@ class Blacklist(TypedDict):
     private: bool  # BOOLEAN, DEFAULT FALSE
     blacklist_type: FilterType  # SMALLINT, DEFAULT 0
     reason: str  # TEXT DEFAULT "No reason provided"
-    repeat : bool # BOOLEAN, DEFAULT FALSE
+    repeat: bool  # BOOLEAN, DEFAULT FALSE
 
 
 class Whitelist(TypedDict):

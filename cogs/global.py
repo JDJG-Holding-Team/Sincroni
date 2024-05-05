@@ -6,15 +6,14 @@ import os
 import random
 import re
 import traceback
-from typing import TYPE_CHECKING, Literal, Optional, Union
 from io import BytesIO
+from typing import TYPE_CHECKING, Literal, Optional, Union
 
 import discord
 from better_profanity import profanity
 from discord import app_commands
 from discord.app_commands import Choice
 from discord.ext import commands
-
 from PIL import Image
 
 from utils import views
@@ -627,12 +626,12 @@ class Global(commands.Cog):
             await view.message.edit(
                 content=f"~~{view.message.content}~~ you didn't respond on time!... not doing anything.", view=None
             )
-           # not needed return
+        # not needed return
 
         elif view.value is False:
             await view.message.edit(content=f"~~{view.message.content}~~ okay, not setting it.", view=None)
             # not needed return
-        
+
         else:
             await view.message.edit(
                 content=f"Set the custom color succesfully for {chat_type} to {str(color_value)}.", view=None
