@@ -792,8 +792,8 @@ class Global(commands.Cog):
                 )
             except (discord.HTTPException, discord.Forbidden):
                 # Handle invalid mod webhook
-                if "MOD_CHANNEL" in os.environ:
-                    mcID = int(os.environ["MOD_CHANNEL"])
+                if mod_channel_id := os.getenv("MOD_CHANNEL"):
+                    mcID = int(mod_channel_id)
                     mod_channel = self.bot.get_channel(mcID)
                     await mod_channel.send(
                         f"Error: {ctx.author} sent a message but the mod webhook is invalid.",
