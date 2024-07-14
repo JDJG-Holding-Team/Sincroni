@@ -756,7 +756,6 @@ class Global(commands.Cog):
         )
         webhook_embed.set_author(name=user_name, icon_url=ctx.author.display_avatar.url)
         webhook_embed.set_footer(text=guild_name, icon_url=guild_icon)
-        webhook_embed.set_thumbnail(url=guild_icon)
 
         global_blacklisted_user = self.bot.db.get_blacklist(0, message.author.id)
         blacklisted_guild = self.bot.db.get_blacklist(0, message.guild.id)
