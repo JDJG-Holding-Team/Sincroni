@@ -20,8 +20,6 @@ from utils import views
 from utils.extra import ChatType, FilterType, rules
 from utils.views import Confirm
 
-
-
 if TYPE_CHECKING:
     from main import Sincroni
 
@@ -795,8 +793,7 @@ class Global(commands.Cog):
                     mcID = int(mod_channel_id)
                     mod_channel = self.bot.get_channel(mcID)
                     await mod_channel.send(
-                        f"Error: {ctx.author} sent a message but the mod webhook is invalid.",
-                        embed=mod_embed
+                        f"Error: {ctx.author} sent a message but the mod webhook is invalid.", embed=mod_embed
                     )
                 else:
                     print("Failed to send message to mod channel and did not have a mod channel to send to.")
