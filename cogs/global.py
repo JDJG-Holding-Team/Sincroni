@@ -20,6 +20,8 @@ from utils import views
 from utils.extra import ChatType, FilterType, rules
 from utils.views import Confirm
 
+
+
 if TYPE_CHECKING:
     from main import Sincroni
 
@@ -771,8 +773,14 @@ class Global(commands.Cog):
                         avatar_url="https://i.imgur.com/qyk9vQq.png",
                     )
                 except (discord.HTTPException, discord.Forbidden):
-                    # TODO: handle invalid mod webhook
-                    pass
+                    # Handle invalid mod webhook
+                    mbed = discord.Embed(
+                        title="Blacklisted User",
+                        description="You are blacklisted from the global chat.",
+                        color=0xFF0000,
+                    )
+                    mbed.set_footer(text="You can appeal this decision by contacting the moderators.")
+                    await message.author.send(embed=mbed)
 
             return
 
@@ -784,9 +792,16 @@ class Global(commands.Cog):
                     avatar_url=ctx.author.display_avatar.url,
                 )
             except (discord.HTTPException, discord.Forbidden):
-                # TODO: handle invalid mod webhook
-                pass
-
+                # Handle invalid mod webhook
+                if "MOD_CHANNEL" in os.environ:
+                    mcID = int(os.environ["MOD_CHANNEL"])
+                    mod_channel = self.bot.get_channel(mcID)
+                    await mod_channel.send(
+                        f"Error: {ctx.author} sent a message but the mod webhook is invalid.",
+                        embed=mod_embed
+                    )
+                else:
+                    print("Failed to send message to mod channel and did not have a mod channel to send to.")
         for record in records:
             # TODO: handle not found global chat channel
             if not record.channel:
@@ -834,7 +849,15 @@ class Global(commands.Cog):
             try:
                 await record.webhook.send(**kwargs)
             except (discord.HTTPException, discord.Forbidden) as err:
-                # TODO: handle invalid global chat webhook
+                print("problematic linked channels")
+                error_mbed = discord.Embed(
+                    title="Error",
+                    description="There was an error sending a message to a linked channel.",
+                    color=0xFF0000,
+                )
+                error_mbed.add_field(name="Channel ID", value=str(record.channel_id))
+                error_mbed.add_field(name="Webhook URL", value=str(record.webhook_url))
+                await self.mod_webhook.send(embed=error_mbed)
 
                 print(record.channel_id)
                 print(record.webhook_url)
