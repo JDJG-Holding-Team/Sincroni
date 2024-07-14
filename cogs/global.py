@@ -752,7 +752,6 @@ class Global(commands.Cog):
             color=0xEB6D15,
             timestamp=ctx.message.created_at,
         )
-        webhook_embed.set_author(name=user_name, icon_url=ctx.author.display_avatar.url)
         webhook_embed.set_footer(text=guild_name, icon_url=guild_icon)
         webhook_embed.set_thumbnail(url=guild_icon)
 
