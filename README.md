@@ -48,4 +48,7 @@ SUPPORT_WEBHOOK =
 
 MOD_WEBHOOK = 
 # Webhook that will log the messages sent in global chat for moderation purposes
+
+MOD_CHANNEL =
+# ID of the channel that will be used as fallback for moderation Webhooks
 ```
