@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import functools
 import os
-import random
 import traceback
 from typing import TYPE_CHECKING, Literal, Optional, Union
 
@@ -13,7 +12,6 @@ from discord.app_commands import Choice
 from discord.ext import commands
 
 import utils
-from utils import views
 from utils.extra import ChatType, FilterType, rules
 from utils.views import Confirm
 
