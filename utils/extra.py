@@ -4,8 +4,8 @@ import asyncio
 import enum
 import random
 import re
-from typing import TYPE_CHECKING
 from io import BytesIO
+from typing import TYPE_CHECKING
 
 import discord
 from PIL import Image
@@ -42,64 +42,68 @@ For further questions, feel free to DM me at JDJG or join our Discord server at 
 link_regex = re.compile(r"http[s]?://(?:[a-zA-Z]|[0-9]|[$\-_@.&+]|[!*(),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+")
 discord_regex = re.compile(r"(?:https?://)?(?:www\.)?discord(?:.gg|(?:app)?.com/invite)/[^/\s]+")
 
+
 def censor_link(string):
     changed_string = discord_regex.sub(":lock: [discord invite redacted] :lock: ", string)
     return changed_string
+
 
 def censor_invite(string):
     new_string = link_regex.sub(":lock: [link redacted] :lock: ", changed_string)
 
     return new_string
 
+
 def get_dpy_colors() -> dict[str, int]:
-        """Returns a dictionary of discord.py colors.
+    """Returns a dictionary of discord.py colors.
 
-        These are hard-coded because discord.py could change
-        them at any time, and we don't want to rely on that.
+    These are hard-coded because discord.py could change
+    them at any time, and we don't want to rely on that.
 
-        Returns
-        -------
-        dict[str, int]
-            A dictionary of discord.py colors. ``{color_name: color_int, ...}``
-        """
-        colors = {
-            "blue": 3447003,
-            "blurple": 5793266,
-            "brand_green": 5763719,
-            "brand_red": 15548997,
-            "dark_blue": 2123412,
-            "dark_embed": 2829617,
-            "dark_gold": 12745742,
-            "dark_gray": 6323595,
-            "dark_green": 2067276,
-            "dark_grey": 6323595,
-            "dark_magenta": 11342935,
-            "dark_orange": 11027200,
-            "dark_purple": 7419530,
-            "dark_red": 10038562,
-            "dark_teal": 1146986,
-            "dark_theme": 3224376,
-            "darker_gray": 5533306,
-            "darker_grey": 5533306,
-            "fuchsia": 15418782,
-            "gold": 15844367,
-            "green": 3066993,
-            "greyple": 10070709,
-            "light_embed": 15658993,
-            "light_gray": 9936031,
-            "light_grey": 9936031,
-            "lighter_gray": 9807270,
-            "lighter_grey": 9807270,
-            "magenta": 15277667,
-            "og_blurple": 7506394,
-            "orange": 15105570,
-            "pink": 15418783,
-            "purple": 10181046,
-            "red": 15158332,
-            "teal": 1752220,
-            "yellow": 16705372,
-        }
-        return colors
+    Returns
+    -------
+    dict[str, int]
+        A dictionary of discord.py colors. ``{color_name: color_int, ...}``
+    """
+    colors = {
+        "blue": 3447003,
+        "blurple": 5793266,
+        "brand_green": 5763719,
+        "brand_red": 15548997,
+        "dark_blue": 2123412,
+        "dark_embed": 2829617,
+        "dark_gold": 12745742,
+        "dark_gray": 6323595,
+        "dark_green": 2067276,
+        "dark_grey": 6323595,
+        "dark_magenta": 11342935,
+        "dark_orange": 11027200,
+        "dark_purple": 7419530,
+        "dark_red": 10038562,
+        "dark_teal": 1146986,
+        "dark_theme": 3224376,
+        "darker_gray": 5533306,
+        "darker_grey": 5533306,
+        "fuchsia": 15418782,
+        "gold": 15844367,
+        "green": 3066993,
+        "greyple": 10070709,
+        "light_embed": 15658993,
+        "light_gray": 9936031,
+        "light_grey": 9936031,
+        "lighter_gray": 9807270,
+        "lighter_grey": 9807270,
+        "magenta": 15277667,
+        "og_blurple": 7506394,
+        "orange": 15105570,
+        "pink": 15418783,
+        "purple": 10181046,
+        "red": 15158332,
+        "teal": 1752220,
+        "yellow": 16705372,
+    }
+    return colors
+
 
 def validate_color(color: str | None, /) -> discord.Color | None:
     """Validate a color string. Basically tries to convert it to a discord.Color.
@@ -145,6 +149,7 @@ def validate_color(color: str | None, /) -> discord.Color | None:
     except ValueError:
         return None
 
+
 def generate_color_block(color_int: int) -> discord.File:
     width = 250
     height = 250
@@ -158,6 +163,7 @@ def generate_color_block(color_int: int) -> discord.File:
     buffer.seek(0)
 
     return discord.File(buffer, filename="color.png")
+
 
 def blacklist_lookup(bot: Sincroni, chat_type: ChatType, guild_id: int):
     match chat_type:

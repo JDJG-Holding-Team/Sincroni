@@ -1,6 +1,7 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING
+
 import traceback
+from typing import TYPE_CHECKING
 
 from better_profanity import profanity
 from discord.ext import commands
@@ -9,6 +10,7 @@ import utils
 
 if TYPE_CHECKING:
     from main import Sincroni
+
 
 class Link(commands.Cog):
     "Linked Chat Commands"
@@ -68,7 +70,7 @@ class Link(commands.Cog):
             print(linked_channel.origin_channel_id)
             print(linked_channel.destination_channel_id)
             traceback.print_exception(type(err), err, err.__traceback__)
-            
+
             # handle error for non working linked channel.
 
         # maybe make a way for there to be a webhooks on the linked chat too.
@@ -86,6 +88,7 @@ class Link(commands.Cog):
         )
 
         await ctx.send(embed=embed)
+
 
 async def setup(bot: Sincroni):
     await bot.add_cog(Link(bot))

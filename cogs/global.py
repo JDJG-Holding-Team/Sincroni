@@ -712,5 +712,6 @@ class Global(commands.Cog):
                 traceback.print_exception(type(err), err, err.__traceback__)
                 # handle in here.
 
+
 async def setup(bot: Sincroni):
     await bot.add_cog(Global(bot))
