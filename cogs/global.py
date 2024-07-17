@@ -1,12 +1,9 @@
 from __future__ import annotations
 
-import asyncio
 import functools
 import os
 import random
-import re
 import traceback
-from io import BytesIO
 from typing import TYPE_CHECKING, Literal, Optional, Union
 
 import discord
@@ -14,8 +11,8 @@ from better_profanity import profanity
 from discord import app_commands
 from discord.app_commands import Choice
 from discord.ext import commands
-from PIL import Image
 
+import utils
 from utils import views
 from utils.extra import ChatType, FilterType, rules
 from utils.views import Confirm
@@ -29,9 +26,6 @@ class Global(commands.Cog):
 
     def __init__(self, bot: Sincroni):
         self.bot: Sincroni = bot
-
-        self.link_regex = re.compile(r"http[s]?://(?:[a-zA-Z]|[0-9]|[$\-_@.&+]|[!*(),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+")
-        self.discord_regex = re.compile(r"(?:https?://)?(?:www\.)?discord(?:.gg|(?:app)?.com/invite)/[^/\s]+")
 
     async def cog_load(self):
         profanity.add_censor_words(["balls", "ballss", "ʙᴀʟʟꜱ", "kys"])
@@ -64,20 +58,6 @@ class Global(commands.Cog):
     def mod_webhook(self) -> Optional[discord.Webhook]:
         webhook_url = os.environ["MOD_WEBHOOK"]
         return self.bot.get_webhook_from_url(webhook_url)
-
-    @commands.hybrid_command(name="source")
-    async def source(self, ctx: commands.Context):
-        github_url = "https://github.com/JDJG-Holding-Team/Sincroni"
-
-        embed = discord.Embed(
-            title="Github link", description=f"{github_url}", color=15428885, timestamp=ctx.message.created_at
-        )
-
-        embed.set_footer(
-            text="This Bot's License is MIT, you must credit if you use my code, but please just make your own, if you don't know something works ask me, or try to learn how mine works."
-        )
-
-        await ctx.send(embed=embed)
 
     @commands.hybrid_group(name="global")
     @commands.guild_only()
@@ -416,114 +396,6 @@ class Global(commands.Cog):
     async def unblacklist_error(self, ctx: commands.Context, error):
         await ctx.send(error)
 
-    def get_dpy_colors(self) -> dict[str, int]:
-        """Returns a dictionary of discord.py colors.
-
-        These are hard-coded because discord.py could change
-        them at any time, and we don't want to rely on that.
-
-        Returns
-        -------
-        dict[str, int]
-            A dictionary of discord.py colors. ``{color_name: color_int, ...}``
-        """
-        colors = {
-            "blue": 3447003,
-            "blurple": 5793266,
-            "brand_green": 5763719,
-            "brand_red": 15548997,
-            "dark_blue": 2123412,
-            "dark_embed": 2829617,
-            "dark_gold": 12745742,
-            "dark_gray": 6323595,
-            "dark_green": 2067276,
-            "dark_grey": 6323595,
-            "dark_magenta": 11342935,
-            "dark_orange": 11027200,
-            "dark_purple": 7419530,
-            "dark_red": 10038562,
-            "dark_teal": 1146986,
-            "dark_theme": 3224376,
-            "darker_gray": 5533306,
-            "darker_grey": 5533306,
-            "fuchsia": 15418782,
-            "gold": 15844367,
-            "green": 3066993,
-            "greyple": 10070709,
-            "light_embed": 15658993,
-            "light_gray": 9936031,
-            "light_grey": 9936031,
-            "lighter_gray": 9807270,
-            "lighter_grey": 9807270,
-            "magenta": 15277667,
-            "og_blurple": 7506394,
-            "orange": 15105570,
-            "pink": 15418783,
-            "purple": 10181046,
-            "red": 15158332,
-            "teal": 1752220,
-            "yellow": 16705372,
-        }
-        return colors
-
-    def validate_color(self, color: str | None, /) -> discord.Color | None:
-        """Validate a color string. Basically tries to convert it to a discord.Color.
-
-        What it does in-order:
-
-        1. Checks if the color is falsy or ``None`` (`if not color: ...`) and returns ``None``.
-        2. Checks if the color is a digit, and if so, try casting to ``int`` with base 16 and
-            then to a ``discord.Color``.
-        3. Checks if the color is a valid discord.py color name and returns the corresponding
-            ``discord.Color``. The names are hard-coded in the function.
-        4. Checks if the color is "random" and returns a random ``discord.Color`` using the
-            following: ``discord.Color(random.randint(0, 0xFFFFFF))``.
-
-        If none of the above checks pass, it tries using the ``from_str`` method on ``discord.Color``.
-
-        Parameters
-        ----------
-        color: str | None
-            The color to validate. Can be a hex code, decimal, or one of discord.py's
-            built-in colors.
-
-        Returns
-        -------
-        discord.Color | None
-            The validated color. ``None`` if the color is invalid
-            or ``color`` is ``None`` / falsy.
-        """
-        if not color:
-            return None
-
-        dpy_colors = self.get_dpy_colors()
-
-        try:
-            if color.isdigit():
-                return discord.Color(int(color))
-            elif dpy_color := dpy_colors.get(color.lower()):
-                return discord.Color(dpy_color)
-            elif color.lower() == "random":
-                return discord.Color(random.randint(0, 0xFFFFFF))
-            else:
-                return discord.Color.from_str(color)
-        except ValueError:
-            return None
-
-    def generate_color_block(self, color_int: int) -> discord.File:
-        width = 250
-        height = 250
-
-        color_value = discord.Color(color_int)
-
-        image = Image.new("RGB", (width, height), color=(color_value.r, color_value.g, color_value.b))
-
-        buffer = BytesIO()
-        image.save(buffer, format="PNG")
-        buffer.seek(0)
-
-        return discord.File(buffer, filename="color.png")
-
     @_global.command(
         name="color",
     )
@@ -596,9 +468,9 @@ class Global(commands.Cog):
                     await view.message.edit(content="Okay, changing the custom color.", view=None)
                     # works fairly well.
 
-        color_value = self.validate_color(color)
+        color_value = utils.validate_color(color)
         if not color or not color_value:
-            dpy_colors = self.get_dpy_colors()
+            dpy_colors = utils.get_dpy_colors()
             return await ctx.send(
                 (
                     "Invalid color! Please recheck what you passed. "
@@ -611,7 +483,7 @@ class Global(commands.Cog):
         embed = discord.Embed(title="Please Review", color=color_value.value, description="Color")
         embed.set_footer(text=f"Chat type: {chat_type}\nColor value: {color_value.value}")
 
-        file = await asyncio.to_thread(self.generate_color_block, color_value.value)
+        file = await asyncio.to_thread(utils.generate_color_block, color_value.value)
         embed.set_image(url=f"attachment://{file.filename}")
 
         view = await Confirm.prompt(
@@ -651,32 +523,6 @@ class Global(commands.Cog):
         startswith: list[Choice] = [choice for choice in colors if choice.name.startswith(current.lower())]
         return ((startswith or colors) if current else colors)[:25]
 
-    def censor_links(self, string):
-        changed_string = self.discord_regex.sub(":lock: [discord invite redacted] :lock: ", string)
-        new_string = self.link_regex.sub(":lock: [link redacted] :lock: ", changed_string)
-
-        return new_string
-
-    def blacklist_lookup(self, chat_type: ChatType, guild_id: int):
-        match chat_type:
-            case chat_type.public:
-                attribute = "pub"
-
-            case chat_type.developer:
-                attribute = "dev"
-
-            case _:
-                attribute = chat_type.name
-
-        return [
-            record.entity_id
-            for record in self.bot.db.blacklists
-            if not record._global
-            and record.blacklist_type.server
-            and record.server_id == guild_id
-            and getattr(record, attribute)
-        ]
-
     @commands.Cog.listener("on_message")
     async def global_chat_handler(self, message: discord.Message):
         supported_message_types = (
@@ -699,7 +545,7 @@ class Global(commands.Cog):
         if not global_chat:
             return
 
-        blacklisted_servers = self.blacklist_lookup(global_chat.chat_type, ctx.guild.id)
+        blacklisted_servers = utils.blacklist_lookup(self.bot, global_chat.chat_type, ctx.guild.id)
 
         records = list(
             filter(
@@ -733,10 +579,16 @@ class Global(commands.Cog):
 
         message_content = profanity.censor(message_content, censor_char="#")
 
-        message_content = self.censor_links(message_content)
+        message_content = utils.censor_link(message_content)
+        message_content = utils.censor_invite(message_content)
 
-        guild_name = self.censor_links(str(ctx.guild))
-        user_name = self.censor_links(str(message.author))
+        guild_name = utils.censor_link(str(ctx.guild))
+        guild_name = utils.censor_invite(guild_name)
+        user_name = utils.censor_link(str(message.author))
+        user_name = utils.censor_invite(user_name)
+
+        # once config is used this will all be optional censorship
+        # ie opt in.
 
         embed = discord.Embed(
             description=str(message_content),
@@ -859,60 +711,6 @@ class Global(commands.Cog):
 
                 traceback.print_exception(type(err), err, err.__traceback__)
                 # handle in here.
-
-    @commands.Cog.listener("on_message")
-    async def linked_channel_handler(self, message: discord.Message):
-        supported_message_types = (
-            discord.MessageType.default,
-            discord.MessageType.reply,
-        )
-        if (
-            not message.guild
-            or not message.content
-            or message.author.bot
-            or message.type not in supported_message_types
-        ):
-            return
-
-        ctx = await self.bot.get_context(message)
-        if ctx.valid:
-            return
-
-        linked_channel = self.bot.db.get_linked_channel(ctx.channel.id)
-        if not linked_channel:
-            return
-
-        # I may need to make two versions when someone links it and then remove the copy.
-        # i don't know yet.
-
-        guild_icon = message.guild.icon.url if message.guild.icon else "https://i.imgur.com/3ZUrjUP.png"
-        message_content = await commands.clean_content().convert(ctx, message.content)
-        message_content = profanity.censor(message_content, censor_char="#")
-        message_content = self.censor_links(message_content)
-
-        embed = discord.Embed(
-            description=str(message_content),
-            color=0xEB6D15,
-            timestamp=message.created_at,
-        )
-
-        embed.set_author(name=message.author, icon_url=ctx.author.display_avatar.url)
-        embed.set_footer(text=ctx.guild)
-        embed.set_thumbnail(url=guild_icon)
-
-        if not linked_channel.destination_channel:
-            return print(f"missing destination channel : {linked_channel.destination_channel_id}")
-
-        try:
-            await linked_channel.destination_channel.send(embed=embed)
-
-        except (discord.HTTPException, discord.Forbidden) as err:
-            print("problematic linked channels")
-            print(linked_channel.origin_channel_id)
-            print(linked_channel.destination_channel_id)
-            traceback.print_exception(type(err), err, err.__traceback__)
-            # handle error for non working linked channel.
-
 
 async def setup(bot: Sincroni):
     await bot.add_cog(Global(bot))
