@@ -18,6 +18,17 @@ class Link(commands.Cog):
     def __init__(self, bot: Sincroni):
         self.bot: Sincroni = bot
 
+    async def cog_load(self):
+        profanity.add_censor_words(["balls", "ballss", "ʙᴀʟʟꜱ", "kys"])
+
+        # load censor words plus add a custom way to load them, and check the issue below:
+        # https://github.com/JDJG-Holding-Team/Sincroni/issues/16#issue-2069012832
+
+    async def cog_unload(self):
+        print("cog unloaded")
+
+        # a few extra stuff
+
     @commands.Cog.listener("on_message")
     async def linked_channel_handler(self, message: discord.Message):
         supported_message_types = (
