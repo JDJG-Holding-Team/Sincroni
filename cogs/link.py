@@ -86,3 +86,6 @@ class Link(commands.Cog):
         )
 
         await ctx.send(embed=embed)
+
+async def setup(bot: Sincroni):
+    await bot.add_cog(Link(bot))
