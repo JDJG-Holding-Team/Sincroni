@@ -49,7 +49,7 @@ def censor_link(string):
 
 
 def censor_invite(string):
-    new_string = link_regex.sub(":lock: [link redacted] :lock: ", changed_string)
+    new_string = link_regex.sub(":lock: [link redacted] :lock: ", string)
 
     return new_string
 
