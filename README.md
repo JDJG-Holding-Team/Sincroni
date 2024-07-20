@@ -1,4 +1,4 @@
-# JDBotsBot2.0
+# Sincroni López
 
 A special version of JDBot by me.
 
