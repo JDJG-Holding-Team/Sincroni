@@ -4,6 +4,7 @@ import traceback
 from typing import TYPE_CHECKING
 
 from better_profanity import profanity
+import discord
 from discord.ext import commands
 
 import utils
