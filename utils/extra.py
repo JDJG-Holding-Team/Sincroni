@@ -178,7 +178,7 @@ def blacklist_lookup(bot: Sincroni, chat_type: ChatType, guild_id: int):
 
     return [
         record.entity_id
-        for record in self.bot.db.blacklists
+        for record in bot.db.blacklists
         if not record._global
         and record.blacklist_type.server
         and record.server_id == guild_id
