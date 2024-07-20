@@ -3,8 +3,8 @@ from __future__ import annotations
 import traceback
 from typing import TYPE_CHECKING
 
-from better_profanity import profanity
 import discord
+from better_profanity import profanity
 from discord.ext import commands
 
 import utils
