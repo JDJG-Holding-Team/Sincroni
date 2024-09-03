@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 16.0 (Ubuntu 16.0-1.pgdg20.04+1)
--- Dumped by pg_dump version 16.0 (Ubuntu 16.0-1.pgdg20.04+1)
+-- Dumped from database version 16.4 (Ubuntu 16.4-1.pgdg22.04+1)
+-- Dumped by pg_dump version 16.4 (Ubuntu 16.4-1.pgdg22.04+1)
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -62,6 +62,20 @@ CREATE SEQUENCE public.sincroni_blacklist_id_seq
 --
 
 ALTER SEQUENCE public.sincroni_blacklist_id_seq OWNED BY public.sincroni_blacklist.id;
+
+
+--
+-- Name: sincroni_config; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.sincroni_config (
+    server_id bigint NOT NULL,
+    webhook_embed boolean DEFAULT true,
+    censor_messages boolean DEFAULT false,
+    censor_links boolean DEFAULT false,
+    censor_invites boolean DEFAULT false,
+    chat_type smallint DEFAULT 0
+);
 
 
 --
@@ -185,6 +199,14 @@ ALTER TABLE ONLY public.sincroni_global_chat
 
 ALTER TABLE ONLY public.sincroni_global_chat
     ADD CONSTRAINT sicroni_global_chat_server_id_channel_id_key UNIQUE (server_id, channel_id);
+
+
+--
+-- Name: sincroni_config sincroni_config_server_id_chat_type_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.sincroni_config
+    ADD CONSTRAINT sincroni_config_server_id_chat_type_key UNIQUE (server_id, chat_type);
 
 
 --
