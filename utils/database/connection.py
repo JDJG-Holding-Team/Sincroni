@@ -6,7 +6,7 @@ import asyncpg
 
 from utils.extra import ChatType, FilterType
 
-from .models import Blacklist, EmbedColor, GlobalChat, LinkedChannel, Whitelist
+from .models import Blacklist, EmbedColor, GlobalChat, GlobalChatConfig, LinkedChannel, Whitelist
 
 if TYPE_CHECKING:
     from main import Sincroni
@@ -41,6 +41,9 @@ class DatabaseConnection:
         self._linked_channels: Dict[int, LinkedChannel] = {}
         # (server_id, chat_type) : EmbedColor
         self._embed_colors: Dict[tuple, EmbedColor] = {}
+
+        # (server_id, chat_type) GlobalChatConfig
+        self._global_chat_configs: Dict[tuple, GlobalChatConfig] = {}
 
     async def create_connection(self) -> None:
         self._pool = await asyncpg.create_pool(self.__dsn, record_class=CustomRecordClass)  # type: ignore
@@ -297,13 +300,17 @@ class DatabaseConnection:
         self,
         origin_channel_id: int,
         destination_channel_id: int,
+        origin_webhook_url: Optional[str] = None,
+        destination_webhook_url: Optional[str] = None,
     ) -> LinkedChannel:
         query = """
             INSERT INTO SINCRONI_LINKED_CHANNELS (
                 origin_channel_id,
-                destination_channel_id
+                destination_channel_id,
+                origin_webhook_url,
+                destination_webhook_url
             ) 
-            VALUES ($1, $2) 
+            VALUES ($1, $2, $3, $4) 
             RETURNING *
             """
 
@@ -311,6 +318,8 @@ class DatabaseConnection:
             query,
             origin_channel_id,
             destination_channel_id,
+            origin_webhook_url,
+            destination_webhook_url,
         )
 
         self._linked_channels[origin_channel_id] = LinkedChannel(self, res)
@@ -371,3 +380,71 @@ class DatabaseConnection:
 
         self._embed_colors[(server_id, chat_type)] = EmbedColor(self, res)
         return self._embed_colors[(server_id, chat_type)]
+
+    @property
+    def global_chat_configs(self) -> List[GlobalChatConfig]:
+        return list(self._global_chat_configs.values())
+
+    async def fetch_global_chat_configs(self) -> List[GlobalChatConfig]:
+        entries = await self.fetch("SELECT * FROM SINCRONI_CONFIG")
+
+        row: GlobalChatConfig
+        for row in entries:
+            self._global_chat_configs[(row["server_id"], row["chat_type"])] = EmbedColor(self, row)
+
+        return self.global_chat_configs
+
+    async def fetch_global_chat_config(
+        self, server_id: int, chat_type: ChatType = ChatType.public, /
+    ) -> Optional[GlobalChatConfig]:
+        query = "SELECT * FROM SINCRONI_CONFIG WHERE server_id = $1 AND chat_type = $2"
+
+        res = await self.fetchrow(query, server_id, chat_type)
+        if res is None:
+            return None
+
+        self._global_chat_configs[(server_id, chat_type)] = GlobalChatConfig(self, res)
+        return self._global_chat_configs[(server_id, chat_type)]
+
+    def get_global_chat_config(
+        self, server_id: int, chat_type: ChatType = ChatType.public
+    ) -> Optional[GlobalChatConfig]:
+        return self._global_chat_configs.get((server_id, chat_type))
+
+    async def remove_global_chat_config(
+        self, server_id, chat_type: ChatType = ChatType.public, /
+    ) -> Optional[GlobalChatConfig]:
+        query = "DELETE FROM SINCRONI_CONFIG WHERE server_id = $1 AND chat_type = $2"
+
+        await self.execute(query, server_id, chat_type)
+
+        return self._global_chat_configs.pop((server_id, chat_type), None)
+
+    async def add_sincroni_config(
+        self,
+        server_id: int,
+        chat_type: ChatType = ChatType.public,
+        webhook_embed: Optional[bool] = False,
+        censor_messages: Optional[bool] = False,
+        censor_links: Optional[bool] = False,
+        censor_invites: Optional[bool] = False,
+    ) -> GlobalChatConfig:
+        query = """
+            INSERT INTO SINCRONI_CONFIG (
+                server_id,
+                chat_type,
+                webhook_embed,
+                censor_messages,
+                censor_links,
+                censor_invites,
+            ) 
+            VALUES ($1, $2, $3, $4, $5, $6) 
+            RETURNING *
+            """
+
+        res = await self.fetchrow(
+            query, server_id, chat_type, webhook_embed, censor_messages, censor_links, censor_invites
+        )
+
+        self._global_chat_configs[(server_id, chat_type)] = GlobalChatConfig(self, res)
+        return self._global_chat_configs[(server_id, chat_type)]

@@ -35,10 +35,21 @@ class Whitelist(TypedDict):
 class LinkedChannels(TypedDict):
     id: int  # serial, NOT NULL
     origin_channel_id: int  # BIGINT, NOT NULL
+    origin_webhook_url: Optional[str]  # TEXT, NULL
     destination_channel_id: int  # BIGINT, NOT NULL
+    destination_webhook_url: Optional[str]  # TEXT, NULL
 
 
 class EmbedColors(TypedDict):
     server_id: int  # BIGINT, NOT NULL
     chat_type: ChatType  # SMALLINT, DEFAULT 0, NOT NULL
     custom_color: int  # INTEGER, NOT NULL
+
+
+class GlobalChatConfig(TypedDict):
+    server_id: int  # BIGINT, NOT NULL
+    webhook_embed: bool  # BOOLEAN, DEFAULT TRUE
+    censor_messages: bool  # BOOLEAN, DEFAULT FALSE
+    censor_links: bool  # BOOLEAN, DEFAULT FALSE
+    censor_invites: bool  # BOOLEAN, DEFAULT FALSE
+    chat_type: ChatType  # SMALLINT, DEFAULT 0, NOT NULL

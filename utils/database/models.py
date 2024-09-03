@@ -18,6 +18,7 @@ if TYPE_CHECKING:
     from .types import EmbedColors as EmbedColorsPayload
     from .types import FilterType as FilterTypePayload
     from .types import GlobalChat as GlobalChatPayload
+    from .types import GlobalChatConfig as GlobalChatConfigPayload
     from .types import LinkedChannels as LinkedChannelsPayload
     from .types import Whitelist as WhitelistPayload
 
@@ -164,7 +165,12 @@ class LinkedChannel:
 
         self.id: int = data["id"]
         self.origin_channel_id: int = data["origin_channel_id"]
+        self.origin_webhook_url: Optional[str] = data["origin_webhook_url"]
         self.destination_channel_id: int = data["destination_channel_id"]
+        self.destination_webhook_url: Optional[str] = data["destination_webhook_url"]
+
+        self._origin_webhook: Optional[Webhook] = None
+        self._destination_webhook: Optional[Webhook] = None
 
     def __repr__(self) -> str:
         return f"<LinkedChannel id={self.id} origin_channel_id={self.origin_channel_id} destination_channel_id={self.destination_channel_id}>"
@@ -176,6 +182,26 @@ class LinkedChannel:
     @property
     def destination_channel(self) -> Optional[TextChannel | discord.DMChannel | Thread]:
         return self._connection.bot.get_channel(self.destination_channel_id)  # type: ignore
+
+    @cached_property
+    def origin_webhook(self) -> Optional[Webhook]:
+        if self.origin_webhook_url is None:
+            return None
+
+        if not self._origin_webhook:
+            self._origin_webhook = self._connection.bot.get_webhook_from_url(self.origin_webhook_url)
+
+        return self._origin_webhook
+
+    @cached_property
+    def destination_webhook(self) -> Optional[Webhook]:
+        if self.destination_webhook_url is None:
+            return None
+
+        if not self._destination_webhook:
+            self._destination_webhook = self._connection.bot.get_webhook_from_url(self.destination_webhook_url)
+
+        return self._destination_webhook
 
 
 class EmbedColor:
@@ -203,3 +229,27 @@ class EmbedColor:
     @property
     def custom_color(self) -> discord.Color:
         return discord.Color(self.raw_custom_color)
+
+
+class GlobalChatConfig:
+    def __init__(self, connection: DatabaseConnection, data: GlobalChatConfigPayload, /) -> None:
+        self._connection: DatabaseConnection = connection
+
+        self.server_id: int = data["server_id"]
+        self.webhook_embed: bool = data["webhook_embed"]
+        self.censor_messages: bool = data["censor_links"]
+        self.censor_links: bool = data["censor_links"]
+        self.censor_invites: bool = data["censor_invites"]
+        self.raw_chat_type: ChatTypePayload = data["chat_type"]
+
+    def __repr__(self) -> str:
+        return f"<GlobalChatConfig server_id={self.server_id} chat_type={self.raw_chat_type}>"
+
+    @property
+    def server(self) -> Optional[Guild]:
+        """The server that is blacklisting the entity from discord.py cache."""
+        return self._connection.bot.get_guild(self.server_id)
+
+    @property
+    def chat_type(self) -> ChatType:
+        return ChatType(self.raw_chat_type)
