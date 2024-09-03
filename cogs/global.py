@@ -4,7 +4,7 @@ import asyncio
 import functools
 import os
 import traceback
-from typing import TYPE_CHECKING, Literal, Optional, Union, List
+from typing import TYPE_CHECKING, List, Literal, Optional, Union
 
 import discord
 from better_profanity import profanity
@@ -651,7 +651,7 @@ class Global(commands.Cog):
                     mod_channel = self.bot.get_channel(mcID)
                     if not mod_channel:
                         return print("Failed to send message to mod channel and did not have a mod channel to send to.")
- 
+
                     await mod_channel.send(
                         f"Error: {ctx.author} sent a message but the mod webhook is invalid.", embed=mod_embed
                     )
