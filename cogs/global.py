@@ -1,9 +1,10 @@
 from __future__ import annotations
 
+import asyncio
 import functools
 import os
 import traceback
-from typing import TYPE_CHECKING, Literal, Optional, Union
+from typing import TYPE_CHECKING, Literal, Optional, Union, List
 
 import discord
 from better_profanity import profanity
@@ -238,6 +239,9 @@ class Global(commands.Cog):
 
             valid_guild = self.bot.get_guild(int(guild))
 
+        if not ctx.guild:
+            return await ctx.send("Something went wrong, please fix this.", ephemeral=True)
+
         else:
             valid_guild = None
 
@@ -265,7 +269,7 @@ class Global(commands.Cog):
             await ctx.send("You must have already blacklisted someone", ephemeral=True)
 
     @blacklist.autocomplete("guild")
-    async def blacklist_guild_autocomplete(self, interaction: discord.interaction, current: str) -> List[Choice]:
+    async def blacklist_guild_autocomplete(self, interaction: discord.Interaction, current: str) -> List[Choice]:
         # ignore current guild in results
 
         records = [
@@ -306,6 +310,9 @@ class Global(commands.Cog):
 
         if not ctx.interaction:
             return await ctx.send("You must run this as a slash command.")
+
+        if not ctx.guild:
+            return await ctx.send("Something went wrong as the guild should exist", ephemeral=True)
 
         if guild:
             if not guild.isdigit():
@@ -515,7 +522,7 @@ class Global(commands.Cog):
 
     @color.autocomplete("color")
     async def color_autocomplete(self, _: discord.Interaction, current: str) -> list[Choice[str]]:
-        dpy_colors: dict[str, int] = self.get_dpy_colors()
+        dpy_colors: dict[str, int] = utils.get_dpy_colors()
 
         colors: list[Choice] = [Choice(name=name.lower(), value=str(value)) for name, value in dpy_colors.items()]
         startswith: list[Choice] = [choice for choice in colors if choice.name.startswith(current.lower())]
@@ -543,7 +550,7 @@ class Global(commands.Cog):
         if not global_chat:
             return
 
-        blacklisted_servers = utils.blacklist_lookup(self.bot, global_chat.chat_type, ctx.guild.id)
+        blacklisted_servers = utils.blacklist_lookup(self.bot, global_chat.chat_type, message.guild.id)
 
         records = list(
             filter(
@@ -642,6 +649,9 @@ class Global(commands.Cog):
                 if mod_channel_id := os.getenv("MOD_CHANNEL"):
                     mcID = int(mod_channel_id)
                     mod_channel = self.bot.get_channel(mcID)
+                    if not mod_channel:
+                        return print("Failed to send message to mod channel and did not have a mod channel to send to.")
+ 
                     await mod_channel.send(
                         f"Error: {ctx.author} sent a message but the mod webhook is invalid.", embed=mod_embed
                     )
@@ -702,6 +712,10 @@ class Global(commands.Cog):
                 )
                 error_mbed.add_field(name="Channel ID", value=str(record.channel_id))
                 error_mbed.add_field(name="Webhook URL", value=str(record.webhook_url))
+
+                if not self.mod_webhook:
+                    return print("Failed to send message to mod channel and did not have a mod channel to send to.")
+
                 await self.mod_webhook.send(embed=error_mbed)
 
                 print(record.channel_id)
