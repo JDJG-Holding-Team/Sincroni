@@ -108,7 +108,9 @@ CREATE TABLE public.sincroni_global_chat (
 CREATE TABLE public.sincroni_linked_channels (
     id integer NOT NULL,
     origin_channel_id bigint NOT NULL,
-    destination_channel_id bigint NOT NULL
+    origin_webhook_url text,
+    destination_channel_id bigint NOT NULL,
+    destination_webhook_url text
 );
 
 
