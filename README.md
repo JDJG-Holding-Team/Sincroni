@@ -2,6 +2,9 @@
 
 A special version of JDBot by me.
 
+Support Server:
+https://discord.gg/Y25PGjsXt2
+
 ## Tables
 
 That's Right, this guide will be on the table designs I use.
