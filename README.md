@@ -6,6 +6,12 @@ Support Server:
 
 https://discord.gg/Y25PGjsXt2
 
+## Another Other Server
+
+Gaming Discord Server:
+
+https://discord.gg/MNXaBj9kAc
+
 ## Tables
 
 That's Right, this guide will be on the table designs I use.
