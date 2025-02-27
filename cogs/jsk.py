@@ -1,3 +1,4 @@
+import discord
 from discord.ext import commands
 from jishaku.codeblocks import codeblock_converter
 from jishaku.cog import OPTIONAL_FEATURES, STANDARD_FEATURES
@@ -9,14 +10,16 @@ from jishaku.repl import AsyncCodeExecutor, get_var_dict_from_ctx
 # look into making more jishaku commands: https://jishaku.readthedocs.io/en/latest/cog.html
 
 
-# fmt: off
 class Jishaku(*OPTIONAL_FEATURES, *STANDARD_FEATURES):
     @Feature.Command(parent="jsk", name="py", aliases=["python"])
-    async def jsk_python(self, ctx: commands.Context, *, argument: codeblock_converter):  # type: ignore
-
+    async def jsk_python(self, ctx: commands.Context, *, argument: codeblock_converter):
         arg_dict = get_var_dict_from_ctx(ctx, "")
         arg_dict.update(get_var_dict_from_ctx(ctx, "_"))
         arg_dict["_"] = self.last_result
+
+        if ctx.message.reference and isinstance(ctx.message.reference.resolved, discord.Message):
+            resolved_msg = ctx.message.reference.resolved
+            arg_dict.update(r=resolved_msg, _r=resolved_msg)
 
         scope = self.scope
 
@@ -24,7 +27,7 @@ class Jishaku(*OPTIONAL_FEATURES, *STANDARD_FEATURES):
             async with ReplResponseReactor(ctx.message):
                 with self.submit(ctx):
                     executor = AsyncCodeExecutor(argument.content, scope, arg_dict=arg_dict)
-                    async for send, result in AsyncSender(executor):  # type: ignore
+                    async for send, result in AsyncSender(executor):
                         if result is None:
                             continue
 
@@ -35,8 +38,7 @@ class Jishaku(*OPTIONAL_FEATURES, *STANDARD_FEATURES):
         finally:
             scope.clear_intersection(arg_dict)
 
-# fmt: on
-
 
 async def setup(bot: commands.Bot):
     await bot.add_cog(Jishaku(bot=bot))
+    
